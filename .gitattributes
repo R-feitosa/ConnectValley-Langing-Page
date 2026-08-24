@@ -1,0 +1,12 @@
+* text=auto eol=lf
+
+# Enviados ao Apache como estao — CRLF quebra o parser
+.htaccess text eol=lf
+
+# Binarios: nunca normalizar
+*.png binary
+*.jpg binary
+*.JPG binary
+*.jpeg binary
+*.webp binary
+*.mp4 binary
