@@ -1,0 +1,2178 @@
+<!doctype html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Connect Valley | RF Group</title>
+
+    <link rel="icon" href="./assets/icone.svg" type="image/svg+xml" />
+    <link rel="icon" type="image/png" sizes="192x192" href="./assets/logo-icone.png" />
+    <link rel="icon" type="image/png" sizes="48x48" href="./assets/logo-icone.png" />
+    <link rel="shortcut icon" href="./assets/logo-icone.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="./assets/logo-icone.png" />
+
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+    />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Anton+SC&family=Montserrat:wght@500;600;700;800;900&family=Poppins:wght@300;400;500;600&family=Syne:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      /* OTIMIZAÇÃO DE PERFORMANCE */
+      * {
+        text-rendering: optimizeSpeed; /* Prioriza velocidade de renderização */
+        -webkit-font-smoothing: antialiased;
+      }
+
+      html {
+        overflow-x: hidden;
+      }
+      body {
+        background-color: #030816;
+        color: #ffffff;
+        font-family: 'Poppins', sans-serif;
+        padding-bottom: 80px;
+      }
+
+      /* TÍTULOS */
+      h1, h2, h3, .font-display, .big-number {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: -0.02em;
+        line-height: 1;
+      }
+
+      /* NAV ITEM */
+      .nav-item {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.5);
+        transition: all 0.3s ease;                                                                   
+      }
+      .nav-item:hover,
+      .nav-item.active {
+        color: #f2c94c;
+        opacity: 1;
+      }
+
+      /* CLASSES SVG */
+      .fill-gold { fill: #f6ce54; }
+      .fill-white { fill: #ffffff; }
+      .stroke-gold { stroke: #f6ce54; stroke-width: 9.87; }
+      .stroke-white { stroke: #ffffff; stroke-width: 3.95; }
+      .no-fill { fill: none !important; }
+
+      /* UTILS - OTIMIZAÇÃO: Removido backdrop-filter pesado */
+      nav {
+        background-color: rgba(3, 8, 22, 0.95) !important; /* Mais opaco para evitar redraw */
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+        transition: all 0.3s ease;
+      }
+
+      /* MARQUEE */
+      .marquee-content {
+        display: flex;
+        animation: marquee 40s linear infinite; /* Mais lento para fluidez */
+        will-change: transform; /* Otimização GPU */
+      }
+      @keyframes marquee {
+        0% { transform: translateX(0); }
+        100% { transform: translateX(-50%); }
+      }
+
+      /* SWIPER */
+      .swiper {
+        width: 100%;
+        padding-bottom: 40px;
+        overflow: visible !important;
+      }
+      .swiper-wrapper {
+        transition-timing-function: linear !important;
+        will-change: transform; /* Otimização GPU */
+      }
+      .swiper-slide {
+        width: auto;
+        margin-right: 40px;
+      }
+
+      /* EFEITOS */
+      .hero-logo-container {
+        display: inline-block;
+        /* Removido perspective para economizar GPU */
+      }
+      .hero-logo {
+        /* Removida transição pesada de mouse */
+      }
+      .tech-grid-bg {
+        background-size: 60px 60px;
+        background-image: 
+          linear-gradient(to right, rgba(0, 85, 255, 0.04) 1px, transparent 1px),
+          linear-gradient(to bottom, rgba(0, 85, 255, 0.04) 1px, transparent 1px);
+      }
+      .bg-brand-blue-dark {
+        background-color: #030816 !important;
+      }
+      .bg-brand-blue-mid {
+        background-color: #0A1930 !important;
+      }
+      .simple-reveal-hidden {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      .text-reveal-mask {
+        transform: translateY(0);
+        opacity: 1;
+        transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.8s ease-out;
+        will-change: transform, opacity;
+      }
+      .text-hidden {
+        transform: translateY(30px);
+        opacity: 0;
+      }
+      .text-shadow-glow-blue {
+        text-shadow: 0 0 8px rgba(0, 85, 255, 0.4); /* Sombra mais leve para a GPU */
+      }
+      #bottom-bar-canvas {
+        position: absolute; inset: 0; width: 100%; height: 100%;
+        pointer-events: none; z-index: 0;
+      }
+
+      /* BARRA BOTTOM - Sem Blur */
+      .fixed-bottom-bar {
+        background: rgba(3, 8, 22, 0.98);
+        border-top: 1px solid rgba(242, 201, 76, 0.3);
+        box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.8);
+        z-index: 9999;
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0);
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+      }
+      .fixed-bottom-bar.visible { transform: translateY(0); }
+      
+      @keyframes progress-fill {
+        from { width: 0; }
+        to { width: 5%; } /* Antes estava 0% */
+      }
+      .progress-fill {
+        width: 0;
+        animation: progress-fill 2s ease-out forwards 1s;
+      }
+
+      /* CARDS */
+      .sponsor-card {
+        background: rgba(10, 25, 48, 0.7); /* Menos transparência */
+        /* Removido backdrop-filter */
+        transition: transform 0.3s ease-out; /* Simplificado transition all */
+        display: flex;
+        flex-direction: column;
+        box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1);
+        position: relative;
+        z-index: 1;
+      }
+      .sponsor-card:hover {
+        transform: translateY(-5px);
+        z-index: 2;
+      }
+
+      .hover-glow-blue:hover {
+        /* Simplificado efeito de hover */
+        border-color: rgba(0, 85, 255, 0.6) !important;
+      }
+
+      .check-list li {
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+        margin-bottom: 12px;
+        font-size: 0.9rem;
+        line-height: 1.5;
+        color: #d1d5db;
+      }
+      .check-list li::before {
+        content: '✓';
+        color: #f2c94c;
+        font-weight: bold;
+      }
+
+      .faq-item {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .faq-answer {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease-out;
+      }
+      .faq-item.active .faq-answer { max-height: 200px; }
+      .faq-item.active .faq-icon { transform: rotate(45deg); }
+
+      /* MODAL */
+      .modal-backdrop {
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(3, 8, 22, 0.85);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        z-index: 10000;
+        display: flex; justify-content: center; align-items: center;
+        padding: 1rem;
+        opacity: 0; pointer-events: none;
+        transition: opacity 0.35s ease;
+      }
+      .modal-backdrop.open { opacity: 1; pointer-events: all; }
+      .modal-content {
+        width: 100%; max-width: 860px;
+        background: linear-gradient(145deg, #0d1f3c 0%, #070f20 100%);
+        border: 1px solid rgba(242, 201, 76, 0.25);
+        border-radius: 28px;
+        overflow: hidden;
+        transform: scale(0.93) translateY(16px);
+        transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+        box-shadow: 0 40px 80px rgba(0,0,0,0.6), 0 0 60px rgba(242,201,76,0.07);
+      }
+      .modal-backdrop.open .modal-content { transform: scale(1) translateY(0); }
+      .modal-close-btn {
+        position: absolute; top: 16px; right: 16px; z-index: 50;
+        width: 36px; height: 36px;
+        background: rgba(255,255,255,0.08);
+        border: 1px solid rgba(255,255,255,0.12);
+        border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        color: #fff; cursor: pointer; font-size: 18px; line-height: 1;
+        transition: background 0.2s, border-color 0.2s, transform 0.2s;
+      }
+      .modal-close-btn:hover { background: rgba(242,201,76,0.2); border-color: rgba(242,201,76,0.5); transform: scale(1.1); }
+
+      /* SCROLLBAR */
+      .custom-scrollbar::-webkit-scrollbar { height: 8px; }
+      .custom-scrollbar::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.05); border-radius: 4px; }
+      .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(242, 201, 76, 0.3); border-radius: 4px; }
+      .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(242, 201, 76, 0.6); }
+
+      /* COOKIE BANNER */
+      .cookie-banner {
+        position: fixed; bottom: 0; left: 0; right: 0;
+        background: rgba(3, 8, 22, 0.98);
+        border-top: 1px solid rgba(242, 201, 76, 0.3);
+        padding: 20px;
+        z-index: 10001;
+        box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.6);
+        display: none; /* Começa escondido para não piscar na tela */
+      }
+
+      .cookie-banner.show {
+        display: block;
+        animation: slideUp 0.5s ease-out forwards;
+      }
+      @keyframes slideUp {
+        from { transform: translateY(100%); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+      }
+      .cookie-banner.hidden { animation: slideDown 0.5s ease-out forwards; }
+      @keyframes slideDown {
+        from { transform: translateY(0); opacity: 1; }
+        to { transform: translateY(100%); opacity: 0; }
+      }
+      .cookie-banner-content {
+        max-width: 1200px; margin: 0 auto;
+        display: flex; align-items: center; justify-content: space-between; gap: 20px;
+      }
+      .cookie-banner-text { flex: 1; font-size: 14px; line-height: 1.6; color: #d1d5db; }
+      .cookie-banner-text p { margin: 0; padding: 0; }
+      .cookie-banner-buttons { display: flex; gap: 12px; flex-shrink: 0; }
+      .cookie-btn {
+        padding: 10px 24px; border-radius: 8px; font-weight: 600;
+        font-size: 13px; cursor: pointer; transition: transform 0.2s ease;
+        border: none; text-transform: uppercase; letter-spacing: 0.1em;
+        font-family: 'Montserrat', sans-serif;
+      }
+      .cookie-btn-accept {
+        background: linear-gradient(135deg, #f6ce54 0%, #f2c94c 100%);
+        color: #030816;
+      }
+      .cookie-btn-accept:hover { transform: translateY(-2px); }
+      .cookie-btn-reject {
+        background: transparent; color: #f2c94c;
+        border: 1px solid rgba(242, 201, 76, 0.5);
+      }
+      .cookie-btn-reject:hover { background: rgba(242, 201, 76, 0.1); }
+      @media (max-width: 768px) {
+        .cookie-banner-content { flex-direction: column; align-items: flex-start; }
+        .cookie-banner-buttons { width: 100%; }
+        .cookie-btn { flex: 1; }
+      }
+
+      /* TOP ANNOUNCEMENT BANNER */
+      .top-announcement-bar {
+        position: fixed;
+        top: 0; left: 0; width: 100%;
+        z-index: 70;
+        background: #F2C94C;
+        color: #030816;
+        text-align: center;
+        padding: 10px 48px;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700;
+        font-size: 11px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 16px;
+        height: 44px;
+      }
+      body.has-banner #navbar { top: 44px !important; }
+      body.has-banner #mobile-menu { top: 44px !important; }
+
+      /* NÚMEROS SECTION */
+      .numero-card {
+        text-align: center;
+        padding: 48px 24px;
+        border-left: 1px solid rgba(242, 201, 76, 0.1);
+        position: relative;
+      }
+      .numero-card:first-child { border-left: none; }
+      @media (max-width: 768px) { .numero-card { border-left: none; border-top: 1px solid rgba(242,201,76,0.1); } .numero-card:first-child { border-top: none; } }
+
+      /* AREAS SECTION */
+      .area-card {
+        background: rgba(10, 25, 48, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.07);
+        border-radius: 20px;
+        padding: 36px 28px;
+        transition: all 0.3s ease;
+      }
+      .area-card:hover {
+        border-color: rgba(242, 201, 76, 0.35);
+        transform: translateY(-6px);
+        background: rgba(10, 25, 48, 0.9);
+      }
+
+      /* TESTIMONIALS */
+      .testimonial-card {
+        background: rgba(10, 25, 48, 0.7);
+        border: 1px solid rgba(255, 255, 255, 0.07);
+        border-radius: 20px;
+        padding: 40px;
+        transition: border-color 0.3s ease;
+        position: relative;
+      }
+      .testimonial-card:hover { border-color: rgba(242, 201, 76, 0.3); }
+      .testimonial-card::before {
+        content: '"';
+        position: absolute;
+        top: 24px; left: 32px;
+        font-size: 80px;
+        line-height: 1;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 900;
+        color: rgba(242, 201, 76, 0.15);
+        pointer-events: none;
+      }
+
+      /* CTA SECTION */
+      .cta-final {
+        background: linear-gradient(135deg, #030816 0%, #0A1930 50%, #030816 100%);
+        border-top: 1px solid rgba(242, 201, 76, 0.15);
+        border-bottom: 1px solid rgba(242, 201, 76, 0.15);
+        position: relative;
+        overflow: hidden;
+      }
+      .cta-final::before {
+        content: '';
+        position: absolute;
+        top: 50%; left: 50%;
+        transform: translate(-50%, -50%);
+        width: 600px; height: 600px;
+        background: radial-gradient(circle, rgba(0,85,255,0.12) 0%, transparent 70%);
+        pointer-events: none;
+      }
+
+      /* FOCO ACESSÍVEL PARA NAVEGAÇÃO POR TECLADO */
+      :focus-visible {
+        outline: 3px solid #0055FF !important;
+        outline-offset: 2px !important;
+      }
+      #mobile-menu {
+        background-color: #030816 !important;
+      }
+    </style>
+
+    <!-- Meta Pixel Code -->
+    <script>
+      !function(f,b,e,v,n,t,s)
+      {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+      n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+      if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+      n.queue=[];t=b.createElement(e);t.async=!0;
+      t.src=v;s=b.getElementsByTagName(e)[0];
+      s.parentNode.insertBefore(t,s)}(window, document,'script',
+      'https://connect.facebook.net/en_US/fbevents.js');
+      fbq('init', '2414795259024937');
+      fbq('track', 'PageView');
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
+      src="https://www.facebook.com/tr?id=2414795259024937&ev=PageView&noscript=1"
+    /></noscript>
+    <!-- End Meta Pixel Code -->
+  </head>
+  <body class="antialiased">
+    <canvas id="connected-bg" class="fixed inset-0 pointer-events-none z-10"></canvas>
+    <div id="cookie-banner" class="cookie-banner">
+      <div class="cookie-banner-content">
+        <div class="cookie-banner-text">
+          <p>
+            🍪 <strong>Cookies</strong> - Utilizamos cookies para melhorar sua
+            experiência. <a href="#" style="color: #f2c94c; text-decoration: none; font-weight: 600">Política de Privacidade</a>.
+          </p>
+        </div>
+        <div class="cookie-banner-buttons">
+          <button class="cookie-btn cookie-btn-reject" onclick="rejectCookies()">Rejeitar</button>
+          <button class="cookie-btn cookie-btn-accept" onclick="acceptCookies()">Aceitar Tudo</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="speaker-modal" class="modal-backdrop">
+      <div class="modal-content relative grid md:grid-cols-2">
+        <button onclick="closeSpeakerModal()" class="modal-close-btn">&times;</button>
+
+        <!-- Lado esquerdo: imagem/vídeo -->
+        <div class="relative bg-black h-[260px] md:h-auto overflow-hidden">
+          <video id="modal-video" class="w-full h-full object-cover opacity-50" poster="./assets/backgroundd.JPG" loop muted playsinline>
+            <source src="./assets/hero-video.mp4" type="video/mp4" />
+          </video>
+          <!-- Gradiente sobre a mídia -->
+          <div class="absolute inset-0 bg-gradient-to-t from-[#070f20] via-transparent to-transparent md:bg-gradient-to-r md:from-transparent md:to-[#070f20]"></div>
+          <!-- Badge Connect Valley -->
+          <div class="absolute top-5 left-5">
+            <span class="bg-brand-gold text-brand-blue-dark text-[10px] font-display font-bold uppercase tracking-widest px-3 py-1 rounded-full">Connect Valley 2026</span>
+          </div>
+          <!-- Botão play centralizado -->
+          <div class="absolute inset-0 flex items-center justify-center">
+            <div class="w-14 h-14 rounded-full bg-brand-gold/90 flex items-center justify-center text-brand-blue-dark cursor-pointer hover:scale-110 hover:bg-brand-gold transition-all duration-200 shadow-lg shadow-brand-gold/30">
+              <svg class="w-5 h-5 ml-1" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Lado direito: info -->
+        <div class="p-8 md:p-10 flex flex-col justify-center">
+          <span class="inline-flex items-center gap-2 text-brand-gold uppercase tracking-[0.3em] text-[10px] font-bold font-display mb-4">
+            <span class="w-4 h-px bg-brand-gold"></span>Palestrante
+          </span>
+          <h3 class="text-3xl md:text-4xl text-white font-display uppercase leading-tight mb-1" id="modal-name">EM BREVE</h3>
+          <p class="text-brand-blue-accent font-display font-bold uppercase tracking-wide text-sm mb-6" id="modal-role">Surpresa</p>
+          <div class="w-10 h-px bg-brand-gold/40 mb-6"></div>
+          <p class="text-gray-400 leading-relaxed text-sm md:text-base" id="modal-bio">Estamos preparando um conteúdo exclusivo com este palestrante.</p>
+        </div>
+      </div>
+    </div>
+
+    <div id="top-banner" class="top-announcement-bar">
+      <span class="hidden sm:block w-2 h-2 rounded-full bg-brand-blue-dark animate-pulse shrink-0"></span>
+      <span>PRÉ-VENDA INICIADA — Vagas Limitadas!</span>
+      <a href="https://doity.com.br/connect-valley-2026" target="_blank" rel="noopener noreferrer" class="bg-brand-blue-dark text-brand-gold px-4 py-1.5 rounded-full text-[10px] hover:bg-brand-blue-mid transition whitespace-nowrap font-display">GARANTIR AGORA →</a>
+      <button id="close-top-banner" aria-label="Fechar aviso" class="absolute right-4 top-1/2 -translate-y-1/2 text-brand-blue-dark/50 hover:text-brand-blue-dark text-xl leading-none transition">&times;</button>
+    </div>
+
+    <nav class="fixed w-full z-50 py-4 transition-all duration-300" id="navbar">
+      <div class="container mx-auto px-6 flex justify-between items-center relative h-12">
+        <button id="mobile-menu-btn" class="md:hidden text-white focus:outline-none z-50" aria-label="Abrir menu de navegação" aria-expanded="false">
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+        </button>
+        <img src="./assets/icone.svg" alt="Logotipo Connect Valley" class="h-8 opacity-90 z-20" />
+        <div class="hidden md:flex absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 gap-4 lg:gap-8 z-10">
+          <a href="#sobre" class="nav-item">Sobre</a>
+          <a href="#mapa" class="nav-item">Mapa</a>
+          <a href="#cronograma" class="nav-item">Cronograma</a>
+          <a href="#manifesto" class="nav-item">Manifesto</a>
+          <a href="#imersao" class="nav-item">Imersão</a>
+          <a href="#palestrantes" class="nav-item">Speakers</a>
+        </div>
+        <div class="hidden md:flex items-center gap-3">
+          <a href="https://connect-valley-app.vercel.app/login" target="_blank" rel="noopener noreferrer" aria-label="Acessar Área do Participante (abre em nova aba)" class="border border-white/30 text-white hover:border-brand-gold hover:text-brand-gold px-5 py-2 rounded-full font-bold uppercase text-[10px] tracking-widest transition-all z-20 font-display">Área do Participante</a>
+          <a href="#ingressos" class="bg-brand-gold text-brand-blue-dark px-6 py-2 rounded-full font-bold uppercase text-[10px] tracking-widest hover:bg-white transition-all shadow-lg z-20 font-display">Ingressos</a>
+        </div>
+      </div>
+    </nav>
+
+    <div id="mobile-menu" class="fixed inset-0 bg-brand-blue-dark z-40 transform -translate-x-full transition-transform duration-300 flex flex-col items-center justify-center space-y-6 md:hidden">
+      <a href="#sobre" class="text-lg text-white font-display uppercase tracking-widest hover:text-brand-gold transition mobile-link">Sobre</a>
+      <a href="#mapa" class="text-lg text-white font-display uppercase tracking-widest hover:text-brand-gold transition mobile-link">Mapa</a>
+      <a href="#cronograma" class="text-lg text-white font-display uppercase tracking-widest hover:text-brand-gold transition mobile-link">Cronograma</a>
+      <a href="#manifesto" class="text-lg text-white font-display uppercase tracking-widest hover:text-brand-gold transition mobile-link">Manifesto</a>
+      <a href="#imersao" class="text-lg text-white font-display uppercase tracking-widest hover:text-brand-gold transition mobile-link">Imersão</a>
+      <a href="#palestrantes" class="text-lg text-white font-display uppercase tracking-widest hover:text-brand-gold transition mobile-link">Speakers</a>
+      <a href="#ingressos" class="text-lg text-white font-display uppercase tracking-widest font-bold mobile-link">Ingressos</a>
+      <a href="https://connect-valley-app.vercel.app/login" target="_blank" rel="noopener noreferrer" aria-label="Acessar Área do Participante (abre em nova aba)" class="mt-4 px-6 py-3 border border-brand-gold text-brand-gold rounded-full font-display font-bold uppercase tracking-widest text-xs hover:bg-brand-gold hover:text-brand-blue-dark transition duration-300">Área do Participante</a>
+    </div>
+
+    <header class="relative min-h-[90vh] flex flex-col justify-between overflow-hidden bg-brand-blue-dark py-16 md:py-24">
+      <!-- Background and Glows -->
+      <div class="absolute inset-0 bg-blue-glow animate-pulse opacity-50 z-0"></div>
+      <div class="absolute inset-0 z-0 opacity-40 mix-blend-lighten">
+        <video autoplay muted loop playsinline class="w-full h-full object-cover grayscale brightness-[0.3]" id="hero-bg" poster="./assets/backgroundd.JPG">
+          <source src="./assets/hero-video-2.mp4" type="video/mp4" />
+        </video>
+      </div>
+      <div class="absolute inset-0 bg-hero-gradient z-10"></div>
+
+      <!-- Placeholder top spacer to push contents below fixed navbar -->
+      <div class="h-20"></div>
+
+      <!-- Texto de fundo em outline -->
+      <div class="absolute inset-0 flex items-end justify-center z-10 pointer-events-none overflow-hidden pb-8 md:pb-12">
+        <svg class="w-full" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 160" preserveAspectRatio="xMidYMid meet">
+          <text x="50%" y="80%" dominant-baseline="middle" text-anchor="middle"
+            font-family="'Montserrat', sans-serif" font-weight="900" font-size="148" letter-spacing="8"
+            fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="1.5">
+            DO INTERIOR
+          </text>
+        </svg>
+      </div>
+
+      <!-- Main Center Content -->
+      <div class="container mx-auto px-6 relative z-20 flex-1 flex flex-col justify-center items-center text-center max-w-5xl">
+
+        <!-- Logo centralizada grande -->
+        <div class="simple-reveal-hidden mb-6 md:mb-8">
+          <img src="./assets/connect-2026.svg" alt="Connect Valley 2026" class="h-28 md:h-44 lg:h-52 object-contain drop-shadow-[0_0_40px_rgba(242,201,76,0.3)]" />
+        </div>
+
+        <!-- Badge -->
+        <div class="mb-6 simple-reveal-hidden inline-flex items-center gap-2 bg-brand-blue-mid/80 border border-brand-gold/20 px-4 py-2 rounded-full backdrop-blur-sm shadow-[0_0_15px_rgba(242,201,76,0.1)]">
+          <span class="w-2 h-2 rounded-full bg-brand-gold animate-ping"></span>
+          <span class="text-brand-gold font-display font-bold uppercase text-[10px] tracking-[0.2em]">Pré-venda Iniciada — Vagas Limitadas</span>
+        </div>
+
+        <!-- Headline -->
+        <h1 class="font-display font-bold text-3xl md:text-6xl lg:text-7xl text-white mb-3 uppercase tracking-tight leading-[1] simple-reveal-hidden">
+          O FUTURO COMEÇA AGORA
+        </h1>
+
+        <!-- Subtítulo -->
+        <p class="text-gray-400 font-syne text-base md:text-lg simple-reveal-hidden mb-10 tracking-wide">
+          Conectando pessoas, ideias e negócios
+        </p>
+
+        <!-- CTAs -->
+        <div class="flex flex-col sm:flex-row gap-4 justify-center items-center w-full sm:w-auto simple-reveal-hidden">
+          <a href="https://doity.com.br/connect-valley-2026" target="_blank" rel="noopener noreferrer" aria-label="Garantir minha vaga na Doity (abre em nova aba)" id="magnetic-btn" class="group relative inline-flex items-center justify-center overflow-hidden rounded-full p-[2px] font-bold text-brand-blue-dark transition-all duration-300 w-full sm:w-auto shadow-lg shadow-brand-gold/20 hover:scale-105">
+            <span class="absolute inset-0 bg-gradient-to-r from-brand-gold to-white transition-all duration-300"></span>
+            <span class="relative w-full rounded-full bg-brand-gold px-10 py-4 transition-all duration-300 font-display font-bold tracking-widest text-sm block text-center whitespace-nowrap">
+              GARANTIR MINHA VAGA
+            </span>
+          </a>
+          <a href="https://connect-valley-app.vercel.app/login" target="_blank" rel="noopener noreferrer" aria-label="Acessar Área do Participante (abre em nova aba)" class="group relative inline-flex items-center justify-center overflow-hidden rounded-full p-[1px] font-bold text-white transition-all duration-300 w-full sm:w-auto hover:scale-105">
+            <span class="absolute inset-0 bg-white/20 transition-all duration-300 group-hover:bg-white/40"></span>
+            <span class="relative w-full rounded-full bg-brand-blue-dark/80 backdrop-blur-sm px-10 py-4 font-display font-bold tracking-widest text-sm block text-center whitespace-nowrap hover:bg-transparent">
+              ÁREA DO PARTICIPANTE
+            </span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Realizado Por -->
+      <div class="container mx-auto px-6 relative z-20 mt-8 pt-6 border-t border-white/5 flex items-center justify-center gap-6 max-w-6xl">
+        <div class="flex items-center gap-8 opacity-60 hover:opacity-90 transition-opacity duration-300 filter brightness-0 invert justify-center">
+          <img src="./assets/icone.svg" alt="Icone Connect" class="h-6 md:h-8 object-contain" />
+          <img src="./assets/logos/logo-rf-feitosa-group.svg" alt="RF Feitosa Group" class="h-6 md:h-8 object-contain" />
+        </div>
+      </div>
+    </header>
+
+    <div id="bottom-bar" class="fixed bottom-0 left-0 w-full fixed-bottom-bar z-50 py-3 px-3 md:py-6 md:px-12 flex flex-col md:flex-row items-center justify-between gap-3 bg-[#030816]/95 border-t border-[#F2C94C]/30 shadow-2xl overflow-hidden">
+      <canvas id="bottom-bar-canvas"></canvas>
+      <div class="relative z-10 flex flex-col items-center md:items-start gap-1 w-full md:w-auto">
+        <span class="text-[9px] md:text-sm uppercase text-gray-400 tracking-[0.2em] font-display">O evento começa em:</span>
+        <div class="flex items-center justify-center gap-2 text-brand-gold font-bold font-mono w-full">
+          <div class="flex flex-col md:flex-row items-center bg-white/5 rounded-lg px-3 py-1 md:bg-transparent md:p-0 min-w-[50px] md:min-w-0">
+            <span id="days" class="text-lg md:text-4xl leading-none">00</span><span class="text-[9px] md:text-lg text-gray-500 md:ml-1 uppercase">d</span>
+          </div>
+          <span class="text-gray-600 text-xs md:text-2xl mb-2 md:mb-0">:</span>
+          <div class="flex flex-col md:flex-row items-center bg-white/5 rounded-lg px-3 py-1 md:bg-transparent md:p-0 min-w-[50px] md:min-w-0">
+            <span id="hours" class="text-lg md:text-4xl leading-none">00</span><span class="text-[9px] md:text-lg text-gray-500 md:ml-1 uppercase">h</span>
+          </div>
+          <span class="text-gray-600 text-xs md:text-2xl mb-2 md:mb-0">:</span>
+          <div class="flex flex-col md:flex-row items-center bg-white/5 rounded-lg px-3 py-1 md:bg-transparent md:p-0 min-w-[50px] md:min-w-0">
+            <span id="minutes" class="text-lg md:text-4xl leading-none">00</span><span class="text-[9px] md:text-lg text-gray-500 md:ml-1 uppercase">m</span>
+          </div>
+          <span class="text-gray-600 text-xs md:text-2xl mb-2 md:mb-0">:</span>
+          <div class="flex flex-col md:flex-row items-center bg-white/5 rounded-lg px-3 py-1 md:bg-transparent md:p-0 min-w-[50px] md:min-w-0">
+            <span id="seconds" class="text-lg md:text-4xl leading-none">00</span><span class="text-[9px] md:text-lg text-gray-500 md:ml-1 uppercase">s</span>
+          </div>
+        </div>
+      </div>
+      <div class="relative z-10 w-full md:max-w-md flex flex-col gap-1">
+        <div class="flex justify-between text-[9px] md:text-xs uppercase font-bold tracking-wider text-gray-400 font-display">
+          <span class="text-brand-gold">PRÉ-VENDA INICIADA!</span>
+          <span class="text-gray-400">5% Vendido</span>
+        </div>
+        <div class="w-full h-2 md:h-4 bg-gray-800 rounded-full overflow-hidden border border-gray-700" role="progressbar" aria-valuenow="5" aria-valuemin="0" aria-valuemax="100" aria-label="Porcentagem de ingressos vendidos">
+          <div class="h-full bg-gradient-to-r from-brand-blue-accent to-brand-gold progress-fill"></div>
+        </div>
+      </div>
+      <a href="https://doity.com.br/connect-valley-2026" target="_blank" rel="noopener noreferrer" aria-label="Comprar ingresso da pré-venda (abre em nova aba)" class="relative z-10 hidden md:block bg-white/10 hover:bg-white/20 text-white px-8 py-3 rounded text-sm font-bold uppercase tracking-wider transition font-display whitespace-nowrap border border-white/5">
+        Comprar Agora
+      </a>
+    </div>
+
+    <div class="py-4 bg-brand-blue-mid border-y border-brand-blue-accent/20 overflow-hidden relative z-30 shadow-[0_0_30px_rgba(0,85,255,0.1)]">
+      <div class="marquee-content text-sm md:text-xl font-bold uppercase tracking-[0.3em] text-brand-gold/80 gap-20 font-display">
+        <span>Networking</span> <span>•</span> <span>Inovação</span> <span>•</span> <span>Conteúdo Prático</span> <span>•</span> <span>Negócios Reais</span> <span>•</span> <span>Ecossistema Forte</span> <span>•</span>
+        <span>Networking</span> <span>•</span> <span>Inovação</span> <span>•</span> <span>Conteúdo Prático</span> <span>•</span> <span>Negócios Reais</span> <span>•</span> <span>Ecossistema Forte</span> <span>•</span>
+      </div>
+    </div>
+
+    <!-- CMO Summit Inspired Highlight Gallery -->
+    <section class="py-8 md:py-12 bg-brand-blue-dark overflow-hidden relative z-20">
+      <div class="container mx-auto px-6 text-center mb-8 max-w-4xl">
+        <h2 class="font-display font-bold text-3xl md:text-5xl text-white uppercase tracking-tight mb-3">
+          ONDE A INOVAÇÃO <span class="text-brand-gold">GERA NEGÓCIOS</span>
+        </h2>
+        <p class="text-gray-400 font-syne text-xs md:text-base uppercase tracking-wider">
+          Reunimos os principais líderes, mentes de tecnologia e investidores em um só lugar.
+        </p>
+      </div>
+      <div class="swiper-gallery-top swiper simple-reveal-hidden pl-6 md:pl-20 mb-4">
+        <div class="swiper-wrapper">
+          <div class="swiper-slide hover-glow-blue">
+            <div class="relative h-64 w-[400px] shrink-0 rounded-2xl overflow-hidden border border-brand-blue-mid group">
+              <img src="./assets/foto-dr-roneely.jpg" loading="lazy" class="h-full w-full object-cover brightness-90 group-hover:brightness-110 transition duration-500" alt="Dr Roneely discursando no palco" />
+            </div>
+          </div>
+          <div class="swiper-slide hover-glow-blue">
+            <div class="relative h-64 w-[400px] shrink-0 rounded-2xl overflow-hidden border border-brand-blue-mid group">
+              <img src="./assets/foto-2.JPG" loading="lazy" class="h-full w-full object-cover brightness-90 group-hover:brightness-110 transition duration-500" alt="Público do evento" />
+            </div>
+          </div>
+          <div class="swiper-slide hover-glow-blue">
+            <div class="relative h-64 w-[400px] shrink-0 rounded-2xl overflow-hidden border border-brand-blue-mid group">
+              <img src="./assets/foto-3.webp" loading="lazy" class="h-full w-full object-cover brightness-90 group-hover:brightness-110 transition duration-500" alt="Palco e plenária" />
+            </div>
+          </div>
+          <div class="swiper-slide hover-glow-blue">
+            <div class="relative h-64 w-[400px] shrink-0 rounded-2xl overflow-hidden border border-brand-blue-mid group">
+              <img src="./assets/foto-4.JPG" loading="lazy" class="h-full w-full object-cover brightness-90 group-hover:brightness-110 transition duration-500" alt="Apresentação de slides" />
+            </div>
+          </div>
+          <div class="swiper-slide hover-glow-blue">
+            <div class="relative h-64 w-[400px] shrink-0 rounded-2xl overflow-hidden border border-brand-blue-mid group">
+              <img src="./assets/foto-5.JPG" loading="lazy" class="h-full w-full object-cover brightness-90 group-hover:brightness-110 transition duration-500" alt="Área de networking" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="relative py-8 md:py-16 bg-brand-blue-dark overflow-hidden flex items-center justify-center md:min-h-[40vh]">
+      <div class="relative z-20 container mx-auto text-center px-4 simple-reveal-hidden">
+        <span class="block text-brand-blue-accent font-display uppercase tracking-[0.4em] text-xs font-bold mb-4">Save the Date</span>
+        <h2 class="text-4xl md:text-6xl font-display font-bold text-white uppercase leading-none">
+          16 e 17 <br /><span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-gold to-white">de Outubro</span>
+        </h2>
+      </div>
+    </section>
+
+    <section id="sobre" class="py-10 md:py-16 bg-brand-blue-dark relative overflow-hidden">
+      <div class="absolute inset-0 tech-grid-bg pointer-events-none z-0"></div>
+      <div id="glow-sobre" class="absolute top-1/4 -left-1/4 w-1/2 h-1/2 bg-brand-blue-accent opacity-20 rounded-full blur-3xl"></div>
+      <div class="container mx-auto px-6 grid md:grid-cols-2 gap-20 items-center relative z-20">
+        <div class="relative group simple-reveal-hidden">
+          <div class="relative rounded-3xl overflow-hidden aspect-[4/5] border border-white/5 shadow-2xl">
+            <img src="./assets/backgroundd.JPG" loading="lazy" class="object-cover w-full h-full brightness-75 group-hover:brightness-95 transition duration-700" alt="Palco principal do evento Connect Valley com painéis de LED e público assistindo" />
+          </div>
+        </div>
+        <div class="self-start pt-4">
+          <h2 class="font-display font-bold text-4xl md:text-6xl lg:text-7xl mb-8 leading-[1] text-white text-hidden text-reveal-trigger uppercase">
+            MUITO MAIS QUE <br />UM EVENTO, <br /><span class="text-brand-gold">UM ECOSSISTEMA.</span>
+          </h2>
+          <div class="space-y-6 text-gray-400 font-syne text-lg md:text-xl leading-relaxed">
+            <p class="blur-reveal">
+              O <strong class="text-white font-bold">CONNECT VALLEY</strong> é uma manifestação do espírito empreendedor, inspirado na ideia de que são os grandes pensadores, inovadores e líderes que sustentam o mundo.
+            </p>
+          </div>
+          <div class="grid grid-cols-3 gap-8 mt-12 pt-12 border-t border-brand-blue-mid simple-reveal-hidden">
+            <div>
+              <span class="block text-4xl md:text-5xl font-display font-bold text-brand-gold counter big-number" data-target="40" data-prefix="+">+40</span>
+              <span class="text-[10px] font-display font-bold uppercase tracking-widest text-gray-500 mt-2 block">Speakers</span>
+            </div>
+            <div>
+              <span class="block text-4xl md:text-5xl font-display font-bold text-brand-gold counter mid-number" data-target="48" data-suffix="hrs">48hrs</span>
+              <span class="text-[10px] font-display font-bold uppercase tracking-widest text-gray-500 mt-2 block">Horas Imersivas</span>
+            </div>
+            <div>
+              <span class="block text-4xl md:text-5xl font-display font-bold text-brand-gold counter big-number" data-target="1000" data-prefix="+">+1000</span>
+              <span class="text-[10px] font-display font-bold uppercase tracking-widest text-gray-500 mt-2 block">Participantes</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="numeros" class="py-10 md:py-16 bg-brand-blue-mid relative overflow-hidden border-t border-brand-blue-accent/10">
+      <div class="absolute inset-0 tech-grid-bg pointer-events-none z-0"></div>
+      <div id="glow-numeros" class="absolute inset-0 opacity-25 pointer-events-none" style="background: radial-gradient(ellipse at center, rgba(0,85,255,0.15) 0%, transparent 70%)"></div>
+      <div class="container mx-auto px-6 relative z-20">
+        <div class="text-center mb-12 simple-reveal-hidden">
+          <span class="text-brand-blue-accent font-display uppercase tracking-[0.4em] text-xs font-bold">Dados reais</span>
+          <h2 class="font-display font-bold text-3xl md:text-5xl text-white mt-3 uppercase tracking-tight">OS NÚMEROS <span class="text-brand-gold">NÃO MENTEM</span></h2>
+        </div>
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-y-12">
+          <div class="numero-card simple-reveal-hidden">
+            <span class="block text-4xl md:text-6xl font-display font-bold text-brand-gold leading-none mb-3 counter" data-target="40" data-prefix="+">+40</span>
+            <span class="text-white font-syne font-bold uppercase tracking-widest text-xs block mb-1">Speakers</span>
+            <p class="text-gray-500 text-xs font-sans">Nomes de destaque nacional e regional</p>
+          </div>
+          <div class="numero-card simple-reveal-hidden">
+            <span class="block text-4xl md:text-6xl font-display font-bold text-brand-gold leading-none mb-3 counter" data-target="1000" data-prefix="+" data-format-k="true">+1k</span>
+            <span class="text-white font-syne font-bold uppercase tracking-widest text-xs block mb-1">Participantes</span>
+            <p class="text-gray-500 text-xs font-sans">Empreendedores e líderes reunidos</p>
+          </div>
+          <div class="numero-card simple-reveal-hidden">
+            <span class="block text-4xl md:text-6xl font-display font-bold text-brand-gold leading-none mb-3 counter" data-target="48" data-suffix="h">48h</span>
+            <span class="text-white font-syne font-bold uppercase tracking-widest text-xs block mb-1">Imersão</span>
+            <p class="text-gray-500 text-xs font-sans">Dois dias de conteúdo e conexão intensa</p>
+          </div>
+          <div class="numero-card simple-reveal-hidden">
+            <span class="block text-4xl md:text-6xl font-display font-bold text-brand-gold leading-none mb-3 counter" data-target="7" data-suffix="ª">7ª</span>
+            <span class="text-white font-syne font-bold uppercase tracking-widest text-xs block mb-1">Edição</span>
+            <p class="text-gray-500 text-xs font-sans">Uma história de crescimento contínuo</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="mapa" class="py-10 md:py-16 bg-brand-blue-dark border-t border-brand-blue-mid/30 relative">
+      <div class="absolute inset-0 tech-grid-bg pointer-events-none z-0"></div>
+      <div class="container mx-auto px-6 relative z-20 max-w-7xl">
+        <div class="text-center mb-12 simple-reveal-hidden">
+          <span class="text-brand-blue-accent uppercase tracking-[0.3em] text-xs font-bold font-display">Venha preparado</span>
+          <h2 class="text-3xl md:text-5xl font-bold text-white mt-4 font-display uppercase">ESPAÇO DO EVENTO - <span class="text-brand-gold">ESPAÇO 2026</span></h2>
+          <p class="text-gray-400 mt-4 max-w-2xl mx-auto">Explore cada detalhe do nosso ecossistema preparado para impulsionar seus negócios.</p>
+        </div>
+        <div class="relative w-full aspect-video rounded-3xl overflow-hidden border border-brand-blue-mid shadow-[0_0_50px_rgba(0,85,255,0.15)] group simple-reveal-hidden">
+            <img src="./assets/mapa-evento.jpg" loading="lazy" class="w-full h-full object-cover brightness-90 group-hover:brightness-110 transition duration-700" alt="Mapa tridimensional do espaço do evento Connect Valley 2026, com palcos e estandes" />
+        </div>
+        <div class="text-center mt-8">
+            <p class="text-gray-600 text-[10px] uppercase tracking-widest font-display">*imagens meramente ilustrativas</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="cronograma" class="py-10 md:py-16 bg-brand-blue-dark border-t border-brand-blue-mid/30 relative">
+      <div class="absolute inset-0 tech-grid-bg pointer-events-none z-0"></div>
+        <div class="container mx-auto px-6 relative z-20 max-w-7xl">
+          <div class="text-center mb-12 simple-reveal-hidden">
+            <span class="text-brand-blue-accent uppercase tracking-[0.3em] text-xs font-bold font-display">Programe-se</span>
+            <h2 class="text-3xl md:text-5xl font-bold text-white mt-4 font-display uppercase">CRONOGRAMA DO <span class="text-brand-gold">EVENTO</span></h2>
+            <p class="text-gray-400 mt-4 max-w-2xl mx-auto">Acompanhe nossa agenda completa de palestras, oficinas e painéis nos dois dias de imersão.</p>
+          </div>
+          <div class="space-y-10">
+            <div class="simple-reveal-hidden">
+              <div class="flex items-center justify-center gap-4 mb-5">
+                <span class="h-px w-12 md:w-24 bg-gradient-to-r from-transparent to-brand-gold/60"></span>
+                <h3 class="font-display uppercase tracking-[0.25em] text-sm md:text-base font-bold text-white">Palco <span class="text-brand-gold">360</span></h3>
+                <span class="h-px w-12 md:w-24 bg-gradient-to-l from-transparent to-brand-gold/60"></span>
+              </div>
+              <div class="relative w-full aspect-video rounded-3xl overflow-hidden border border-brand-blue-mid shadow-[0_0_50px_rgba(0,85,255,0.15)] group">
+                <img src="./assets/cronograma-palco-360.jpg" loading="lazy" class="w-full h-full object-cover brightness-90 group-hover:brightness-110 transition duration-700" alt="Infográfico do cronograma do Palco 360 com a programação dos dias 16 e 17 de outubro do Connect Valley 2026" />
+              </div>
+            </div>
+            <div class="simple-reveal-hidden">
+              <div class="flex items-center justify-center gap-4 mb-5">
+                <span class="h-px w-12 md:w-24 bg-gradient-to-r from-transparent to-brand-gold/60"></span>
+                <h3 class="font-display uppercase tracking-[0.25em] text-sm md:text-base font-bold text-white">Palco <span class="text-brand-gold">Work</span></h3>
+                <span class="h-px w-12 md:w-24 bg-gradient-to-l from-transparent to-brand-gold/60"></span>
+              </div>
+              <div class="relative w-full aspect-video rounded-3xl overflow-hidden border border-brand-blue-mid shadow-[0_0_50px_rgba(0,85,255,0.15)] group">
+                <img src="./assets/cronograma-palco-work.jpg" loading="lazy" class="w-full h-full object-cover brightness-90 group-hover:brightness-110 transition duration-700" alt="Infográfico do cronograma do Palco Work com as oficinas e pitchs de vendas dos dias 16 e 17 de outubro do Connect Valley 2026" />
+              </div>
+            </div>
+          </div>
+        </div>
+    </section>
+
+    <section id="areas" class="py-10 md:py-16 bg-brand-blue-dark border-t border-brand-blue-mid/30 relative overflow-hidden">
+      <div class="absolute inset-0 tech-grid-bg pointer-events-none z-0"></div>
+      <div id="glow-areas" class="absolute -right-32 top-1/4 w-[400px] h-[400px] rounded-full bg-brand-gold/10 blur-[120px] pointer-events-none"></div>
+      <div class="container mx-auto px-6 relative z-20">
+        <div class="text-center mb-12 max-w-3xl mx-auto simple-reveal-hidden">
+          <span class="text-brand-blue-accent font-display uppercase tracking-[0.4em] text-xs font-bold">Mergulhe fundo</span>
+          <h2 class="font-display font-bold text-4xl md:text-6xl text-white mt-4 uppercase tracking-tight">ÁREAS DE <span class="text-brand-gold">CONTEÚDO</span></h2>
+          <p class="text-gray-400 font-syne mt-4 text-sm md:text-lg">Temas indispensáveis que movem o mercado e transformam negócios no mundo real.</p>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+          <!-- Card 1 -->
+          <div class="area-card simple-reveal-hidden bg-brand-blue-mid/20 border border-white/5 p-8 rounded-3xl transition duration-500 hover:border-brand-gold/40 hover:translate-y-[-4px]">
+            <div class="w-12 h-12 rounded-xl bg-brand-gold/10 flex items-center justify-center text-brand-gold mb-5 border border-brand-gold/20 shadow-[0_0_15px_rgba(242,201,76,0.1)]">
+              <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" />
+              </svg>
+            </div>
+            <h3 class="text-white font-display font-bold text-xl uppercase tracking-wide mb-3">Empreendedorismo</h3>
+            <p class="text-gray-400 font-syne text-sm leading-relaxed">Como construir negócios resilientes, escaláveis e lucrativos no novo cenário de mercado.</p>
+          </div>
+          <!-- Card 2 -->
+          <div class="area-card simple-reveal-hidden bg-brand-blue-mid/20 border border-white/5 p-8 rounded-3xl transition duration-500 hover:border-brand-gold/40 hover:translate-y-[-4px]">
+            <div class="w-12 h-12 rounded-xl bg-brand-gold/10 flex items-center justify-center text-brand-gold mb-5 border border-brand-gold/20 shadow-[0_0_15px_rgba(242,201,76,0.1)]">
+              <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <rect x="4" y="4" width="16" height="16" rx="2" stroke-linecap="round" stroke-linejoin="round" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 9h6v6H9zM9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 15h3M1 9h3M1 15h3" />
+              </svg>
+            </div>
+            <h3 class="text-white font-display font-bold text-xl uppercase tracking-wide mb-3">Inteligência Artificial</h3>
+            <p class="text-gray-400 font-syne text-sm leading-relaxed">Aplicações práticas da IA no dia a dia dos negócios: automação, produtividade e novas oportunidades.</p>
+          </div>
+          <!-- Card 3 -->
+          <div class="area-card simple-reveal-hidden bg-brand-blue-mid/20 border border-white/5 p-8 rounded-3xl transition duration-500 hover:border-brand-gold/40 hover:translate-y-[-4px]">
+            <div class="w-12 h-12 rounded-xl bg-brand-gold/10 flex items-center justify-center text-brand-gold mb-5 border border-brand-gold/20 shadow-[0_0_15px_rgba(242,201,76,0.1)]">
+              <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <circle cx="12" cy="12" r="10" stroke-linecap="round" stroke-linejoin="round" />
+                <circle cx="12" cy="12" r="6" stroke-linecap="round" stroke-linejoin="round" />
+                <circle cx="12" cy="12" r="2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </div>
+            <h3 class="text-white font-display font-bold text-xl uppercase tracking-wide mb-3">Vendas & Marketing</h3>
+            <p class="text-gray-400 font-syne text-sm leading-relaxed">Estratégias avançadas de aquisição, funis de conversão e crescimento de receita acelerado.</p>
+          </div>
+          <!-- Card 4 -->
+          <div class="area-card simple-reveal-hidden bg-brand-blue-mid/20 border border-white/5 p-8 rounded-3xl transition duration-500 hover:border-brand-gold/40 hover:translate-y-[-4px]">
+            <div class="w-12 h-12 rounded-xl bg-brand-gold/10 flex items-center justify-center text-brand-gold mb-5 border border-brand-gold/20 shadow-[0_0_15px_rgba(242,201,76,0.1)]">
+              <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <h3 class="text-white font-display font-bold text-xl uppercase tracking-wide mb-3">Finanças & Investimentos</h3>
+            <p class="text-gray-400 font-syne text-sm leading-relaxed">Gestão de fluxo de caixa, captação de recursos com investidores e inteligência financeira para crescer.</p>
+          </div>
+          <!-- Card 5 -->
+          <div class="area-card simple-reveal-hidden bg-brand-blue-mid/20 border border-white/5 p-8 rounded-3xl transition duration-500 hover:border-brand-gold/40 hover:translate-y-[-4px]">
+            <div class="w-12 h-12 rounded-xl bg-brand-gold/10 flex items-center justify-center text-brand-gold mb-5 border border-brand-gold/20 shadow-[0_0_15px_rgba(242,201,76,0.1)]">
+              <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <circle cx="12" cy="12" r="10" stroke-linecap="round" stroke-linejoin="round" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+              </svg>
+            </div>
+            <h3 class="text-white font-display font-bold text-xl uppercase tracking-wide mb-3">Tecnologia & Inovação</h3>
+            <p class="text-gray-400 font-syne text-sm leading-relaxed">Tendências de tecnologia emergentes, novos modelos de negócios digitais e transformação real.</p>
+          </div>
+          <!-- Card 6 -->
+          <div class="area-card simple-reveal-hidden bg-brand-blue-mid/20 border border-white/5 p-8 rounded-3xl transition duration-500 hover:border-brand-gold/40 hover:translate-y-[-4px]">
+            <div class="w-12 h-12 rounded-xl bg-brand-gold/10 flex items-center justify-center text-brand-gold mb-5 border border-brand-gold/20 shadow-[0_0_15px_rgba(242,201,76,0.1)]">
+              <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                <circle cx="9" cy="7" r="4" stroke-linecap="round" stroke-linejoin="round" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M16 3.13a4 4 0 0 1 0 7.75" />
+              </svg>
+            </div>
+            <h3 class="text-white font-display font-bold text-xl uppercase tracking-wide mb-3">Liderança & Cultura</h3>
+            <p class="text-gray-400 font-syne text-sm leading-relaxed">Como liderar equipes de alto rendimento, reter talentos e construir uma cultura inovadora.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="manifesto" class="py-10 md:py-16 bg-brand-blue-dark relative">
+      <div class="absolute inset-0 tech-grid-bg pointer-events-none z-0"></div>
+      <div class="container mx-auto px-6 relative z-20 max-w-7xl">
+        <div class="text-center mb-12 simple-reveal-hidden">
+          <span class="text-brand-blue-accent uppercase tracking-[0.3em] text-xs font-bold font-display">Play</span>
+          <h2 class="text-3xl md:text-5xl font-display font-bold text-white mt-4 uppercase">Manifesto <span class="text-brand-gold">Connect</span></h2>
+        </div>
+        <div class="relative w-full aspect-video rounded-3xl overflow-hidden border border-brand-blue-mid shadow-[0_0_50px_rgba(0,85,255,0.15)] group simple-reveal-hidden">
+          <video id="manifesto-video" class="w-full h-full object-cover" poster="./assets/backgroundd.JPG">
+            <source src="./assets/hero-video.mp4" type="video/mp4" />
+          </video>
+          <div id="play-overlay" role="button" tabindex="0" aria-label="Reproduzir vídeo do manifesto" class="absolute inset-0 bg-black/40 flex items-center justify-center cursor-pointer transition duration-300 group-hover:bg-black/30 z-20">
+            <div class="w-24 h-24 bg-brand-gold/90 rounded-full flex items-center justify-center shadow-lg backdrop-blur-sm hover:scale-110 transition duration-300">
+              <svg class="w-10 h-10 text-brand-blue-dark ml-2" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="imersao" class="py-10 md:py-16 bg-brand-blue-dark relative border-t border-brand-blue-mid/30 overflow-hidden">
+      <div class="absolute inset-0 tech-grid-bg pointer-events-none z-0"></div>
+      <div class="container mx-auto px-6 relative z-20">
+        <div class="text-center mb-12 simple-reveal-hidden">
+          <span class="text-brand-blue-accent uppercase tracking-[0.3em] text-xs font-bold font-display">Experience</span>
+          <h2 class="text-3xl md:text-5xl font-display font-bold text-white mt-4 uppercase">VIVA A <span class="text-brand-gold">IMERSÃO</span></h2>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 auto-rows-[250px] gap-4 md:gap-6">
+          <div class="col-span-1 sm:col-span-2 row-span-2 relative group overflow-hidden rounded-2xl border border-brand-blue-mid hover-glow-blue cursor-pointer">
+            <img src="./assets/foto-dr-roneely.jpg" loading="lazy" class="w-full h-full object-cover transition duration-700 group-hover:scale-110 brightness-90 group-hover:brightness-110" alt="Doutor Roneely discursando no palco central 360 graus do Connect Valley" />
+            <div class="absolute inset-0 bg-brand-blue-dark mix-blend-multiply opacity-50 group-hover:opacity-0 transition duration-500"></div>
+            <div class="absolute bottom-6 left-6 z-20">
+              <span class="text-brand-gold font-bold uppercase tracking-wider text-sm mb-1 block">Palco 360°</span>
+              <h3 class="text-2xl font-bold text-white font-display uppercase">O Palco da Inovação</h3>
+            </div>
+          </div>
+          <div class="col-span-1 md:col-span-2 relative group overflow-hidden rounded-2xl border border-brand-blue-mid hover-glow-blue cursor-pointer">
+            <img src="./assets/foto-3.webp" loading="lazy" class="w-full h-full object-cover transition duration-700 group-hover:scale-110 brightness-90 group-hover:brightness-110" alt="Público engajado assistindo às palestras na plenária" />
+            <div class="absolute inset-0 bg-brand-blue-dark mix-blend-multiply opacity-50 group-hover:opacity-0 transition duration-500"></div>
+          </div>
+          <div class="col-span-1 md:row-span-2 relative group overflow-hidden rounded-2xl border border-brand-blue-mid hover-glow-blue cursor-pointer">
+            <img src="./assets/foto-5.JPG" loading="lazy" class="w-full h-full object-cover transition duration-700 group-hover:scale-110 brightness-90 group-hover:brightness-110" alt="Participantes interagindo na área comum do evento" />
+            <div class="absolute inset-0 bg-brand-blue-dark mix-blend-multiply opacity-50 group-hover:opacity-0 transition duration-500"></div>
+            <div class="absolute bottom-6 left-6 z-20">
+              <h3 class="text-xl font-bold text-white font-display uppercase">Networking</h3>
+            </div>
+          </div>
+          <div class="col-span-1 row-span-1 relative group overflow-hidden rounded-2xl border border-brand-blue-mid hover-glow-blue cursor-pointer">
+            <img src="./assets/foto-4.JPG" loading="lazy" class="w-full h-full object-cover transition duration-700 group-hover:scale-110 brightness-90 group-hover:brightness-110" alt="Palestrante apresentando slides na plenária" />
+            <div class="absolute inset-0 bg-brand-blue-dark mix-blend-multiply opacity-50 group-hover:opacity-0 transition duration-500"></div>
+          </div>
+          <div class="col-span-1 md:row-span-2 relative group overflow-hidden rounded-2xl border border-brand-blue-mid hover-glow-blue cursor-pointer">
+            <img src="./assets/foto-2.JPG" loading="lazy" class="w-full h-full object-cover transition duration-700 group-hover:scale-110 brightness-90 group-hover:brightness-110" alt="Participantes sorrindo e tirando fotos no evento" />
+            <div class="absolute inset-0 bg-brand-blue-dark mix-blend-multiply opacity-50 group-hover:opacity-0 transition duration-500"></div>
+          </div>
+          <div class="col-span-1 row-span-1 relative group overflow-hidden rounded-2xl border border-brand-blue-mid hover-glow-blue cursor-pointer">
+            <img src="./assets/foto-8.JPG" loading="lazy" class="w-full h-full object-cover transition duration-700 group-hover:scale-110 brightness-90 group-hover:brightness-110" alt="Área de credenciamento e entrada dos participantes" />
+            <div class="absolute inset-0 bg-brand-blue-dark mix-blend-multiply opacity-50 group-hover:opacity-0 transition duration-500"></div>
+          </div>
+          <div class="col-span-1 row-span-1 relative group overflow-hidden rounded-2xl border border-brand-blue-mid hover-glow-blue cursor-pointer">
+            <img src="./assets/foto-9.JPG" loading="lazy" class="w-full h-full object-cover transition duration-700 group-hover:scale-110 brightness-90 group-hover:brightness-110" alt="Estandes de patrocinadores e networking no pavilhão" />
+            <div class="absolute inset-0 bg-brand-blue-dark mix-blend-multiply opacity-50 group-hover:opacity-0 transition duration-500"></div>
+          </div>
+          <div class="col-span-1 md:col-span-2 row-span-1 relative group overflow-hidden rounded-2xl border border-brand-blue-mid hover-glow-blue cursor-pointer">
+            <img src="./assets/foto-7-novo.JPG" loading="lazy" class="w-full h-full object-cover transition duration-700 group-hover:scale-110 brightness-90 group-hover:brightness-110" alt="Painel de discussão e debate no palco central" />
+            <div class="absolute inset-0 bg-brand-blue-dark mix-blend-multiply opacity-50 group-hover:opacity-0 transition duration-500"></div>
+          </div>
+          <div class="col-span-1 row-span-1 relative group overflow-hidden rounded-2xl border border-brand-blue-mid hover-glow-blue cursor-pointer">
+            <img src="./assets/foto-17.JPG" loading="lazy" class="w-full h-full object-cover transition duration-700 group-hover:scale-110 brightness-90 group-hover:brightness-110" alt="Equipe de organização reunida no palco do Connect Valley" />
+            <div class="absolute inset-0 bg-brand-blue-dark mix-blend-multiply opacity-50 group-hover:opacity-0 transition duration-500"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="depoimentos" class="py-10 md:py-16 bg-brand-blue-mid relative overflow-hidden border-t border-brand-blue-mid/30">
+      <div class="absolute inset-0 tech-grid-bg pointer-events-none z-0"></div>
+      <div id="glow-depoimentos" class="absolute inset-0 opacity-25 pointer-events-none" style="background: radial-gradient(ellipse at center, rgba(0,85,255,0.2) 0%, transparent 70%)"></div>
+      <div class="container mx-auto px-6 relative z-20">
+        <div class="text-center mb-12 max-w-3xl mx-auto simple-reveal-hidden">
+          <span class="text-brand-blue-accent font-display uppercase tracking-[0.4em] text-xs font-bold">Vozes do Ecossistema</span>
+          <h2 class="font-display font-bold text-4xl md:text-5xl text-white mt-4 uppercase tracking-tight">O QUE DIZEM <span class="text-brand-gold">QUEM VIVEU</span></h2>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+          <!-- Card 1 -->
+          <div class="testimonial-card simple-reveal-hidden bg-brand-blue-dark/60 border border-white/5 p-8 rounded-3xl relative transition duration-500 hover:border-brand-gold/30">
+            <p class="text-gray-300 font-syne leading-relaxed mb-8 text-sm pt-6">O Connect Valley foi transformador. As conexões que fiz em dois dias me abriram portas que levaria anos para encontrar sozinho. Um ecossistema de verdade.</p>
+            <div class="flex items-center gap-4">
+              <div class="w-11 h-11 rounded-full bg-brand-blue-accent/20 border border-brand-blue-accent/30 flex items-center justify-center text-brand-gold font-display font-bold text-base">A</div>
+              <div>
+                <div class="text-white font-display font-semibold text-sm uppercase tracking-wide">Participante 2024</div>
+                <div class="text-gray-500 font-syne text-[10px] uppercase tracking-widest mt-0.5">Empresário</div>
+              </div>
+            </div>
+          </div>
+          <!-- Card 2 -->
+          <div class="testimonial-card simple-reveal-hidden bg-brand-blue-dark/60 border border-white/5 p-8 rounded-3xl relative transition duration-500 hover:border-brand-gold/30">
+            <p class="text-gray-300 font-syne leading-relaxed mb-8 text-sm pt-6">Um evento diferente de tudo que já participei no Ceará. Organização impecável, conteúdo de alto nível e networking real. Saí com novos parceiros de negócios.</p>
+            <div class="flex items-center gap-4">
+              <div class="w-11 h-11 rounded-full bg-brand-blue-accent/20 border border-brand-blue-accent/30 flex items-center justify-center text-brand-gold font-display font-bold text-base">M</div>
+              <div>
+                <div class="text-white font-display font-semibold text-sm uppercase tracking-wide">Participante 2024</div>
+                <div class="text-gray-500 font-syne text-[10px] uppercase tracking-widest mt-0.5">Empreendedora</div>
+              </div>
+            </div>
+          </div>
+          <!-- Card 3 -->
+          <div class="testimonial-card simple-reveal-hidden bg-brand-blue-dark/60 border border-white/5 p-8 rounded-3xl relative transition duration-500 hover:border-brand-gold/30">
+            <p class="text-gray-300 font-syne leading-relaxed mb-8 text-sm pt-6">Fechei parcerias incríveis durante o evento. O Connect Valley é o lugar onde negócios de verdade acontecem. Já estou garantindo minha vaga para 2026.</p>
+            <div class="flex items-center gap-4">
+              <div class="w-11 h-11 rounded-full bg-brand-blue-accent/20 border border-brand-blue-accent/30 flex items-center justify-center text-brand-gold font-display font-bold text-base">R</div>
+              <div>
+                <div class="text-white font-display font-semibold text-sm uppercase tracking-wide">Participante 2024</div>
+                <div class="text-gray-500 font-syne text-[10px] uppercase tracking-widest mt-0.5">Diretor Comercial</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <section id="palestrantes" class="py-10 md:py-16 bg-brand-blue-dark relative overflow-hidden border-t border-brand-blue-mid/30">
+      <div class="absolute inset-0 tech-grid-bg pointer-events-none z-0"></div>
+      <div id="glow-palestrantes" class="absolute -left-32 bottom-1/4 w-[400px] h-[400px] rounded-full bg-brand-blue-accent/10 blur-[130px] pointer-events-none"></div>
+      <div class="container mx-auto px-6 relative z-20">
+        <div class="text-center mb-12 max-w-3xl mx-auto simple-reveal-hidden">
+          <span class="text-brand-blue-accent font-display uppercase tracking-[0.3em] text-xs font-bold">Line Up</span>
+          <h2 class="font-display font-bold text-4xl md:text-6xl text-white mt-4 uppercase tracking-tight">PALESTRANTES <span class="text-brand-gold">CONFIRMADOS</span></h2>
+          <p class="text-gray-400 font-syne mt-4 text-sm md:text-lg">Clique nos cards abaixo para visualizar detalhes sobre suas trajetórias (em breve).</p>
+        </div>
+      </div>
+      <div class="swiper-speakers swiper simple-reveal-hidden pl-6 md:pl-20">
+        <div class="swiper-wrapper">
+          <!-- Slide 1 - Roneely Feitosa -->
+          <div class="swiper-slide">
+            <div class="w-[280px] md:w-[320px] group relative cursor-pointer" role="button" tabindex="0" aria-label="Ver detalhes do palestrante Roneely Feitosa" onclick="openSpeakerModal('Roneely Feitosa', 'Connect Valley')">
+              <div class="rounded-3xl overflow-hidden aspect-[3/4] mb-6 relative shadow-2xl border border-brand-blue-mid group-hover:border-brand-gold/60 transition duration-500 hover:shadow-[0_0_30px_rgba(242,201,76,0.15)]">
+                <img src="./assets/roneely-feitosa.jpg" alt="Roneely Feitosa" loading="lazy" class="w-full h-full object-cover brightness-90 group-hover:brightness-110 group-hover:scale-105 transition duration-700" />
+                <div class="absolute inset-0 bg-gradient-to-t from-brand-blue-dark via-brand-blue-dark/20 to-transparent z-10"></div>
+                <div class="absolute bottom-0 left-0 right-0 p-6 z-20">
+                  <h4 class="font-display font-bold text-2xl text-white uppercase tracking-tight">Roneely Feitosa</h4>
+                  <p class="text-brand-gold text-xs uppercase font-bold tracking-wider mt-1">RF Group</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Slide 2 - Severino Neto -->
+          <div class="swiper-slide">
+            <div class="w-[280px] md:w-[320px] group relative cursor-pointer" role="button" tabindex="0" aria-label="Ver detalhes do palestrante Severino Neto" onclick="openSpeakerModal('Severino Neto', 'Connect Valley')">
+              <div class="rounded-3xl overflow-hidden aspect-[3/4] mb-6 relative shadow-2xl border border-brand-blue-mid group-hover:border-brand-gold/60 transition duration-500 hover:shadow-[0_0_30px_rgba(242,201,76,0.15)]">
+                <img src="./assets/severino-neto.jpg" alt="Severino Neto" loading="lazy" class="w-full h-full object-cover brightness-90 group-hover:brightness-110 group-hover:scale-105 transition duration-700" />
+                <div class="absolute inset-0 bg-gradient-to-t from-brand-blue-dark via-brand-blue-dark/20 to-transparent z-10"></div>
+                <div class="absolute bottom-0 left-0 right-0 p-6 z-20">
+                  <h4 class="font-display font-bold text-2xl text-white uppercase tracking-tight">Severino Neto</h4>
+                  <p class="text-brand-gold text-xs uppercase font-bold tracking-wider mt-1">São Luiz Supermercado</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Slide 3 - Nelson Rossi -->
+          <div class="swiper-slide">
+            <div class="w-[280px] md:w-[320px] group relative cursor-pointer" role="button" tabindex="0" aria-label="Ver detalhes do palestrante Nelson Rossi" onclick="openSpeakerModal('Nelson Rossi', 'Connect Valley')">
+              <div class="rounded-3xl overflow-hidden aspect-[3/4] mb-6 relative shadow-2xl border border-brand-blue-mid group-hover:border-brand-gold/60 transition duration-500 hover:shadow-[0_0_30px_rgba(242,201,76,0.15)]">
+                <img src="./assets/nelson-rossi.jpg" alt="Nelson Rossi" loading="lazy" class="w-full h-full object-cover brightness-90 group-hover:brightness-110 group-hover:scale-105 transition duration-700" />
+                <div class="absolute inset-0 bg-gradient-to-t from-brand-blue-dark via-brand-blue-dark/20 to-transparent z-10"></div>
+                <div class="absolute bottom-0 left-0 right-0 p-6 z-20">
+                  <h4 class="font-display font-bold text-2xl text-white uppercase tracking-tight">Nelson Rossi</h4>
+                  <p class="text-brand-gold text-xs uppercase font-bold tracking-wider mt-1">Grendene</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Slide 3 -->
+          <div class="swiper-slide">
+            <div class="w-[280px] md:w-[320px] group relative cursor-pointer" role="button" tabindex="0" aria-label="Ver detalhes do palestrante Em Breve" onclick="openSpeakerModal('EM BREVE', 'Surpresa')">
+              <div class="rounded-3xl overflow-hidden aspect-[3/4] mb-6 relative shadow-2xl border border-brand-blue-mid bg-brand-blue-mid/20 flex flex-col justify-end p-6 group-hover:border-brand-gold/50 transition duration-500 hover:shadow-[0_0_30px_rgba(242,201,76,0.05)]">
+                <div class="absolute inset-0 bg-gradient-to-t from-brand-blue-dark via-brand-blue-dark/40 to-transparent z-10"></div>
+                <div class="absolute inset-0 flex items-center justify-center">
+                  <span class="text-7xl text-brand-blue-accent/30 group-hover:text-brand-gold/50 group-hover:scale-110 transition duration-500 font-display font-bold">?</span>
+                </div>
+                <div class="relative z-20">
+                  <h4 class="font-display font-bold text-2xl text-gray-400 uppercase tracking-tight group-hover:text-white transition duration-300">Em Breve</h4>
+                  <p class="text-brand-gold/70 font-syne text-xs uppercase font-bold tracking-wider mt-1">Surpresa</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Slide 4 -->
+          <div class="swiper-slide">
+            <div class="w-[280px] md:w-[320px] group relative cursor-pointer" role="button" tabindex="0" aria-label="Ver detalhes do palestrante Em Breve" onclick="openSpeakerModal('EM BREVE', 'Surpresa')">
+              <div class="rounded-3xl overflow-hidden aspect-[3/4] mb-6 relative shadow-2xl border border-brand-blue-mid bg-brand-blue-mid/20 flex flex-col justify-end p-6 group-hover:border-brand-gold/50 transition duration-500 hover:shadow-[0_0_30px_rgba(242,201,76,0.05)]">
+                <div class="absolute inset-0 bg-gradient-to-t from-brand-blue-dark via-brand-blue-dark/40 to-transparent z-10"></div>
+                <div class="absolute inset-0 flex items-center justify-center">
+                  <span class="text-7xl text-brand-blue-accent/30 group-hover:text-brand-gold/50 group-hover:scale-110 transition duration-500 font-display font-bold">?</span>
+                </div>
+                <div class="relative z-20">
+                  <h4 class="font-display font-bold text-2xl text-gray-400 uppercase tracking-tight group-hover:text-white transition duration-300">Em Breve</h4>
+                  <p class="text-brand-gold/70 font-syne text-xs uppercase font-bold tracking-wider mt-1">Surpresa</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="ingressos" class="py-10 md:py-16 bg-brand-blue-dark relative border-t border-brand-blue-mid/30">
+      <div class="absolute inset-0 tech-grid-bg pointer-events-none z-0"></div>
+      <div id="glow-ingressos" class="absolute inset-0 bg-blue-glow opacity-20"></div>
+      <div class="container mx-auto px-4 md:px-6 relative z-20">
+        
+        <div class="relative w-full max-w-2xl mx-auto mb-12 text-center simple-reveal-hidden">
+          <h3 class="font-display font-bold text-3xl md:text-4xl text-white uppercase tracking-wider mb-2">PRÉ-VENDA INICIADA</h3>
+          <p class="text-brand-gold font-syne font-bold uppercase tracking-[0.2em] mb-4 text-xl text-shadow-glow-blue">Garanta seu lugar no lote promocional</p>
+          <div class="h-16 border border-white/10 rounded-2xl p-2 bg-[#050B14] flex gap-1 shadow-[0_0_30px_rgba(242,201,76,0.1)]">
+            <div class="h-full flex-1 rounded-sm bg-brand-blue-accent/50"></div>
+            <div class="h-full flex-1 rounded-sm bg-brand-gold/80"></div>
+            <div class="h-full flex-1 rounded-sm bg-white/5"></div>
+            <div class="h-full flex-1 rounded-sm bg-white/5"></div>
+            <div class="h-full flex-1 rounded-sm bg-white/5"></div>
+            <div class="h-full flex-1 rounded-sm bg-white/5"></div>
+            <div class="h-full flex-1 rounded-sm bg-white/5"></div>
+            <div class="h-full flex-1 rounded-sm bg-white/5"></div>
+            <div class="h-full flex-1 rounded-sm bg-white/5"></div>
+            <div class="h-full flex-1 rounded-sm bg-white/5"></div>
+            <div class="h-full flex-1 rounded-sm bg-white/5"></div>
+            <div class="h-full flex-1 rounded-sm bg-white/5"></div>
+            <div class="h-full flex-1 rounded-sm bg-white/5"></div>
+            <div class="h-full flex-1 rounded-sm bg-white/5"></div>
+            <div class="h-full flex-1 rounded-sm bg-white/5"></div>
+            <div class="h-full flex-1 rounded-sm bg-white/5"></div>
+            <div class="h-full flex-1 rounded-sm bg-white/5"></div>
+            <div class="h-full flex-1 rounded-sm bg-white/5"></div>
+            <div class="h-full flex-1 rounded-sm bg-white/5"></div>
+            <div class="h-full flex-1 rounded-sm bg-white/5"></div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto mb-24">
+          
+          <!-- Lote Promocional (Active) -->
+          <div class="simple-reveal-hidden rounded-3xl p-8 border-2 border-brand-gold bg-brand-gold/5 relative shadow-[0_0_40px_rgba(242,201,76,0.15)] flex flex-col items-center text-center transform hover:-translate-y-2 transition-transform duration-300">
+             <div class="absolute -top-4 bg-brand-gold text-brand-blue-dark px-6 py-1 rounded-full font-display font-bold text-xs uppercase tracking-widest shadow-lg">Lote Atual</div>
+             <h4 class="text-white text-xl font-display font-bold uppercase mb-2 mt-4">Lote Promocional</h4>
+             <div class="text-3xl font-display font-bold text-brand-gold mb-6">R$ 167,00</div>
+             <ul class="text-gray-300 font-syne text-sm mb-8 space-y-3 text-left w-full check-list border-t border-brand-gold/20 pt-6">
+                <li>Acesso aos 2 dias de evento</li>
+                <li>Acesso à plenária principal</li>
+                <li>Networking de alto nível</li>
+                <li>Certificado de participação</li>
+             </ul>
+             <a href="https://doity.com.br/connect-valley-2026" target="_blank" rel="noopener noreferrer" aria-label="Comprar ingresso do lote promocional na Doity (abre em nova aba)" class="mt-auto w-full py-4 rounded-xl bg-brand-gold text-brand-blue-dark font-display font-bold uppercase tracking-widest text-sm hover:bg-white transition-all duration-300 shadow-lg shadow-brand-gold/20">Comprar Agora</a>
+          </div>
+
+          <!-- Lote 1 -->
+          <div class="simple-reveal-hidden rounded-3xl p-8 border border-gray-800 bg-brand-blue-mid/20 flex flex-col items-center text-center opacity-70">
+             <h4 class="text-gray-400 text-xl font-display font-bold uppercase mb-2 mt-4">1º Lote</h4>
+             <div class="text-3xl font-display font-bold text-white mb-6">R$ 207,00</div>
+             <ul class="text-gray-500 font-syne text-sm mb-8 space-y-3 text-left w-full border-t border-gray-800 pt-6">
+                <li>Acesso aos 2 dias de evento</li>
+                <li>Acesso à plenária principal</li>
+                <li>Networking de alto nível</li>
+                <li>Certificado de participação</li>
+             </ul>
+             <button disabled class="mt-auto w-full py-4 rounded-xl border border-gray-800 text-gray-500 font-display font-bold uppercase tracking-widest text-sm cursor-not-allowed bg-transparent">Em Breve</button>
+          </div>
+
+          <!-- Lote 2 -->
+          <div class="simple-reveal-hidden rounded-3xl p-8 border border-gray-800 bg-brand-blue-mid/20 flex flex-col items-center text-center opacity-50">
+             <h4 class="text-gray-505 text-xl font-display font-bold uppercase mb-2 mt-4">2º Lote</h4>
+             <div class="text-2xl font-display font-bold text-gray-600 mb-6">Em Breve</div>
+             <ul class="text-gray-600 font-syne text-sm mb-8 space-y-3 text-left w-full border-t border-gray-800/50 pt-6">
+                <li>Acesso aos 2 dias de evento</li>
+                <li>Acesso à plenária principal</li>
+                <li>Networking de alto nível</li>
+                <li>Certificado de participação</li>
+             </ul>
+             <button disabled class="mt-auto w-full py-4 rounded-xl border border-gray-800 text-gray-600 font-display font-bold uppercase tracking-widest text-sm cursor-not-allowed bg-transparent">Em Breve</button>
+          </div>
+
+          <!-- Lote 3 -->
+          <div class="simple-reveal-hidden rounded-3xl p-8 border border-gray-800 bg-brand-blue-mid/20 flex flex-col items-center text-center opacity-40">
+             <h4 class="text-gray-600 text-xl font-display font-bold uppercase mb-2 mt-4">3º Lote</h4>
+             <div class="text-2xl font-display font-bold text-gray-700 mb-6">Em Breve</div>
+             <ul class="text-gray-700 font-syne text-sm mb-8 space-y-3 text-left w-full border-t border-gray-800/30 pt-6">
+                <li>Acesso aos 2 dias de evento</li>
+                <li>Acesso à plenária principal</li>
+                <li>Networking de alto nível</li>
+                <li>Certificado de participação</li>
+             </ul>
+             <button disabled class="mt-auto w-full py-4 rounded-xl border border-gray-800 text-gray-700 font-display font-bold uppercase tracking-widest text-sm cursor-not-allowed bg-transparent">Em Breve</button>
+          </div>
+
+        </div>
+
+        <section id="patrocinio" class="py-10 md:py-16 relative border-t border-brand-blue-mid/30">
+      <div class="absolute inset-0 tech-grid-bg pointer-events-none z-0"></div>
+          <div id="glow-patrocinio" class="absolute -right-32 bottom-1/4 w-[500px] h-[500px] rounded-full bg-brand-gold/10 blur-[140px] pointer-events-none"></div>
+          <div class="container mx-auto px-6 relative z-20">
+            <div class="text-center mb-12 max-w-3xl mx-auto simple-reveal-hidden">
+              <span class="text-brand-blue-accent font-display uppercase tracking-[0.3em] text-xs font-bold">Oportunidade de Negócios</span>
+              <h2 class="font-display font-bold text-4xl md:text-5xl text-white mt-4 uppercase tracking-tight">CATEGORIAS DE <span class="text-brand-gold">PATROCÍNIO</span></h2>
+              <p class="text-gray-400 font-syne mt-4 text-sm md:text-lg">Exponha sua marca para os maiores players do mercado de tecnologia e inovação.</p>
+            </div>
+
+            <div class="grid lg:grid-cols-4 gap-8 max-w-7xl mx-auto patrocinio-grid">
+              <!-- Prata -->
+              <div class="sponsor-card simple-reveal-hidden rounded-3xl p-8 border border-gray-850 bg-brand-blue-mid/10 hover:border-gray-500 transition duration-500 group flex flex-col justify-between">
+                <div>
+                  <div class="mb-6"><h3 class="text-2xl font-display font-bold text-gray-400 uppercase italic">PRATA</h3></div>
+                  <ul class="space-y-4 font-syne text-sm text-gray-400 mb-8 check-list">
+                    <li>Direito a um balcão totem para divulgação da marca.</li>
+                    <li>Logo na área de patrocinadores do site oficial do evento.</li>
+                    <li>Divulgação da Marca apoiadora no Instagram do evento.</li>
+                    <li>2 vouchers para participar do evento, por empresa.</li>
+                    <li>1 Vaga para acesso a Área VIP.</li>
+                    <li>1 Vaga para o lançamento oficial.</li>
+                  </ul>
+                </div>
+                <div class="mt-auto"><a href="https://wa.me/5588993832512?text=Ol%C3%A1%21+Tenho+interesse+na+Categoria+PRATA+do+Connect+Valley." target="_blank" rel="noopener noreferrer" aria-label="Reservar categoria Prata via WhatsApp (abre em nova aba)" class="block w-full py-4 text-center border border-gray-600 text-gray-300 font-display font-bold uppercase tracking-widest text-xs rounded-xl hover:bg-gray-200 hover:text-brand-blue-dark transition-all duration-300">Reservar Categoria</a></div>
+              </div>
+
+              <!-- Ouro -->
+              <div class="sponsor-card simple-reveal-hidden rounded-3xl p-8 border border-brand-gold/40 bg-brand-gold/5 lg:transform lg:-translate-y-4 shadow-[0_0_40px_rgba(242,201,76,0.1)] transition duration-500 group flex flex-col justify-between">
+                <div>
+                  <div class="mb-6"><h3 class="text-3xl font-display font-bold text-brand-gold uppercase italic">OURO</h3></div>
+                  <ul class="space-y-4 font-syne text-sm text-gray-300 mb-8 check-list">
+                    <li class="text-white font-bold">Stand para divulgação da marca 3m x 3m x 3m.</li>
+                    <li>Logo em destaque maior no site, materiais promocionais e cenário oficial.</li>
+                    <li>Ministrar uma oficina no palco Valley (15min).</li>
+                    <li>Inserção de flyers.</li>
+                    <li>Logo na área de patrocinadores do site.</li>
+                    <li>Divulgação da Marca no Instagram.</li>
+                    <li>5 Vouchers para participar do evento.</li>
+                    <li>2 Vagas para acesso a Área VIP.</li>
+                    <li>2 Vagas para o lançamento oficial.</li>
+                  </ul>
+                </div>
+                <div class="mt-auto"><a href="https://wa.me/5588993832512?text=Ol%C3%A1%21+Tenho+interesse+na+Categoria+OURO+do+Connect+Valley." target="_blank" rel="noopener noreferrer" aria-label="Reservar categoria Ouro via WhatsApp (abre em nova aba)" class="block w-full py-4 text-center border border-brand-gold text-brand-gold font-display font-bold uppercase tracking-widest text-xs rounded-xl hover:bg-white hover:text-brand-blue-dark transition-all duration-300 shadow-lg shadow-brand-gold/20">Reservar Categoria</a></div>
+              </div>
+
+              <!-- Ouro+ -->
+              <div class="sponsor-card simple-reveal-hidden rounded-3xl p-8 border border-brand-gold/40 bg-brand-gold/5 transition duration-500 group flex flex-col justify-between">
+                <div>
+                  <div class="mb-6"><h3 class="text-2xl font-display font-bold text-brand-gold uppercase italic">OURO+</h3></div>
+                  <ul class="space-y-4 font-syne text-sm text-gray-300 mb-8 check-list">
+                    <li class="text-white font-bold">Stand para divulgação da marca 4m x 3m x 3m.</li>
+                    <li>Uma palestra no palco Valley (20min).</li>
+                    <li>Material promocional e cenário oficial logo.</li>
+                    <li>Logo na área de patrocinadores do site oficial.</li>
+                    <li>Divulgação da Marca apoiadora no Instagram do evento.</li>
+                    <li>Inserção de flyers.</li>
+                    <li>8 vouchers para participar do evento, por empresa.</li>
+                    <li>3 vagas para acesso a Área VIP.</li>
+                    <li>3 vagas para o lançamento oficial.</li>
+                  </ul>
+                </div>
+                <div class="mt-auto"><a href="https://wa.me/5588993832512?text=Ol%C3%A1%21+Tenho+interesse+na+Categoria+OURO+do+Connect+Valley." target="_blank" rel="noopener noreferrer" aria-label="Reservar categoria Ouro Plus via WhatsApp (abre em nova aba)" class="block w-full py-4 text-center border border-brand-gold text-brand-gold font-display font-bold uppercase tracking-widest text-xs rounded-xl hover:bg-white hover:text-brand-blue-dark transition-all duration-300 shadow-lg shadow-brand-gold/20">Reservar Categoria</a></div>
+              </div>
+
+              <!-- Diamante -->
+              <div class="sponsor-card simple-reveal-hidden rounded-3xl p-8 border border-cyan-400/30 bg-cyan-400/5 transition duration-500 group flex flex-col justify-between">
+                <div>
+                  <div class="mb-6"><h3 class="text-2xl font-display font-bold text-cyan-400 uppercase italic">DIAMANTE</h3></div>
+                  <ul class="space-y-4 font-syne text-sm text-gray-400 mb-8 check-list">
+                    <li class="text-cyan-400 font-bold">Exclusividade por segmento nessa cota.</li>
+                    <li class="text-white font-bold">Uma palestra no palco Valley (15min).</li>
+                    <li>Stand 3m x 3m x 3m.</li>
+                    <li>Exposição da marca no telão durante os intervalos.</li>
+                    <li>Logo em destaque maior no site e materiais.</li>
+                    <li>Logo na área de patrocinadores do site.</li>
+                    <li>Divulgação da Marca no Instagram.</li>
+                    <li>Inserção de flyers.</li>
+                    <li>8 Vouchers para participar do evento.</li>
+                    <li>2 Vagas para acesso a Área VIP.</li>
+                    <li>2 Vagas para o lançamento oficial.</li>
+                  </ul>
+                </div>
+                <div class="mt-auto"><a href="https://wa.me/5588993832512?text=Ol%C3%A1%21+Tenho+interesse+na+Categoria+DIAMANTE+do+Connect+Valley." target="_blank" rel="noopener noreferrer" aria-label="Reservar categoria Diamante via WhatsApp (abre em nova aba)" class="block w-full py-4 text-center border border-cyan-400 text-cyan-400 font-display font-bold uppercase tracking-widest text-xs rounded-xl hover:bg-cyan-400 hover:text-brand-blue-dark transition-all duration-300">Reservar Categoria</a></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <div class="text-center mt-8">
+          <p class="text-gray-400 font-syne text-sm">Precisa de ingressos corporativos? <a href="https://wa.me/5588993832512?text=Ol%C3%A1%21+Gostaria+de+saber+sobre+ingressos+corporativos+para+o+Connect+Valley." target="_blank" rel="noopener noreferrer" aria-label="Entre em contato via WhatsApp para ingressos corporativos (abre em nova aba)" class="text-brand-gold font-bold hover:underline">Entre em contato</a></p>
+        </div>
+      </div>
+    </section>
+
+    <section id="construtores" class="py-10 md:py-16 bg-brand-blue-dark border-t border-brand-blue-mid/30 relative overflow-hidden">
+      <div class="absolute inset-0 tech-grid-bg pointer-events-none z-0"></div>
+      <div id="glow-construtores" class="absolute -left-32 top-1/3 w-[350px] h-[350px] rounded-full bg-brand-blue-accent/10 blur-[120px] pointer-events-none"></div>
+      <div class="container mx-auto px-6 relative z-20 text-center mb-12 max-w-3xl simple-reveal-hidden">
+        <span class="text-brand-blue-accent font-display uppercase tracking-[0.3em] text-xs font-bold">Quem faz acontecer</span>
+        <h2 class="font-display font-bold text-4xl md:text-5xl text-white mt-4 uppercase tracking-tight">CONSTRUTORES <span class="text-brand-gold">DO VALE</span></h2>
+        <p class="text-gray-400 font-syne mt-4 text-sm md:text-lg">Empresas e marcas que acreditam e impulsionam o ecossistema regional.</p>
+      </div>
+
+      <div class="container mx-auto px-6 relative z-20 space-y-16">
+
+        <!-- Cota Diamante -->
+        <div class="simple-reveal-hidden">
+          <div class="flex items-center justify-center gap-4 mb-8">
+            <span class="h-px w-12 md:w-24 bg-gradient-to-r from-transparent to-cyan-400/60"></span>
+            <h3 class="font-display font-bold uppercase italic tracking-[0.2em] text-xl md:text-3xl text-cyan-400">Diamante</h3>
+            <span class="h-px w-12 md:w-24 bg-gradient-to-l from-transparent to-cyan-400/60"></span>
+          </div>
+          <div class="flex flex-wrap justify-center gap-6">
+            <div class="sponsor-card rounded-xl p-4 w-72 md:w-96 h-44 md:h-56 flex items-center justify-center border border-cyan-400/30 hover:border-cyan-400/70 shadow-[0_0_30px_rgba(34,211,238,0.08)] transition duration-500 group"><img src="./assets/logos/diamante/d-r.png" loading="lazy" alt="Logotipo D&amp;R — Patrocinador Diamante" class="max-w-[85%] max-h-[78%] object-contain opacity-90 group-hover:opacity-100 transition duration-500" /></div>
+            <div class="sponsor-card rounded-xl p-4 w-72 md:w-96 h-44 md:h-56 flex items-center justify-center border border-cyan-400/30 hover:border-cyan-400/70 shadow-[0_0_30px_rgba(34,211,238,0.08)] transition duration-500 group"><img src="./assets/logos/diamante/nort-motos.png" loading="lazy" alt="Logotipo Nort Motos — Patrocinador Diamante" class="max-w-[85%] max-h-[78%] object-contain opacity-90 group-hover:opacity-100 transition duration-500" /></div>
+            <div class="sponsor-card rounded-xl p-4 w-72 md:w-96 h-44 md:h-56 flex items-center justify-center border border-cyan-400/30 hover:border-cyan-400/70 shadow-[0_0_30px_rgba(34,211,238,0.08)] transition duration-500 group"><img src="./assets/logos/diamante/prefeitura-de-sobral.png" loading="lazy" alt="Logotipo Prefeitura de Sobral — Patrocinador Diamante" class="max-w-[85%] max-h-[78%] object-contain opacity-90 group-hover:opacity-100 transition duration-500" /></div>
+          </div>
+        </div>
+
+        <!-- Cota Ouro+ -->
+        <div class="simple-reveal-hidden">
+          <div class="flex items-center justify-center gap-4 mb-8">
+            <span class="h-px w-12 md:w-24 bg-gradient-to-r from-transparent to-brand-gold/60"></span>
+            <h3 class="font-display font-bold uppercase italic tracking-[0.2em] text-lg md:text-2xl text-brand-gold">Ouro+</h3>
+            <span class="h-px w-12 md:w-24 bg-gradient-to-l from-transparent to-brand-gold/60"></span>
+          </div>
+          <div class="flex flex-wrap justify-center gap-5">
+            <div class="sponsor-card rounded-xl p-3 w-52 md:w-64 h-32 md:h-44 flex items-center justify-center border border-brand-gold/40 hover:border-brand-gold/80 transition duration-500 group"><img src="./assets/logos/ouro_plus/fiel-imoveis.png" loading="lazy" alt="Logotipo Fiel Imóveis — Patrocinador Ouro+" class="max-w-[85%] max-h-[78%] object-contain opacity-90 group-hover:opacity-100 transition duration-500" /></div>
+            <div class="sponsor-card rounded-xl p-3 w-52 md:w-64 h-32 md:h-44 flex items-center justify-center border border-brand-gold/40 hover:border-brand-gold/80 transition duration-500 group"><img src="./assets/logos/ouro_plus/fortes-tecnologia.png" loading="lazy" alt="Logotipo Fortes Tecnologia — Patrocinador Ouro+" class="max-w-[85%] max-h-[78%] object-contain opacity-90 group-hover:opacity-100 transition duration-500" /></div>
+            <div class="sponsor-card rounded-xl p-3 w-52 md:w-64 h-32 md:h-44 flex items-center justify-center border border-brand-gold/40 hover:border-brand-gold/80 transition duration-500 group"><img src="./assets/logos/ouro_plus/gateway.png" loading="lazy" alt="Logotipo Gateway — Patrocinador Ouro+" class="max-w-[85%] max-h-[78%] object-contain opacity-90 group-hover:opacity-100 transition duration-500" /></div>
+            <div class="sponsor-card rounded-xl p-3 w-52 md:w-64 h-32 md:h-44 flex items-center justify-center border border-brand-gold/40 hover:border-brand-gold/80 transition duration-500 group"><img src="./assets/logos/ouro_plus/movin.png" loading="lazy" alt="Logotipo Movin — Patrocinador Ouro+" class="max-w-[85%] max-h-[78%] object-contain opacity-90 group-hover:opacity-100 transition duration-500" /></div>
+            <div class="sponsor-card rounded-xl p-3 w-52 md:w-64 h-32 md:h-44 flex items-center justify-center border border-brand-gold/40 hover:border-brand-gold/80 transition duration-500 group"><img src="./assets/logos/ouro_plus/nexia-saude.png" loading="lazy" alt="Logotipo Nexia Saúde — Patrocinador Ouro+" class="max-w-[85%] max-h-[78%] object-contain opacity-90 group-hover:opacity-100 transition duration-500" /></div>
+            <div class="sponsor-card rounded-xl p-3 w-52 md:w-64 h-32 md:h-44 flex items-center justify-center border border-brand-gold/40 hover:border-brand-gold/80 transition duration-500 group"><img src="./assets/logos/ouro_plus/nort-contabilidade.png" loading="lazy" alt="Logotipo Nort Contabilidade — Patrocinador Ouro+" class="max-w-[85%] max-h-[78%] object-contain opacity-90 group-hover:opacity-100 transition duration-500" /></div>
+            <div class="sponsor-card rounded-xl p-3 w-52 md:w-64 h-32 md:h-44 flex items-center justify-center border border-brand-gold/40 hover:border-brand-gold/80 transition duration-500 group"><img src="./assets/logos/ouro_plus/pdr.png" loading="lazy" alt="Logotipo PDR — Patrocinador Ouro+" class="max-w-[85%] max-h-[78%] object-contain opacity-90 group-hover:opacity-100 transition duration-500" /></div>
+            <div class="sponsor-card rounded-xl p-3 w-52 md:w-64 h-32 md:h-44 flex items-center justify-center border border-brand-gold/40 hover:border-brand-gold/80 transition duration-500 group"><img src="./assets/logos/ouro_plus/qualitive.png" loading="lazy" alt="Logotipo Qualitive — Patrocinador Ouro+" class="max-w-[85%] max-h-[78%] object-contain opacity-90 group-hover:opacity-100 transition duration-500" /></div>
+            <div class="sponsor-card rounded-xl p-3 w-52 md:w-64 h-32 md:h-44 flex items-center justify-center border border-brand-gold/40 hover:border-brand-gold/80 transition duration-500 group"><img src="./assets/logos/ouro_plus/sg-protecao-veicular.png" loading="lazy" alt="Logotipo SG Proteção Veicular — Patrocinador Ouro+" class="max-w-[85%] max-h-[78%] object-contain opacity-90 group-hover:opacity-100 transition duration-500" /></div>
+            <div class="sponsor-card rounded-xl p-3 w-52 md:w-64 h-32 md:h-44 flex items-center justify-center border border-brand-gold/40 hover:border-brand-gold/80 transition duration-500 group"><img src="./assets/logos/ouro_plus/sobral-climatizadores.png" loading="lazy" alt="Logotipo Sobral Climatizadores — Patrocinador Ouro+" class="max-w-[85%] max-h-[78%] object-contain opacity-90 group-hover:opacity-100 transition duration-500" /></div>
+            <div class="sponsor-card rounded-xl p-3 w-52 md:w-64 h-32 md:h-44 flex items-center justify-center border border-brand-gold/40 hover:border-brand-gold/80 transition duration-500 group"><img src="./assets/logos/ouro_plus/valmir-andrade.png" loading="lazy" alt="Logotipo Valmir Andrade — Patrocinador Ouro+" class="max-w-[85%] max-h-[78%] object-contain opacity-90 group-hover:opacity-100 transition duration-500" /></div>
+          </div>
+        </div>
+
+        <!-- Cota Ouro -->
+        <div class="simple-reveal-hidden">
+          <div class="flex items-center justify-center gap-4 mb-8">
+            <span class="h-px w-12 md:w-24 bg-gradient-to-r from-transparent to-brand-gold/40"></span>
+            <h3 class="font-display font-bold uppercase italic tracking-[0.2em] text-lg md:text-2xl text-brand-gold/90">Ouro</h3>
+            <span class="h-px w-12 md:w-24 bg-gradient-to-l from-transparent to-brand-gold/40"></span>
+          </div>
+          <div class="flex flex-wrap justify-center gap-5">
+            <div class="sponsor-card rounded-xl p-3 w-48 md:w-60 h-28 md:h-40 flex items-center justify-center border border-brand-gold/25 hover:border-brand-gold/60 transition duration-500 group"><img src="./assets/logos/ouro/drysteel.png" loading="lazy" alt="Logotipo Drysteel — Patrocinador Ouro" class="max-w-[85%] max-h-[78%] object-contain opacity-90 group-hover:opacity-100 transition duration-500" /></div>
+            <div class="sponsor-card rounded-xl p-3 w-48 md:w-60 h-28 md:h-40 flex items-center justify-center border border-brand-gold/25 hover:border-brand-gold/60 transition duration-500 group"><img src="./assets/logos/ouro/medcenter.png" loading="lazy" alt="Logotipo Medcenter — Patrocinador Ouro" class="max-w-[85%] max-h-[78%] object-contain opacity-90 group-hover:opacity-100 transition duration-500" /></div>
+            <div class="sponsor-card rounded-xl p-3 w-48 md:w-60 h-28 md:h-40 flex items-center justify-center border border-brand-gold/25 hover:border-brand-gold/60 transition duration-500 group"><img src="./assets/logos/ouro/plata.png" loading="lazy" alt="Logotipo Plata — Patrocinador Ouro" class="max-w-[85%] max-h-[78%] object-contain opacity-90 group-hover:opacity-100 transition duration-500" /></div>
+            <div class="sponsor-card rounded-xl p-3 w-48 md:w-60 h-28 md:h-40 flex items-center justify-center border border-brand-gold/25 hover:border-brand-gold/60 transition duration-500 group"><img src="./assets/logos/ouro/pro-sol.png" loading="lazy" alt="Logotipo Pro Sol — Patrocinador Ouro" class="max-w-[85%] max-h-[78%] object-contain opacity-90 group-hover:opacity-100 transition duration-500" /></div>
+            <div class="sponsor-card rounded-xl p-3 w-48 md:w-60 h-28 md:h-40 flex items-center justify-center border border-brand-gold/25 hover:border-brand-gold/60 transition duration-500 group"><img src="./assets/logos/ouro/quick.png" loading="lazy" alt="Logotipo Quick — Patrocinador Ouro" class="max-w-[85%] max-h-[78%] object-contain opacity-90 group-hover:opacity-100 transition duration-500" /></div>
+            <div class="sponsor-card rounded-xl p-3 w-48 md:w-60 h-28 md:h-40 flex items-center justify-center border border-brand-gold/25 hover:border-brand-gold/60 transition duration-500 group"><img src="./assets/logos/ouro/sobral-grafica.png" loading="lazy" alt="Logotipo Sobral Gráfica — Patrocinador Ouro" class="max-w-[85%] max-h-[78%] object-contain opacity-90 group-hover:opacity-100 transition duration-500" /></div>
+          </div>
+        </div>
+
+        <!-- Cota Prata -->
+        <div class="simple-reveal-hidden">
+          <div class="flex items-center justify-center gap-4 mb-8">
+            <span class="h-px w-12 md:w-24 bg-gradient-to-r from-transparent to-gray-400/50"></span>
+            <h3 class="font-display font-bold uppercase italic tracking-[0.2em] text-base md:text-xl text-gray-400">Prata</h3>
+            <span class="h-px w-12 md:w-24 bg-gradient-to-l from-transparent to-gray-400/50"></span>
+          </div>
+          <div class="flex flex-wrap justify-center gap-4">
+            <div class="sponsor-card rounded-xl p-2 w-44 md:w-52 h-24 md:h-32 flex items-center justify-center border border-gray-400/30 hover:border-gray-300/60 transition duration-500 group"><img src="./assets/logos/prata/biofit.png" loading="lazy" alt="Logotipo Biofit — Patrocinador Prata" class="max-w-[85%] max-h-[78%] object-contain opacity-90 group-hover:opacity-100 transition duration-500" /></div>
+            <div class="sponsor-card rounded-xl p-2 w-44 md:w-52 h-24 md:h-32 flex items-center justify-center border border-gray-400/30 hover:border-gray-300/60 transition duration-500 group"><img src="./assets/logos/prata/bocca-felice.png" loading="lazy" alt="Logotipo Bocca Felice — Patrocinador Prata" class="max-w-[85%] max-h-[78%] object-contain opacity-90 group-hover:opacity-100 transition duration-500" /></div>
+            <div class="sponsor-card rounded-xl p-2 w-44 md:w-52 h-24 md:h-32 flex items-center justify-center border border-gray-400/30 hover:border-gray-300/60 transition duration-500 group"><img src="./assets/logos/prata/claro-empresas.png" loading="lazy" alt="Logotipo Claro Empresas — Patrocinador Prata" class="max-w-[85%] max-h-[78%] object-contain opacity-90 group-hover:opacity-100 transition duration-500" /></div>
+            <div class="sponsor-card rounded-xl p-2 w-44 md:w-52 h-24 md:h-32 flex items-center justify-center border border-gray-400/30 hover:border-gray-300/60 transition duration-500 group"><img src="./assets/logos/prata/davos.png" loading="lazy" alt="Logotipo Davos — Patrocinador Prata" class="max-w-[85%] max-h-[78%] object-contain opacity-90 group-hover:opacity-100 transition duration-500" /></div>
+            <div class="sponsor-card rounded-xl p-2 w-44 md:w-52 h-24 md:h-32 flex items-center justify-center border border-gray-400/30 hover:border-gray-300/60 transition duration-500 group"><img src="./assets/logos/prata/pontual.png" loading="lazy" alt="Logotipo Pontual — Patrocinador Prata" class="max-w-[85%] max-h-[78%] object-contain opacity-90 group-hover:opacity-100 transition duration-500" /></div>
+            <div class="sponsor-card rounded-xl p-2 w-44 md:w-52 h-24 md:h-32 flex items-center justify-center border border-gray-400/30 hover:border-gray-300/60 transition duration-500 group"><img src="./assets/logos/prata/positiva.png" loading="lazy" alt="Logotipo Positiva — Patrocinador Prata" class="max-w-[85%] max-h-[78%] object-contain opacity-90 group-hover:opacity-100 transition duration-500" /></div>
+            <div class="sponsor-card rounded-xl p-2 w-44 md:w-52 h-24 md:h-32 flex items-center justify-center border border-gray-400/30 hover:border-gray-300/60 transition duration-500 group"><img src="./assets/logos/prata/rapidex.png" loading="lazy" alt="Logotipo Rapidex — Patrocinador Prata" class="max-w-[85%] max-h-[78%] object-contain opacity-90 group-hover:opacity-100 transition duration-500" /></div>
+            <div class="sponsor-card rounded-xl p-2 w-44 md:w-52 h-24 md:h-32 flex items-center justify-center border border-gray-400/30 hover:border-gray-300/60 transition duration-500 group"><img src="./assets/logos/prata/score-contabilidade.png" loading="lazy" alt="Logotipo Score Contabilidade — Patrocinador Prata" class="max-w-[85%] max-h-[78%] object-contain opacity-90 group-hover:opacity-100 transition duration-500" /></div>
+            <div class="sponsor-card rounded-xl p-2 w-44 md:w-52 h-24 md:h-32 flex items-center justify-center border border-gray-400/30 hover:border-gray-300/60 transition duration-500 group"><img src="./assets/logos/prata/sobral-international-school.png" loading="lazy" alt="Logotipo Sobral International School — Patrocinador Prata" class="max-w-[85%] max-h-[78%] object-contain opacity-90 group-hover:opacity-100 transition duration-500" /></div>
+            <div class="sponsor-card rounded-xl p-2 w-44 md:w-52 h-24 md:h-32 flex items-center justify-center border border-gray-400/30 hover:border-gray-300/60 transition duration-500 group"><img src="./assets/logos/prata/unopar.png" loading="lazy" alt="Logotipo Unopar — Patrocinador Prata" class="max-w-[85%] max-h-[78%] object-contain opacity-90 group-hover:opacity-100 transition duration-500" /></div>
+            <div class="sponsor-card rounded-xl p-2 w-44 md:w-52 h-24 md:h-32 flex items-center justify-center border border-gray-400/30 hover:border-gray-300/60 transition duration-500 group"><img src="./assets/logos/prata/velas-corretora.png" loading="lazy" alt="Logotipo Velas Corretora — Patrocinador Prata" class="max-w-[85%] max-h-[78%] object-contain opacity-90 group-hover:opacity-100 transition duration-500" /></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="galeria" class="py-10 md:py-16 bg-brand-blue-dark overflow-hidden border-t border-brand-blue-mid/30">
+      <div class="text-center mb-12 relative z-20">
+        <h2 class="font-display font-bold text-4xl md:text-6xl text-white mt-4 uppercase tracking-tight">MOMENTOS <span class="text-brand-gold">INESQUECÍVEIS</span></h2>
+      </div>
+      <div class="swiper-gallery-top swiper simple-reveal-hidden pl-6 md:pl-20 mb-8 relative z-20">
+        <div class="swiper-wrapper">
+          <div class="swiper-slide hover-glow-blue"><div class="relative h-64 w-[400px] shrink-0 rounded-xl overflow-hidden border border-brand-blue-mid group"><img src="./assets/foto-dr-roneely.jpg" loading="lazy" class="h-full w-full object-cover brightness-90 group-hover:brightness-110 transition duration-500" /></div></div>
+          <div class="swiper-slide hover-glow-blue"><div class="relative h-64 w-[400px] shrink-0 rounded-xl overflow-hidden border border-brand-blue-mid group"><img src="./assets/foto-2.JPG" loading="lazy" class="h-full w-full object-cover brightness-90 group-hover:brightness-110 transition duration-500" /></div></div>
+          <div class="swiper-slide hover-glow-blue"><div class="relative h-64 w-[400px] shrink-0 rounded-xl overflow-hidden border border-brand-blue-mid group"><img src="./assets/foto-3.webp" loading="lazy" class="h-full w-full object-cover brightness-90 group-hover:brightness-110 transition duration-500" /></div></div>
+          <div class="swiper-slide hover-glow-blue"><div class="relative h-64 w-[400px] shrink-0 rounded-xl overflow-hidden border border-brand-blue-mid group"><img src="./assets/foto-4.JPG" loading="lazy" class="h-full w-full object-cover brightness-90 group-hover:brightness-110 transition duration-500" /></div></div>
+          <div class="swiper-slide hover-glow-blue"><div class="relative h-64 w-[400px] shrink-0 rounded-xl overflow-hidden border border-brand-blue-mid group"><img src="./assets/foto-5.JPG" loading="lazy" class="h-full w-full object-cover brightness-90 group-hover:brightness-110 transition duration-500" /></div></div>
+          <div class="swiper-slide hover-glow-blue"><div class="relative h-64 w-[400px] shrink-0 rounded-xl overflow-hidden border border-brand-blue-mid group"><img src="./assets/foto-6.JPG" loading="lazy" class="h-full w-full object-cover brightness-90 group-hover:brightness-110 transition duration-500" /></div></div>
+          <div class="swiper-slide hover-glow-blue"><div class="relative h-64 w-[400px] shrink-0 rounded-xl overflow-hidden border border-brand-blue-mid group"><img src="./assets/foto-7.JPG" loading="lazy" class="h-full w-full object-cover brightness-90 group-hover:brightness-110 transition duration-500" /></div></div>
+          <div class="swiper-slide hover-glow-blue"><div class="relative h-64 w-[400px] shrink-0 rounded-xl overflow-hidden border border-brand-blue-mid group"><img src="./assets/foto-8.JPG" loading="lazy" class="h-full w-full object-cover brightness-90 group-hover:brightness-110 transition duration-500" /></div></div>
+        </div>
+      </div>
+      <div class="swiper-gallery-bottom swiper simple-reveal-hidden pl-6 md:pl-20 relative z-20">
+        <div class="swiper-wrapper">
+          <div class="swiper-slide hover-glow-blue"><div class="relative h-64 w-[400px] shrink-0 rounded-xl overflow-hidden border border-brand-blue-mid group"><img src="./assets/foto-9.JPG" loading="lazy" class="h-full w-full object-cover brightness-90 group-hover:brightness-110 transition duration-500" /></div></div>
+          <div class="swiper-slide hover-glow-blue"><div class="relative h-64 w-[400px] shrink-0 rounded-xl overflow-hidden border border-brand-blue-mid group"><img src="./assets/foto-10.JPG" loading="lazy" class="h-full w-full object-cover brightness-90 group-hover:brightness-110 transition duration-500" /></div></div>
+          <div class="swiper-slide hover-glow-blue"><div class="relative h-64 w-[400px] shrink-0 rounded-xl overflow-hidden border border-brand-blue-mid group"><img src="./assets/foto-11.JPG" loading="lazy" class="h-full w-full object-cover brightness-90 group-hover:brightness-110 transition duration-500" /></div></div>
+          <div class="swiper-slide hover-glow-blue"><div class="relative h-64 w-[400px] shrink-0 rounded-xl overflow-hidden border border-brand-blue-mid group"><img src="./assets/foto-12.JPG" loading="lazy" class="h-full w-full object-cover brightness-90 group-hover:brightness-110 transition duration-500" /></div></div>
+          <div class="swiper-slide hover-glow-blue"><div class="relative h-64 w-[400px] shrink-0 rounded-xl overflow-hidden border border-brand-blue-mid group"><img src="./assets/foto-13.JPG" loading="lazy" class="h-full w-full object-cover brightness-90 group-hover:brightness-110 transition duration-500" /></div></div>
+          <div class="swiper-slide hover-glow-blue"><div class="relative h-64 w-[400px] shrink-0 rounded-xl overflow-hidden border border-brand-blue-mid group"><img src="./assets/foto-14.JPG" loading="lazy" class="h-full w-full object-cover brightness-90 group-hover:brightness-110 transition duration-500" /></div></div>
+          <div class="swiper-slide hover-glow-blue"><div class="relative h-64 w-[400px] shrink-0 rounded-xl overflow-hidden border border-brand-blue-mid group"><img src="./assets/foto-15.JPG" loading="lazy" class="h-full w-full object-cover brightness-90 group-hover:brightness-110 transition duration-500" /></div></div>
+          <div class="swiper-slide hover-glow-blue"><div class="relative h-64 w-[400px] shrink-0 rounded-xl overflow-hidden border border-brand-blue-mid group"><img src="./assets/foto-16.JPG" loading="lazy" class="h-full w-full object-cover brightness-90 group-hover:brightness-110 transition duration-500" /></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta-final py-12 md:py-24">
+      <div class="container mx-auto px-6 relative z-20 text-center">
+        <span class="text-brand-blue-accent font-display uppercase tracking-[0.4em] text-xs font-bold block mb-6">Não fique de fora</span>
+        <h2 class="font-display font-bold text-4xl md:text-6xl text-white uppercase leading-[1.1] mb-4">
+          O FUTURO<br /><span class="text-brand-gold">COMEÇA EM</span><br />OUTUBRO
+        </h2>
+        <p class="text-gray-400 font-syne mt-8 max-w-xl mx-auto text-lg leading-relaxed mb-10">
+          16 e 17 de Outubro de 2026 · Sobral, Ceará.<br />A maior imersão de negócios e inovação do interior do Ceará.
+        </p>
+        <a href="https://doity.com.br/connect-valley-2026" target="_blank" rel="noopener noreferrer" aria-label="Garantir vaga agora (abre em nova aba)" class="inline-flex items-center gap-3 bg-brand-gold text-brand-blue-dark px-10 py-5 rounded-full font-display font-bold uppercase tracking-widest text-base md:text-lg hover:bg-white transition-all duration-300 shadow-2xl shadow-brand-gold/20">
+          GARANTIR MINHA VAGA
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+        </a>
+        <p class="font-syne text-sm md:text-base mt-6 uppercase tracking-widest font-bold text-brand-gold">Lote Promocional: R$ 167,00 · Vagas Limitadas</p>
+      </div>
+    </section>
+
+    <footer class="bg-brand-blue-dark text-gray-400 py-16 border-t border-brand-blue-mid/30" style="padding-bottom: 100px">
+      <div class="container mx-auto px-6 max-w-6xl">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-12">
+          <!-- Col 1 -->
+          <div>
+            <img src="./assets/connect-2026.svg" loading="lazy" alt="Logo" class="h-8 mb-6 opacity-80" />
+            <p class="text-xs leading-relaxed text-gray-500 font-syne">
+              Connect Valley é uma iniciativa do RF Group. Conectando propósitos, gerando resultados e transformando o futuro dos negócios.
+            </p>
+          </div>
+          <!-- Col 2 -->
+          <div>
+            <h4 class="font-display font-bold text-sm text-white uppercase tracking-wider mb-6">Navegação</h4>
+            <ul class="space-y-3 text-xs font-syne">
+              <li><a href="#sobre" class="hover:text-brand-gold transition duration-300">Sobre</a></li>
+              <li><a href="#mapa" class="hover:text-brand-gold transition duration-300">Mapa</a></li>
+              <li><a href="#cronograma" class="hover:text-brand-gold transition duration-300">Cronograma</a></li>
+              <li><a href="#palestrantes" class="hover:text-brand-gold transition duration-300">Speakers</a></li>
+            </ul>
+          </div>
+          <!-- Col 3 -->
+          <div>
+            <h4 class="font-display font-bold text-sm text-white uppercase tracking-wider mb-6">Ingressos</h4>
+            <ul class="space-y-3 text-xs font-syne">
+              <li><a href="#ingressos" class="hover:text-brand-gold transition duration-300">Garantir Vaga</a></li>
+              <li><a href="https://connect-valley-app.vercel.app/login" target="_blank" rel="noopener" class="hover:text-brand-gold transition duration-300">Área do Participante</a></li>
+              <li><a href="https://wa.me/5588993832512" target="_blank" rel="noopener" class="hover:text-brand-gold transition duration-300 font-bold text-brand-gold">Suporte WhatsApp</a></li>
+            </ul>
+          </div>
+          <!-- Col 4 -->
+          <div>
+            <h4 class="font-display font-bold text-sm text-white uppercase tracking-wider mb-6">Informações</h4>
+            <p class="text-xs text-gray-500 font-syne leading-relaxed">
+              CONNECT VALLEY © 2026<br />
+              Todos os direitos reservados.<br />
+              CNPJ: 28.721.098/0001-95<br />
+              <a href="#" class="hover:text-brand-gold transition duration-300 mt-2 inline-block">Termos de Uso</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+    <script>
+      // TAILWIND CONFIG
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              'brand-gold': '#F2C94C',
+              'brand-blue-dark': '#030816',
+              'brand-blue-mid': '#0A1930',
+              'brand-blue-accent': '#0055FF'
+            },
+            fontFamily: {
+              sans: ['Poppins', 'sans-serif'],
+              display: ['Montserrat', 'sans-serif'],
+              syne: ['Syne', 'sans-serif'],
+              anton: ['Anton SC', 'sans-serif']
+            },
+            backgroundImage: {
+              'hero-gradient': 'linear-gradient(to bottom, rgba(3,8,22,0.3), rgba(3,8,22,1))',
+              'blue-glow': 'radial-gradient(circle at center, rgba(0,85,255,0.15) 0%, rgba(3,8,22,0) 70%)'
+            }
+          }
+        }
+      }
+
+      gsap.registerPlugin(ScrollTrigger)
+
+      document.addEventListener('DOMContentLoaded', function () {
+        initSiteAnimations()
+        initAmbientGlowAnimations()
+        initConnectedBackground()
+        initSwipers()
+        initVideoPlayer()
+        initHeroVideoLoop()
+        initScrollSpy()
+        // REMOVIDO: Listeners de mousemove pesados para rotação 3D
+      })
+
+      function initHeroVideoLoop() {
+        const heroVideo = document.getElementById('hero-bg')
+        if (heroVideo) {
+          heroVideo.addEventListener('ended', function () { this.currentTime = 0; this.play() }, false)
+        }
+      }
+
+      function initSwipers() {
+        // Palestrantes
+        new Swiper('.swiper-speakers', {
+          slidesPerView: 'auto',
+          spaceBetween: 40,
+          loop: true,
+          freeMode: true,
+          speed: 6000,
+          autoplay: { delay: 0, disableOnInteraction: false }
+        })
+
+        // Galeria Top
+        new Swiper('.swiper-gallery-top', {
+          slidesPerView: 'auto',
+          spaceBetween: 40,
+          loop: true,
+          freeMode: true,
+          speed: 6000,
+          autoplay: { delay: 0, disableOnInteraction: false }
+        })
+
+        // Galeria Bottom
+        new Swiper('.swiper-gallery-bottom', {
+          slidesPerView: 'auto',
+          spaceBetween: 40,
+          loop: true,
+          freeMode: true,
+          speed: 6000,
+          autoplay: { delay: 0, disableOnInteraction: false, reverseDirection: true }
+        })
+      }
+
+      const mobileBtn = document.getElementById('mobile-menu-btn')
+      const mobileMenu = document.getElementById('mobile-menu')
+      const mobileLinks = document.querySelectorAll('.mobile-link')
+
+      if (mobileBtn && mobileMenu) {
+        mobileBtn.addEventListener('click', () => {
+          const willOpen = mobileMenu.classList.contains('-translate-x-full');
+          mobileMenu.classList.toggle('-translate-x-full');
+          mobileBtn.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+        });
+        mobileLinks.forEach(link => {
+          link.addEventListener('click', () => {
+            mobileMenu.classList.add('-translate-x-full');
+            mobileBtn.setAttribute('aria-expanded', 'false');
+          });
+        });
+        const mobilePartLink = mobileMenu.querySelector('a[href*="connect-valley-app"]');
+        if (mobilePartLink) {
+          mobilePartLink.addEventListener('click', () => {
+            mobileMenu.classList.add('-translate-x-full');
+            mobileBtn.setAttribute('aria-expanded', 'false');
+          });
+        }
+      }
+
+      function initScrollSpy() {
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('.nav-item');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+
+        function updateActiveLink() {
+          let currentSectionId = '';
+          const scrollPos = window.scrollY + 200; // offset for triggers
+
+          sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            const sectionHeight = section.offsetHeight;
+
+            if (scrollPos >= sectionTop && scrollPos < sectionTop + sectionHeight) {
+              currentSectionId = section.getAttribute('id');
+            }
+          });
+
+          // Force highlight of last section if scrolled near bottom
+          if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 50) {
+            const lastSection = sections[sections.length - 1];
+            if (lastSection) currentSectionId = lastSection.getAttribute('id');
+          }
+
+          navLinks.forEach(link => {
+            if (link.getAttribute('href') === `#${currentSectionId}`) {
+              link.classList.add('active');
+            } else {
+              link.classList.remove('active');
+            }
+          });
+
+          mobileLinks.forEach(link => {
+            if (link.getAttribute('href') === `#${currentSectionId}`) {
+              link.classList.add('active');
+              link.classList.remove('text-white');
+              link.classList.add('text-brand-gold');
+            } else {
+              link.classList.remove('active');
+              link.classList.remove('text-brand-gold');
+              link.classList.add('text-white');
+            }
+          });
+        }
+
+        window.addEventListener('scroll', updateActiveLink);
+        window.addEventListener('resize', updateActiveLink);
+        updateActiveLink();
+      }
+
+      function initVideoPlayer() {
+        const video = document.getElementById('manifesto-video')
+        const overlay = document.getElementById('play-overlay')
+        if (video && overlay) {
+          overlay.addEventListener('click', () => {
+            video.muted = false; video.volume = 1.0;
+            video.play().then(() => { video.controls = true; overlay.style.display = 'none' })
+            .catch(error => { console.error('Erro ao reproduzir:', error); video.controls = true; overlay.style.display = 'none' })
+          })
+        }
+      }
+
+      function openSpeakerModal(name, role) {
+        const modal = document.getElementById('speaker-modal')
+        const modalName = document.getElementById('modal-name')
+        const modalRole = document.getElementById('modal-role')
+        if (modal && modalName && modalRole) {
+          modalName.innerText = name; modalRole.innerText = role; modal.classList.add('open')
+        }
+      }
+
+      function closeSpeakerModal() {
+        const modal = document.getElementById('speaker-modal')
+        if (modal) modal.classList.remove('open')
+      }
+
+      document.getElementById('speaker-modal').addEventListener('click', function (e) {
+        if (e.target === this) closeSpeakerModal()
+      })
+
+      /* ---- Rede de conexões da barra inferior ---- */
+      ;(function initBottomBarNetwork() {
+        const canvas = document.getElementById('bottom-bar-canvas')
+        if (!canvas) return
+        const ctx = canvas.getContext('2d')
+        const GOLD = [242, 201, 76]
+        const BLUE = [0, 85, 255]
+        const MAX_DIST = 160
+        const NODE_COUNT = 38
+        let nodes = [], W, H, raf
+
+        function resize() {
+          W = canvas.width  = canvas.offsetWidth
+          H = canvas.height = canvas.offsetHeight
+        }
+
+        function mkNode() {
+          const useGold = Math.random() > 0.45
+          return {
+            x: Math.random() * W, y: Math.random() * H,
+            vx: (Math.random() - 0.5) * 0.5,
+            vy: (Math.random() - 0.5) * 0.5,
+            r: Math.random() * 1.8 + 1,
+            color: useGold ? GOLD : BLUE,
+            pulse: Math.random() * Math.PI * 2,
+            pulseSpeed: 0.02 + Math.random() * 0.02
+          }
+        }
+
+        function init() {
+          resize()
+          nodes = Array.from({ length: NODE_COUNT }, mkNode)
+        }
+
+        function draw() {
+          ctx.clearRect(0, 0, W, H)
+
+          /* linhas */
+          for (let i = 0; i < nodes.length; i++) {
+            for (let j = i + 1; j < nodes.length; j++) {
+              const a = nodes[i], b = nodes[j]
+              const dx = a.x - b.x, dy = a.y - b.y
+              const dist = Math.sqrt(dx * dx + dy * dy)
+              if (dist > MAX_DIST) continue
+              const alpha = (1 - dist / MAX_DIST) * 0.35
+              const mid = [(a.color[0] + b.color[0]) / 2, (a.color[1] + b.color[1]) / 2, (a.color[2] + b.color[2]) / 2]
+              const grad = ctx.createLinearGradient(a.x, a.y, b.x, b.y)
+              grad.addColorStop(0, `rgba(${a.color},${alpha})`)
+              grad.addColorStop(1, `rgba(${b.color},${alpha})`)
+              ctx.beginPath()
+              ctx.strokeStyle = grad
+              ctx.lineWidth = 0.8
+              ctx.moveTo(a.x, a.y)
+              ctx.lineTo(b.x, b.y)
+              ctx.stroke()
+            }
+          }
+
+          /* nós */
+          nodes.forEach(n => {
+            n.pulse += n.pulseSpeed
+            const glow = 0.6 + Math.sin(n.pulse) * 0.4
+            ctx.beginPath()
+            ctx.arc(n.x, n.y, n.r * glow, 0, Math.PI * 2)
+            ctx.fillStyle = `rgba(${n.color},${0.7 * glow})`
+            ctx.fill()
+
+            /* halo suave */
+            const halo = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, n.r * 5)
+            halo.addColorStop(0, `rgba(${n.color},${0.12 * glow})`)
+            halo.addColorStop(1, `rgba(${n.color},0)`)
+            ctx.beginPath()
+            ctx.arc(n.x, n.y, n.r * 5, 0, Math.PI * 2)
+            ctx.fillStyle = halo
+            ctx.fill()
+
+            n.x += n.vx; n.y += n.vy
+            if (n.x < 0 || n.x > W) n.vx *= -1
+            if (n.y < 0 || n.y > H) n.vy *= -1
+          })
+
+          raf = requestAnimationFrame(draw)
+        }
+
+        init()
+        draw()
+        window.addEventListener('resize', () => { cancelAnimationFrame(raf); init(); draw() })
+      })()
+      /* ---- fim rede de conexões ---- */
+
+      function initConnectedBackground() {
+        const canvas = document.getElementById('connected-bg')
+        if (!canvas) return
+        const ctx = canvas.getContext('2d')
+
+        let width = canvas.width = window.innerWidth
+        let height = canvas.height = window.innerHeight
+
+        const particles = []
+        const maxParticles = window.innerWidth < 768 ? 25 : 60
+        const connectionDist = 110
+        const speedFactor = 0.4
+
+        class Particle {
+          constructor() {
+            this.x = Math.random() * width
+            this.y = Math.random() * height
+            this.vx = (Math.random() - 0.5) * speedFactor
+            this.vy = (Math.random() - 0.5) * speedFactor
+            this.radius = Math.random() * 1.5 + 1
+          }
+
+          update() {
+            this.x += this.vx
+            this.y += this.vy
+
+            if (this.x < 0 || this.x > width) this.vx *= -1
+            if (this.y < 0 || this.y > height) this.vy *= -1
+          }
+
+          draw() {
+            ctx.beginPath()
+            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2)
+            ctx.fillStyle = 'rgba(0, 85, 255, 0.4)'
+            ctx.fill()
+          }
+        }
+
+        function init() {
+          particles.length = 0
+          for (let i = 0; i < maxParticles; i++) {
+            particles.push(new Particle())
+          }
+        }
+
+        function animate() {
+          ctx.clearRect(0, 0, width, height)
+
+          // Draw connections
+          for (let i = 0; i < particles.length; i++) {
+            const p1 = particles[i]
+            p1.update()
+            p1.draw()
+
+            for (let j = i + 1; j < particles.length; j++) {
+              const p2 = particles[j]
+              const dx = p1.x - p2.x
+              const dy = p1.y - p2.y
+              const dist = Math.sqrt(dx * dx + dy * dy)
+
+              if (dist < connectionDist) {
+                const alpha = (1 - dist / connectionDist) * 0.15
+                ctx.beginPath()
+                ctx.moveTo(p1.x, p1.y)
+                ctx.lineTo(p2.x, p2.y)
+                ctx.strokeStyle = `rgba(0, 85, 255, ${alpha})`
+                ctx.lineWidth = 0.5
+                ctx.stroke()
+              }
+            }
+          }
+
+          requestAnimationFrame(animate)
+        }
+
+        window.addEventListener('resize', () => {
+          width = canvas.width = window.innerWidth
+          height = canvas.height = window.innerHeight
+          init()
+        })
+
+        init()
+        animate()
+      }
+
+      function initAmbientGlowAnimations() {
+        // Slow float for Sobre glow
+        const glowSobre = document.getElementById('glow-sobre');
+        if (glowSobre) {
+          gsap.to(glowSobre, {
+            x: 40,
+            y: -40,
+            duration: 12,
+            repeat: -1,
+            yoyo: true,
+            ease: 'sine.inOut'
+          });
+        }
+
+        // Slow float for Areas glow
+        const glowAreas = document.getElementById('glow-areas');
+        if (glowAreas) {
+          gsap.to(glowAreas, {
+            x: -50,
+            y: 30,
+            duration: 15,
+            repeat: -1,
+            yoyo: true,
+            ease: 'sine.inOut'
+          });
+        }
+
+        // Slow float for Palestrantes glow
+        const glowPalestrantes = document.getElementById('glow-palestrantes');
+        if (glowPalestrantes) {
+          gsap.to(glowPalestrantes, {
+            x: 50,
+            y: -30,
+            duration: 14,
+            repeat: -1,
+            yoyo: true,
+            ease: 'sine.inOut'
+          });
+        }
+
+        // Slow float for Patrocinio glow
+        const glowPatrocinio = document.getElementById('glow-patrocinio');
+        if (glowPatrocinio) {
+          gsap.to(glowPatrocinio, {
+            x: -40,
+            y: -40,
+            duration: 16,
+            repeat: -1,
+            yoyo: true,
+            ease: 'sine.inOut'
+          });
+        }
+
+        // Slow float for Construtores glow
+        const glowConstrutores = document.getElementById('glow-construtores');
+        if (glowConstrutores) {
+          gsap.to(glowConstrutores, {
+            x: 30,
+            y: 40,
+            duration: 13,
+            repeat: -1,
+            yoyo: true,
+            ease: 'sine.inOut'
+          });
+        }
+      }
+
+      function initSiteAnimations() {
+        gsap.to('#navbar', { y: 0, duration: 1, ease: 'power3.out' })
+        
+        // Hero entrance animations (immediate on page load)
+        gsap.fromTo('header .simple-reveal-hidden', 
+          { opacity: 0, y: 30 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 1,
+            stagger: 0.15,
+            ease: 'power3.out',
+            delay: 0.1
+          }
+        )
+        
+        // Hero background parallax
+        gsap.to('#hero-bg', {
+          yPercent: 30, ease: 'none',
+          scrollTrigger: { trigger: 'header', start: 'top top', end: 'bottom top', scrub: 0.5 }
+        })
+
+        const targetDate = new Date('October 16, 2026 09:00:00').getTime()
+        setInterval(function () {
+          const now = new Date().getTime()
+          const distance = targetDate - now
+          document.getElementById('days').innerText = Math.floor(distance / (1000 * 60 * 60 * 24))
+          document.getElementById('hours').innerText = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
+          document.getElementById('minutes').innerText = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60))
+          document.getElementById('seconds').innerText = Math.floor((distance % (1000 * 60)) / 1000)
+        }, 1000)
+ 
+        gsap.utils.toArray('.text-reveal-trigger').forEach(title => {
+          ScrollTrigger.create({
+            trigger: title, start: 'top 85%',
+            onEnter: () => { title.classList.remove('text-hidden'); title.classList.add('text-reveal-mask') }
+          })
+        })
+
+        gsap.utils.toArray('.blur-reveal').forEach(text => {
+          gsap.fromTo(text, { y: 40, opacity: 0 }, {
+            y: 0, opacity: 1, duration: 1, ease: 'power2.out',
+            scrollTrigger: { trigger: text, start: 'top 90%' }
+          })
+        })
+
+        gsap.utils.toArray('.counter').forEach(counter => {
+          const target = +counter.getAttribute('data-target')
+          const prefix = counter.getAttribute('data-prefix') || ''
+          const suffix = counter.getAttribute('data-suffix') || ''
+          const formatK = counter.getAttribute('data-format-k') === 'true'
+          
+          // Inicializar a exibição em 0 para garantir que a animação comece do zero
+          counter.innerHTML = prefix + '0' + suffix
+          
+          const obj = { value: 0 }
+          
+          ScrollTrigger.create({
+            trigger: counter, start: 'top 95%',
+            onEnter: () => {
+              gsap.to(obj, {
+                value: target, 
+                duration: 2, 
+                ease: 'power2.out',
+                onUpdate: function () {
+                  const val = Math.ceil(obj.value)
+                  if (formatK) {
+                    counter.innerHTML = prefix + (val >= 1000 ? '1k' : val) + suffix
+                  } else {
+                    counter.innerHTML = prefix + val + suffix
+                  }
+                }
+              })
+            }
+          })
+        })
+
+        // Custom Stagger: Sobre section elements
+        gsap.fromTo('#sobre .simple-reveal-hidden',
+          { opacity: 0, y: 30 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            stagger: 0.2,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: '#sobre',
+              start: 'top 80%',
+              toggleActions: 'play none none none'
+            }
+          }
+        )
+
+        // Custom Stagger: Numero cards
+        gsap.fromTo('#numeros .numero-card',
+          { opacity: 0, y: 30 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            stagger: 0.1,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: '#numeros',
+              start: 'top 80%',
+              toggleActions: 'play none none none'
+            }
+          }
+        )
+
+        // Custom Stagger: Area cards
+        gsap.fromTo('#areas .area-card',
+          { opacity: 0, y: 30 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            stagger: 0.1,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: '#areas',
+              start: 'top 80%',
+              toggleActions: 'play none none none'
+            }
+          }
+        )
+
+        // Custom Stagger: Imersão grid
+        gsap.fromTo('#imersao .grid > div',
+          { opacity: 0, scale: 0.95, y: 20 },
+          {
+            opacity: 1,
+            scale: 1,
+            y: 0,
+            duration: 0.8,
+            stagger: 0.08,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: '#imersao .grid',
+              start: 'top 85%',
+              toggleActions: 'play none none none'
+            }
+          }
+        )
+
+        // Custom Stagger: Testimonial cards
+        gsap.fromTo('#depoimentos .testimonial-card',
+          { opacity: 0, y: 30 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            stagger: 0.15,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: '#depoimentos',
+              start: 'top 80%',
+              toggleActions: 'play none none none'
+            }
+          }
+        )
+
+        // Custom Stagger: Ingressos cards
+        gsap.fromTo('#ingressos .grid > div',
+          { opacity: 0, y: 40 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            stagger: 0.15,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: '#ingressos .grid',
+              start: 'top 80%',
+              toggleActions: 'play none none none'
+            }
+          }
+        )
+
+        // Custom Stagger: Patrocinio cards (Sponsors cotas)
+        gsap.fromTo('#patrocinio .sponsor-card',
+          { opacity: 0, y: 40 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            stagger: 0.15,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: '#patrocinio .patrocinio-grid',
+              start: 'top 80%',
+              toggleActions: 'play none none none'
+            }
+          }
+        )
+
+        // Generic ScrollTrigger for other standalone .simple-reveal-hidden elements
+        gsap.utils.toArray('.simple-reveal-hidden').forEach(el => {
+          if (
+            el.closest('header') ||
+            el.closest('#sobre') ||
+            el.closest('.numero-card') ||
+            el.closest('.area-card') ||
+            el.closest('.testimonial-card') ||
+            el.closest('#ingressos .grid > div') ||
+            el.closest('#patrocinio .sponsor-card') ||
+            el.closest('#imersao .grid > div')
+          ) {
+            return
+          }
+          gsap.fromTo(el,
+            { opacity: 0, y: 30 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.8,
+              ease: 'power2.out',
+              scrollTrigger: {
+                trigger: el,
+                start: 'top 85%',
+                toggleActions: 'play none none none'
+              }
+            }
+          )
+        })
+      }
+
+      // COOKIES
+      function acceptCookies() { localStorage.setItem('connectvalley-cookies', 'accepted'); hideCookieBanner() }
+      function rejectCookies() { localStorage.setItem('connectvalley-cookies', 'rejected'); hideCookieBanner() }
+      
+      function hideCookieBanner() {
+        const banner = document.getElementById('cookie-banner')
+        if (banner) { 
+          banner.classList.remove('show');
+          banner.classList.add('hidden'); 
+          setTimeout(() => { banner.style.display = 'none' }, 500) 
+        }
+      }
+      
+      function showCookieBanner() {
+        try {
+          // Se NÃO existir o cookie salvo, ele adiciona a classe 'show'
+          if (!localStorage.getItem('connectvalley-cookies')) {
+            const banner = document.getElementById('cookie-banner')
+            if (banner) banner.classList.add('show')
+          }
+        } catch (e) {
+          const banner = document.getElementById('cookie-banner')
+          if (banner) banner.classList.add('show')
+        }
+      }
+      
+      // Acessibilidade por Teclado: Ativar elementos com role="button" ao pressionar Enter ou Espaço
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          const target = e.target.closest('[role="button"]');
+          if (target) {
+            const tagName = e.target.tagName.toLowerCase();
+            if (['input', 'textarea', 'select', 'button', 'a'].includes(tagName)) return;
+            e.preventDefault();
+            target.click();
+          }
+        }
+      });
+      
+      if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', showCookieBanner)
+      else showCookieBanner()
+
+      // TOP BANNER
+      ;(function() {
+        const BANNER_KEY = 'cv-top-banner-closed';
+        const banner = document.getElementById('top-banner');
+        const closeBtn = document.getElementById('close-top-banner');
+        if (!banner) return;
+        if (localStorage.getItem(BANNER_KEY)) {
+          banner.style.display = 'none';
+        } else {
+          document.body.classList.add('has-banner');
+        }
+        if (closeBtn) {
+          closeBtn.addEventListener('click', function() {
+            banner.style.display = 'none';
+            document.body.classList.remove('has-banner');
+            try { localStorage.setItem(BANNER_KEY, '1'); } catch(e) {}
+          });
+        }
+      })();
+    </script>
+  </body>
+</html>
