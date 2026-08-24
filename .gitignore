@@ -1,0 +1,27 @@
+# Artefatos de backup da hospedagem (cPanel/Softaculous)
+*.tar.gz
+*.zip
+softaculous_backups/
+logs/
+tmp/
+
+# Credenciais e certificados — nunca versionar
+.env
+.env.*
+*.pem
+*.key
+*.crt
+wp-config.php
+
+# Validação ACME/SSL gerada pelo servidor
+.well-known/
+
+# Arquivos de sistema operacional
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editores
+.vscode/
+.idea/
+*.swp
