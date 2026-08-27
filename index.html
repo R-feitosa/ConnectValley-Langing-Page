@@ -913,17 +913,25 @@
         </div>
 
         <!-- Vídeo 2 - Novidades Connect 2026 (diálogo do Dr. e da Dra.) -->
-        <!-- Fica oculto até o arquivo ./assets/novidades-connect-2026.mp4 existir. Ver initOptionalMedia(). -->
+        <!--
+          O vídeo vem do YouTube: basta colar a URL (ou só o ID) em data-youtube
+          abaixo. Enquanto o atributo estiver vazio o bloco inteiro sai da página,
+          então nada quebra até o vídeo ser publicado. Ver initOptionalMedia().
+
+          Nada do YouTube é carregado antes do clique: até lá a página mostra só a
+          miniatura e o botão de play. Isso mantém a página leve e evita cookie de
+          terceiro antes do consentimento.
+        -->
         <div data-optional-media style="display: none">
           <div class="text-center mb-12 simple-reveal-hidden">
             <span class="text-brand-blue-accent uppercase tracking-[0.3em] text-xs font-bold font-display">Novidades</span>
             <h2 class="text-3xl md:text-5xl font-display font-bold text-white mt-4 uppercase">Novidades <span class="text-brand-gold">Connect 2026</span></h2>
             <p class="text-gray-400 font-syne mt-4 text-sm md:text-lg">Um bate-papo sobre tudo o que muda nesta edição.</p>
           </div>
-          <div class="video-player relative w-full aspect-video rounded-3xl overflow-hidden border border-brand-blue-mid shadow-[0_0_50px_rgba(0,85,255,0.15)] group simple-reveal-hidden">
-            <video class="w-full h-full object-cover" preload="metadata" poster="./assets/backgroundd.JPG">
-              <source src="./assets/novidades-connect-2026.mp4" type="video/mp4" />
-            </video>
+          <div class="video-player relative w-full aspect-video rounded-3xl overflow-hidden border border-brand-blue-mid shadow-[0_0_50px_rgba(0,85,255,0.15)] group simple-reveal-hidden"
+               data-youtube=""
+               data-video-title="Novidades Connect 2026">
+            <img class="w-full h-full object-cover" alt="" loading="lazy" data-youtube-poster />
             <div class="video-play-overlay absolute inset-0 bg-black/40 flex items-center justify-center cursor-pointer transition duration-300 group-hover:bg-black/30 z-20" role="button" tabindex="0" aria-label="Reproduzir o vídeo Novidades Connect 2026">
               <div class="w-24 h-24 bg-brand-gold/90 rounded-full flex items-center justify-center shadow-lg backdrop-blur-sm hover:scale-110 transition duration-300">
                 <svg class="w-10 h-10 text-brand-blue-dark ml-2" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
@@ -1759,18 +1767,66 @@
         updateActiveLink();
       }
 
+      /*
+        Aceita qualquer forma de endereço do YouTube — o link da barra do
+        navegador, o de compartilhar, o de incorporar, o de Shorts — ou o ID
+        solto. Devolve '' quando não reconhece, e quem chama trata isso como
+        "ainda não configurado".
+      */
+      function parseYouTubeId(value) {
+        const raw = (value || '').trim()
+        if (!raw) return ''
+        if (/^[\w-]{11}$/.test(raw)) return raw
+
+        try {
+          const url = new URL(raw.startsWith('http') ? raw : 'https://' + raw)
+          if (!/(^|\.)(youtube\.com|youtube-nocookie\.com|youtu\.be)$/.test(url.hostname)) return ''
+
+          const fromQuery = url.searchParams.get('v')
+          if (fromQuery && /^[\w-]{11}$/.test(fromQuery)) return fromQuery
+
+          // youtu.be/ID, /embed/ID, /shorts/ID, /live/ID, /v/ID
+          const last = url.pathname.split('/').filter(Boolean).pop() || ''
+          return /^[\w-]{11}$/.test(last) ? last : ''
+        } catch (e) {
+          return ''
+        }
+      }
+
       function initVideoPlayer() {
         document.querySelectorAll('.video-player').forEach(player => {
-          const video = player.querySelector('video')
           const overlay = player.querySelector('.video-play-overlay')
-          if (!video || !overlay) return
+          if (!overlay) return
 
-          const play = () => {
+          const youtubeId = parseYouTubeId(player.getAttribute('data-youtube'))
+          const video = player.querySelector('video')
+          if (!youtubeId && !video) return
+
+          /*
+            No caso do YouTube nada de terceiro entra na página antes do clique:
+            só a miniatura. O iframe (e todo o peso do player) é criado aqui, já
+            com o autoplay que o próprio clique autoriza.
+          */
+          const playYouTube = () => {
+            const title = player.getAttribute('data-video-title') || 'Vídeo'
+            const frame = document.createElement('iframe')
+            frame.src = 'https://www.youtube-nocookie.com/embed/' + youtubeId + '?autoplay=1&rel=0&modestbranding=1'
+            frame.title = title
+            frame.className = 'absolute inset-0 w-full h-full'
+            frame.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share'
+            frame.allowFullscreen = true
+            frame.referrerPolicy = 'strict-origin-when-cross-origin'
+            frame.setAttribute('frameborder', '0')
+            player.replaceChildren(frame)
+          }
+
+          const playLocal = () => {
             video.muted = false; video.volume = 1.0;
             video.play().then(() => { video.controls = true; overlay.style.display = 'none' })
             .catch(error => { console.error('Erro ao reproduzir:', error); video.controls = true; overlay.style.display = 'none' })
           }
 
+          const play = youtubeId ? playYouTube : playLocal
           overlay.addEventListener('click', play)
           overlay.addEventListener('keydown', e => {
             if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); play() }
@@ -1786,14 +1842,38 @@
       */
       function initOptionalMedia() {
         const checks = [...document.querySelectorAll('[data-optional-media]')].map(block => {
-          const media = block.querySelector('video, img')
-          if (!media) return Promise.resolve()
-
           const reveal = () => {
             block.style.display = ''
             if (window.ScrollTrigger) ScrollTrigger.refresh()
           }
           const drop = () => block.remove()
+
+          /*
+            Player do YouTube: o que decide é ter um endereço válido em
+            data-youtube, e não um arquivo em disco. Com o atributo vazio (ou com
+            um link que não dá para interpretar) o bloco simplesmente não entra.
+          */
+          const youtubePlayer = block.querySelector('.video-player[data-youtube]')
+          if (youtubePlayer) {
+            const id = parseYouTubeId(youtubePlayer.getAttribute('data-youtube'))
+            if (!id) { drop(); return Promise.resolve() }
+
+            const poster = youtubePlayer.querySelector('[data-youtube-poster]')
+            if (poster) {
+              // maxres não existe para todo vídeo; hq existe sempre
+              poster.src = 'https://i.ytimg.com/vi/' + id + '/maxresdefault.jpg'
+              poster.addEventListener('error', function onErr() {
+                this.removeEventListener('error', onErr)
+                this.src = 'https://i.ytimg.com/vi/' + id + '/hqdefault.jpg'
+              })
+              poster.alt = 'Miniatura do vídeo ' + (youtubePlayer.getAttribute('data-video-title') || '')
+            }
+            reveal()
+            return Promise.resolve()
+          }
+
+          const media = block.querySelector('video, img')
+          if (!media) return Promise.resolve()
 
           if (media.tagName === 'IMG') {
             return new Promise(resolve => {

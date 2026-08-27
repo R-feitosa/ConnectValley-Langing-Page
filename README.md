@@ -52,18 +52,33 @@ no servidor — publicar é sincronizar os arquivos, sem build.
 
 ## Assets pendentes
 
-Uma atualização do Connect 2026 já está implementada no `index.html`, mas
-depende de um arquivo que ainda não chegou. Enquanto o arquivo não existe, o
-bloco é removido da página em tempo de execução (`initOptionalMedia()`), então
-nada aparece quebrado. Basta colocar o arquivo no caminho abaixo — não há
-nenhuma outra alteração a fazer:
+O bloco "Novidades Connect 2026" na seção `#videos` já está pronto, esperando só
+o endereço do vídeo. Ele vem do YouTube: cole a URL em `data-youtube`, no
+próprio bloco dentro do `index.html`.
 
-| Arquivo | Onde aparece |
-| --- | --- |
-| `assets/novidades-connect-2026.mp4` | bloco "Novidades Connect 2026" na seção `#videos` (o vídeo do diálogo do Dr. e da Dra.) |
+```html
+<div class="video-player ..." data-youtube="https://youtu.be/SEU_VIDEO" ...>
+```
+
+Serve qualquer forma de endereço — o link da barra do navegador, o de
+compartilhar, o de incorporar, o de Shorts, ou o ID de 11 caracteres sozinho.
+Enquanto o atributo estiver vazio, o bloco inteiro sai da página
+(`initOptionalMedia()`), então nada quebra até o vídeo ir ao ar.
 
 Ainda em aberto: as **logos de patrocinadores faltantes** — seguir "Atualizando
 patrocinadores" abaixo para cada marca nova.
+
+### Por que YouTube, e não um arquivo no repositório
+
+Os dois vídeos do hero já somam cerca de 16 MB e são o maior peso da página.
+Como o deploy copia `assets/` inteiro para `public_html`, todo MP4 versionado
+vira disco no servidor e banda a cada visita — sem streaming adaptativo, que o
+Apache não faz. O YouTube resolve os três pontos de uma vez.
+
+O embed é preguiçoso de propósito: até o clique a página mostra só a miniatura e
+o botão de play, e nada do YouTube é carregado. Isso mantém a página leve e evita
+cookie de terceiro antes do consentimento — daí também o domínio
+`youtube-nocookie.com` no iframe.
 
 ### Convenção dos retratos de palestrante
 
