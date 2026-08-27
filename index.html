@@ -499,12 +499,12 @@
           <a href="#sobre" class="nav-item">Sobre</a>
           <a href="#mapa" class="nav-item">Mapa</a>
           <a href="#cronograma" class="nav-item">Cronograma</a>
-          <a href="#manifesto" class="nav-item">Manifesto</a>
+          <a href="#videos" class="nav-item">Vídeos</a>
           <a href="#imersao" class="nav-item">Imersão</a>
           <a href="#palestrantes" class="nav-item">Speakers</a>
         </div>
         <div class="hidden md:flex items-center gap-3">
-          <a href="https://connect-valley-app.vercel.app/login" target="_blank" rel="noopener noreferrer" aria-label="Acessar Área do Participante (abre em nova aba)" class="border border-white/30 text-white hover:border-brand-gold hover:text-brand-gold px-5 py-2 rounded-full font-bold uppercase text-[10px] tracking-widest transition-all z-20 font-display">Área do Participante</a>
+          <a href="https://connect-valley-app.vercel.app/login" target="_blank" rel="noopener noreferrer" aria-label="Acessar o aplicativo oficial do Connect 2026 (abre em nova aba)" class="border border-white/30 text-white hover:border-brand-gold hover:text-brand-gold px-5 py-2 rounded-full font-bold uppercase text-[10px] tracking-widest transition-all z-20 font-display">Acesse o App</a>
           <a href="#ingressos" class="bg-brand-gold text-brand-blue-dark px-6 py-2 rounded-full font-bold uppercase text-[10px] tracking-widest hover:bg-white transition-all shadow-lg z-20 font-display">Ingressos</a>
         </div>
       </div>
@@ -514,11 +514,11 @@
       <a href="#sobre" class="text-lg text-white font-display uppercase tracking-widest hover:text-brand-gold transition mobile-link">Sobre</a>
       <a href="#mapa" class="text-lg text-white font-display uppercase tracking-widest hover:text-brand-gold transition mobile-link">Mapa</a>
       <a href="#cronograma" class="text-lg text-white font-display uppercase tracking-widest hover:text-brand-gold transition mobile-link">Cronograma</a>
-      <a href="#manifesto" class="text-lg text-white font-display uppercase tracking-widest hover:text-brand-gold transition mobile-link">Manifesto</a>
+      <a href="#videos" class="text-lg text-white font-display uppercase tracking-widest hover:text-brand-gold transition mobile-link">Vídeos</a>
       <a href="#imersao" class="text-lg text-white font-display uppercase tracking-widest hover:text-brand-gold transition mobile-link">Imersão</a>
       <a href="#palestrantes" class="text-lg text-white font-display uppercase tracking-widest hover:text-brand-gold transition mobile-link">Speakers</a>
       <a href="#ingressos" class="text-lg text-white font-display uppercase tracking-widest font-bold mobile-link">Ingressos</a>
-      <a href="https://connect-valley-app.vercel.app/login" target="_blank" rel="noopener noreferrer" aria-label="Acessar Área do Participante (abre em nova aba)" class="mt-4 px-6 py-3 border border-brand-gold text-brand-gold rounded-full font-display font-bold uppercase tracking-widest text-xs hover:bg-brand-gold hover:text-brand-blue-dark transition duration-300">Área do Participante</a>
+      <a href="https://connect-valley-app.vercel.app/login" target="_blank" rel="noopener noreferrer" aria-label="Acessar o aplicativo oficial do Connect 2026 (abre em nova aba)" class="mt-4 px-6 py-3 border border-brand-gold text-brand-gold rounded-full font-display font-bold uppercase tracking-widest text-xs hover:bg-brand-gold hover:text-brand-blue-dark transition duration-300">Acesse o App</a>
     </div>
 
     <header class="relative min-h-[90vh] flex flex-col justify-between overflow-hidden bg-brand-blue-dark py-16 md:py-24">
@@ -577,10 +577,10 @@
               GARANTIR MINHA VAGA
             </span>
           </a>
-          <a href="https://connect-valley-app.vercel.app/login" target="_blank" rel="noopener noreferrer" aria-label="Acessar Área do Participante (abre em nova aba)" class="group relative inline-flex items-center justify-center overflow-hidden rounded-full p-[1px] font-bold text-white transition-all duration-300 w-full sm:w-auto hover:scale-105">
+          <a href="https://connect-valley-app.vercel.app/login" target="_blank" rel="noopener noreferrer" aria-label="Acessar o aplicativo oficial do Connect 2026 (abre em nova aba)" class="group relative inline-flex items-center justify-center overflow-hidden rounded-full p-[1px] font-bold text-white transition-all duration-300 w-full sm:w-auto hover:scale-105">
             <span class="absolute inset-0 bg-white/20 transition-all duration-300 group-hover:bg-white/40"></span>
             <span class="relative w-full rounded-full bg-brand-blue-dark/80 backdrop-blur-sm px-10 py-4 font-display font-bold tracking-widest text-sm block text-center whitespace-nowrap hover:bg-transparent">
-              ÁREA DO PARTICIPANTE
+              ACESSE O APP
             </span>
           </a>
         </div>
@@ -888,23 +888,50 @@
       </div>
     </section>
 
-    <section id="manifesto" class="py-10 md:py-16 bg-brand-blue-dark relative">
+    <section id="videos" class="py-10 md:py-16 bg-brand-blue-dark relative">
+      <!-- âncora legada: links antigos para #manifesto continuam caindo aqui -->
+      <span id="manifesto" class="block h-0 overflow-hidden" aria-hidden="true"></span>
       <div class="absolute inset-0 tech-grid-bg pointer-events-none z-0"></div>
-      <div class="container mx-auto px-6 relative z-20 max-w-7xl">
-        <div class="text-center mb-12 simple-reveal-hidden">
-          <span class="text-brand-blue-accent uppercase tracking-[0.3em] text-xs font-bold font-display">Play</span>
-          <h2 class="text-3xl md:text-5xl font-display font-bold text-white mt-4 uppercase">Manifesto <span class="text-brand-gold">Connect</span></h2>
-        </div>
-        <div class="relative w-full aspect-video rounded-3xl overflow-hidden border border-brand-blue-mid shadow-[0_0_50px_rgba(0,85,255,0.15)] group simple-reveal-hidden">
-          <video id="manifesto-video" class="w-full h-full object-cover" poster="./assets/backgroundd.JPG">
-            <source src="./assets/hero-video.mp4" type="video/mp4" />
-          </video>
-          <div id="play-overlay" role="button" tabindex="0" aria-label="Reproduzir vídeo do manifesto" class="absolute inset-0 bg-black/40 flex items-center justify-center cursor-pointer transition duration-300 group-hover:bg-black/30 z-20">
-            <div class="w-24 h-24 bg-brand-gold/90 rounded-full flex items-center justify-center shadow-lg backdrop-blur-sm hover:scale-110 transition duration-300">
-              <svg class="w-10 h-10 text-brand-blue-dark ml-2" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
+      <div class="container mx-auto px-6 relative z-20 max-w-7xl space-y-16 md:space-y-20">
+
+        <!-- Vídeo 1 - Connect 2025 -->
+        <div>
+          <div class="text-center mb-12 simple-reveal-hidden">
+            <span class="text-brand-blue-accent uppercase tracking-[0.3em] text-xs font-bold font-display">Play</span>
+            <h2 class="text-3xl md:text-5xl font-display font-bold text-white mt-4 uppercase">Connect <span class="text-brand-gold">2025</span></h2>
+          </div>
+          <div class="video-player relative w-full aspect-video rounded-3xl overflow-hidden border border-brand-blue-mid shadow-[0_0_50px_rgba(0,85,255,0.15)] group simple-reveal-hidden">
+            <video class="w-full h-full object-cover" poster="./assets/backgroundd.JPG">
+              <source src="./assets/hero-video.mp4" type="video/mp4" />
+            </video>
+            <div class="video-play-overlay absolute inset-0 bg-black/40 flex items-center justify-center cursor-pointer transition duration-300 group-hover:bg-black/30 z-20" role="button" tabindex="0" aria-label="Reproduzir o vídeo Connect 2025">
+              <div class="w-24 h-24 bg-brand-gold/90 rounded-full flex items-center justify-center shadow-lg backdrop-blur-sm hover:scale-110 transition duration-300">
+                <svg class="w-10 h-10 text-brand-blue-dark ml-2" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
+              </div>
             </div>
           </div>
         </div>
+
+        <!-- Vídeo 2 - Novidades Connect 2026 (diálogo do Dr. e da Dra.) -->
+        <!-- Fica oculto até o arquivo ./assets/novidades-connect-2026.mp4 existir. Ver initOptionalMedia(). -->
+        <div data-optional-media style="display: none">
+          <div class="text-center mb-12 simple-reveal-hidden">
+            <span class="text-brand-blue-accent uppercase tracking-[0.3em] text-xs font-bold font-display">Novidades</span>
+            <h2 class="text-3xl md:text-5xl font-display font-bold text-white mt-4 uppercase">Novidades <span class="text-brand-gold">Connect 2026</span></h2>
+            <p class="text-gray-400 font-syne mt-4 text-sm md:text-lg">Um bate-papo sobre tudo o que muda nesta edição.</p>
+          </div>
+          <div class="video-player relative w-full aspect-video rounded-3xl overflow-hidden border border-brand-blue-mid shadow-[0_0_50px_rgba(0,85,255,0.15)] group simple-reveal-hidden">
+            <video class="w-full h-full object-cover" preload="metadata" poster="./assets/backgroundd.JPG">
+              <source src="./assets/novidades-connect-2026.mp4" type="video/mp4" />
+            </video>
+            <div class="video-play-overlay absolute inset-0 bg-black/40 flex items-center justify-center cursor-pointer transition duration-300 group-hover:bg-black/30 z-20" role="button" tabindex="0" aria-label="Reproduzir o vídeo Novidades Connect 2026">
+              <div class="w-24 h-24 bg-brand-gold/90 rounded-full flex items-center justify-center shadow-lg backdrop-blur-sm hover:scale-110 transition duration-300">
+                <svg class="w-10 h-10 text-brand-blue-dark ml-2" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </section>
 
@@ -959,6 +986,110 @@
             <img src="./assets/foto-17.JPG" loading="lazy" class="w-full h-full object-cover transition duration-700 group-hover:scale-110 brightness-90 group-hover:brightness-110" alt="Equipe de organização reunida no palco do Connect Valley" />
             <div class="absolute inset-0 bg-brand-blue-dark mix-blend-multiply opacity-50 group-hover:opacity-0 transition duration-500"></div>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="beneficios" class="py-10 md:py-16 bg-brand-blue-mid relative overflow-hidden border-t border-brand-blue-mid/30">
+      <div class="absolute inset-0 tech-grid-bg pointer-events-none z-0"></div>
+      <div id="glow-beneficios" class="absolute -right-32 top-1/4 w-[420px] h-[420px] rounded-full bg-brand-gold/10 blur-[130px] pointer-events-none"></div>
+      <div class="container mx-auto px-6 relative z-20">
+        <div class="text-center mb-12 max-w-3xl mx-auto simple-reveal-hidden">
+          <span class="text-brand-blue-accent font-display uppercase tracking-[0.4em] text-xs font-bold">O que você leva</span>
+          <h2 class="font-display font-bold text-4xl md:text-6xl text-white mt-4 uppercase tracking-tight">BENEFÍCIOS E <span class="text-brand-gold">EXPERIÊNCIAS</span></h2>
+          <p class="text-gray-400 font-syne mt-4 text-sm md:text-lg">Muito além das palestras: certificação, oportunidades e conexões que seguem depois do evento.</p>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+          <!-- Card 1 -->
+          <div class="beneficio-card simple-reveal-hidden bg-brand-blue-dark/60 border border-white/5 p-8 rounded-3xl transition duration-500 hover:border-brand-gold/40 hover:translate-y-[-4px]">
+            <div class="w-12 h-12 rounded-xl bg-brand-gold/10 flex items-center justify-center text-brand-gold mb-5 border border-brand-gold/20 shadow-[0_0_15px_rgba(242,201,76,0.1)]">
+              <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <circle cx="12" cy="9" r="5" stroke-linecap="round" stroke-linejoin="round" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8.5 13.2L7 22l5-2.5L17 22l-1.5-8.8" />
+              </svg>
+            </div>
+            <h3 class="text-white font-display font-bold text-xl uppercase tracking-wide mb-3">20 horas de certificado</h3>
+            <p class="text-gray-400 font-syne text-sm leading-relaxed">Certificado de 20 horas de carga horária emitido para os participantes do evento.</p>
+          </div>
+          <!-- Card 2 -->
+          <div class="beneficio-card simple-reveal-hidden bg-brand-blue-dark/60 border border-white/5 p-8 rounded-3xl transition duration-500 hover:border-brand-gold/40 hover:translate-y-[-4px]">
+            <div class="w-12 h-12 rounded-xl bg-brand-gold/10 flex items-center justify-center text-brand-gold mb-5 border border-brand-gold/20 shadow-[0_0_15px_rgba(242,201,76,0.1)]">
+              <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M17 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                <circle cx="9.5" cy="7" r="4" stroke-linecap="round" stroke-linejoin="round" />
+                <circle cx="18" cy="9" r="3" stroke-linecap="round" stroke-linejoin="round" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M22 13l-1.8-1.8" />
+              </svg>
+            </div>
+            <h3 class="text-white font-display font-bold text-xl uppercase tracking-wide mb-3">Banco de talentos</h3>
+            <p class="text-gray-400 font-syne text-sm leading-relaxed">Conectando empresas a profissionais e pessoas a oportunidades.</p>
+          </div>
+          <!-- Card 3 -->
+          <div class="beneficio-card simple-reveal-hidden bg-brand-blue-dark/60 border border-white/5 p-8 rounded-3xl transition duration-500 hover:border-brand-gold/40 hover:translate-y-[-4px]">
+            <div class="w-12 h-12 rounded-xl bg-brand-gold/10 flex items-center justify-center text-brand-gold mb-5 border border-brand-gold/20 shadow-[0_0_15px_rgba(242,201,76,0.1)]">
+              <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <circle cx="5" cy="18" r="2.5" stroke-linecap="round" stroke-linejoin="round" />
+                <circle cx="19" cy="18" r="2.5" stroke-linecap="round" stroke-linejoin="round" />
+                <circle cx="12" cy="5" r="2.5" stroke-linecap="round" stroke-linejoin="round" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M10.4 7.1L6.6 15.9M13.6 7.1l3.8 8.8M7.5 18h9" />
+              </svg>
+            </div>
+            <h3 class="text-white font-display font-bold text-xl uppercase tracking-wide mb-3">Networking estratégico</h3>
+            <p class="text-gray-400 font-syne text-sm leading-relaxed">Entre empresários, gestores, profissionais e estudantes.</p>
+          </div>
+          <!-- Card 4 -->
+          <div class="beneficio-card simple-reveal-hidden bg-brand-blue-dark/60 border border-white/5 p-8 rounded-3xl transition duration-500 hover:border-brand-gold/40 hover:translate-y-[-4px]">
+            <div class="w-12 h-12 rounded-xl bg-brand-gold/10 flex items-center justify-center text-brand-gold mb-5 border border-brand-gold/20 shadow-[0_0_15px_rgba(242,201,76,0.1)]">
+              <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M10 13a5 5 0 0 0 7.5.6l3-3a5 5 0 0 0-7-7l-1.7 1.7" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M14 11a5 5 0 0 0-7.5-.6l-3 3a5 5 0 0 0 7 7l1.7-1.7" />
+              </svg>
+            </div>
+            <h3 class="text-white font-display font-bold text-xl uppercase tracking-wide mb-3">Conexão entre empresas e talentos</h3>
+            <p class="text-gray-400 font-syne text-sm leading-relaxed">Empresas e talentos se encontram durante o evento.</p>
+          </div>
+          <!-- Card 5 -->
+          <div class="beneficio-card simple-reveal-hidden bg-brand-blue-dark/60 border border-white/5 p-8 rounded-3xl transition duration-500 hover:border-brand-gold/40 hover:translate-y-[-4px]">
+            <div class="w-12 h-12 rounded-xl bg-brand-gold/10 flex items-center justify-center text-brand-gold mb-5 border border-brand-gold/20 shadow-[0_0_15px_rgba(242,201,76,0.1)]">
+              <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 3l9 5-9 5-9-5 9-5z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 13l9 5 9-5M3 17.5l9 5 9-5" />
+              </svg>
+            </div>
+            <h3 class="text-white font-display font-bold text-xl uppercase tracking-wide mb-3">Tudo em um único ambiente</h3>
+            <p class="text-gray-400 font-syne text-sm leading-relaxed">Conteúdos, palestras e experiências centralizados em um único ambiente.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="app" class="py-10 md:py-16 bg-brand-blue-dark relative overflow-hidden border-t border-brand-blue-mid/30">
+      <div class="absolute inset-0 tech-grid-bg pointer-events-none z-0"></div>
+      <div id="glow-app" class="absolute -left-32 bottom-0 w-[420px] h-[420px] rounded-full bg-brand-blue-accent/10 blur-[130px] pointer-events-none"></div>
+      <div class="container mx-auto px-6 relative z-20 max-w-4xl text-center">
+        <div class="simple-reveal-hidden">
+          <span class="text-brand-blue-accent font-display uppercase tracking-[0.4em] text-xs font-bold">Hub oficial</span>
+          <h2 class="font-display font-bold text-4xl md:text-6xl text-white mt-4 uppercase tracking-tight">APLICATIVO <span class="text-brand-gold">OFICIAL</span></h2>
+        </div>
+        <p class="simple-reveal-hidden text-white font-syne text-lg md:text-2xl leading-snug mt-8 max-w-3xl mx-auto">
+          Tudo o que você precisa para viver o Connect 2026 em um só lugar.
+        </p>
+        <p class="simple-reveal-hidden text-gray-400 font-syne text-sm md:text-lg leading-relaxed mt-6 max-w-3xl mx-auto">
+          Acesse o app oficial para acompanhar a programação, conectar-se com participantes e empresas,
+          acessar oportunidades e aproveitar todos os recursos do evento.
+        </p>
+        <ul class="simple-reveal-hidden flex flex-wrap justify-center gap-3 mt-10">
+            <li class="px-4 py-2 rounded-full border border-brand-gold/30 bg-brand-gold/5 text-brand-gold font-syne font-bold text-xs uppercase tracking-widest">20 horas de certificado</li>
+            <li class="px-4 py-2 rounded-full border border-brand-gold/30 bg-brand-gold/5 text-brand-gold font-syne font-bold text-xs uppercase tracking-widest">Networking</li>
+            <li class="px-4 py-2 rounded-full border border-brand-gold/30 bg-brand-gold/5 text-brand-gold font-syne font-bold text-xs uppercase tracking-widest">Oportunidades</li>
+            <li class="px-4 py-2 rounded-full border border-brand-gold/30 bg-brand-gold/5 text-brand-gold font-syne font-bold text-xs uppercase tracking-widest">Conteúdo</li>
+            <li class="px-4 py-2 rounded-full border border-brand-gold/30 bg-brand-gold/5 text-brand-gold font-syne font-bold text-xs uppercase tracking-widest">Conexão com empresas e talentos</li>
+        </ul>
+        <div class="simple-reveal-hidden mt-12">
+          <a href="https://connect-valley-app.vercel.app/login" target="_blank" rel="noopener noreferrer" aria-label="Acessar o aplicativo oficial do Connect 2026 (abre em nova aba)" class="inline-flex items-center gap-3 bg-brand-gold text-brand-blue-dark px-10 py-5 rounded-full font-display font-bold uppercase tracking-widest text-base md:text-lg hover:bg-white transition-all duration-300 shadow-2xl shadow-brand-gold/20">
+            ACESSE O APP
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+          </a>
         </div>
       </div>
     </section>
@@ -1060,7 +1191,20 @@
               </div>
             </div>
           </div>
-          <!-- Slide 3 -->
+          <!-- Slide 4 - Dra. Taísi (oculto até ./assets/taisi.jpg existir) -->
+          <div class="swiper-slide" data-optional-media style="display: none">
+            <div class="w-[280px] md:w-[320px] group relative cursor-pointer" role="button" tabindex="0" aria-label="Ver detalhes da palestrante Dra. Taísi" onclick="openSpeakerModal('Dra. Taísi', 'Connect Valley')">
+              <div class="rounded-3xl overflow-hidden aspect-[3/4] mb-6 relative shadow-2xl border border-brand-blue-mid group-hover:border-brand-gold/60 transition duration-500 hover:shadow-[0_0_30px_rgba(242,201,76,0.15)]">
+                <img src="./assets/taisi.jpg" alt="Dra. Taísi" loading="lazy" class="w-full h-full object-cover brightness-90 group-hover:brightness-110 group-hover:scale-105 transition duration-700" />
+                <div class="absolute inset-0 bg-gradient-to-t from-brand-blue-dark via-brand-blue-dark/20 to-transparent z-10"></div>
+                <div class="absolute bottom-0 left-0 right-0 p-6 z-20">
+                  <h4 class="font-display font-bold text-2xl text-white uppercase tracking-tight">Dra. Taísi</h4>
+                  <p class="text-brand-gold text-xs uppercase font-bold tracking-wider mt-1">Connect Valley</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Slide 5 -->
           <div class="swiper-slide">
             <div class="w-[280px] md:w-[320px] group relative cursor-pointer" role="button" tabindex="0" aria-label="Ver detalhes do palestrante Em Breve" onclick="openSpeakerModal('EM BREVE', 'Surpresa')">
               <div class="rounded-3xl overflow-hidden aspect-[3/4] mb-6 relative shadow-2xl border border-brand-blue-mid bg-brand-blue-mid/20 flex flex-col justify-end p-6 group-hover:border-brand-gold/50 transition duration-500 hover:shadow-[0_0_30px_rgba(242,201,76,0.05)]">
@@ -1075,7 +1219,7 @@
               </div>
             </div>
           </div>
-          <!-- Slide 4 -->
+          <!-- Slide 6 -->
           <div class="swiper-slide">
             <div class="w-[280px] md:w-[320px] group relative cursor-pointer" role="button" tabindex="0" aria-label="Ver detalhes do palestrante Em Breve" onclick="openSpeakerModal('EM BREVE', 'Surpresa')">
               <div class="rounded-3xl overflow-hidden aspect-[3/4] mb-6 relative shadow-2xl border border-brand-blue-mid bg-brand-blue-mid/20 flex flex-col justify-end p-6 group-hover:border-brand-gold/50 transition duration-500 hover:shadow-[0_0_30px_rgba(242,201,76,0.05)]">
@@ -1439,7 +1583,7 @@
             <h4 class="font-display font-bold text-sm text-white uppercase tracking-wider mb-6">Ingressos</h4>
             <ul class="space-y-3 text-xs font-syne">
               <li><a href="#ingressos" class="hover:text-brand-gold transition duration-300">Garantir Vaga</a></li>
-              <li><a href="https://connect-valley-app.vercel.app/login" target="_blank" rel="noopener" class="hover:text-brand-gold transition duration-300">Área do Participante</a></li>
+              <li><a href="https://connect-valley-app.vercel.app/login" target="_blank" rel="noopener" class="hover:text-brand-gold transition duration-300">Acesse o App</a></li>
               <li><a href="https://wa.me/5588993832512" target="_blank" rel="noopener" class="hover:text-brand-gold transition duration-300 font-bold text-brand-gold">Suporte WhatsApp</a></li>
             </ul>
           </div>
@@ -1492,10 +1636,12 @@
         initSiteAnimations()
         initAmbientGlowAnimations()
         initConnectedBackground()
-        initSwipers()
         initVideoPlayer()
         initHeroVideoLoop()
         initScrollSpy()
+        // os carrosséis só montam depois que a mídia opcional entrou ou saiu do
+        // DOM: reconfigurar o Swiper depois de pronto interrompe o marquee
+        initOptionalMedia().then(initSwipers)
         // REMOVIDO: Listeners de mousemove pesados para rotação 3D
       })
 
@@ -1614,15 +1760,70 @@
       }
 
       function initVideoPlayer() {
-        const video = document.getElementById('manifesto-video')
-        const overlay = document.getElementById('play-overlay')
-        if (video && overlay) {
-          overlay.addEventListener('click', () => {
+        document.querySelectorAll('.video-player').forEach(player => {
+          const video = player.querySelector('video')
+          const overlay = player.querySelector('.video-play-overlay')
+          if (!video || !overlay) return
+
+          const play = () => {
             video.muted = false; video.volume = 1.0;
             video.play().then(() => { video.controls = true; overlay.style.display = 'none' })
             .catch(error => { console.error('Erro ao reproduzir:', error); video.controls = true; overlay.style.display = 'none' })
+          }
+
+          overlay.addEventListener('click', play)
+          overlay.addEventListener('keydown', e => {
+            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); play() }
           })
-        }
+        })
+      }
+
+      /*
+        Blocos marcados com [data-optional-media] dependem de um asset que ainda
+        pode não ter sido enviado (o vídeo de novidades, a foto de uma palestrante).
+        Ficam ocultos por padrão e só aparecem quando o arquivo existe de fato —
+        assim nada quebra na página enquanto a mídia não chega.
+      */
+      function initOptionalMedia() {
+        const checks = [...document.querySelectorAll('[data-optional-media]')].map(block => {
+          const media = block.querySelector('video, img')
+          if (!media) return Promise.resolve()
+
+          const reveal = () => {
+            block.style.display = ''
+            if (window.ScrollTrigger) ScrollTrigger.refresh()
+          }
+          const drop = () => block.remove()
+
+          if (media.tagName === 'IMG') {
+            return new Promise(resolve => {
+              const img = new Image()
+              img.onload = () => { reveal(); resolve() }
+              img.onerror = () => { drop(); resolve() }
+              img.src = media.getAttribute('src')
+            })
+          }
+
+          /*
+            Para vídeo vale perguntar se o arquivo existe, e não se este browser
+            consegue decodificá-lo: um HEAD evita esconder o bloco por falta de
+            codec. Se o fetch nem roda (abrir o index.html direto por file://),
+            mostra assim mesmo — no máximo aparece o poster.
+          */
+          const source = media.querySelector('source')
+          const src = source ? source.getAttribute('src') : media.getAttribute('src')
+          if (!src) { drop(); return Promise.resolve() }
+
+          return fetch(src, { method: 'HEAD' })
+            .then(res => { res.ok ? reveal() : drop() })
+            .catch(reveal)
+        })
+
+        // nenhuma checagem pode segurar o resto da página: 3s é o teto
+        return Promise.race([
+          Promise.all(checks),
+          new Promise(resolve => setTimeout(resolve, 3000))
+        ])
       }
 
       function openSpeakerModal(name, role) {

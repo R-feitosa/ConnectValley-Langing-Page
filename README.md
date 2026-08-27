@@ -50,6 +50,26 @@ vídeos e nos caminhos relativos.
 A hospedagem é cPanel. O conteúdo desta pasta corresponde a `public_html/`
 no servidor — publicar é sincronizar os arquivos, sem build.
 
+## Assets pendentes
+
+Duas atualizações do Connect 2026 já estão implementadas no `index.html`, mas
+dependem de arquivos que ainda não chegaram. Enquanto o arquivo não existe, o
+bloco correspondente é removido da página em tempo de execução
+(`initOptionalMedia()`), então nada aparece quebrado. Basta colocar o arquivo no
+caminho abaixo — não há nenhuma outra alteração a fazer:
+
+| Arquivo | Onde aparece |
+| --- | --- |
+| `assets/novidades-connect-2026.mp4` | bloco "Novidades Connect 2026" na seção `#videos` (o vídeo do diálogo do Dr. e da Dra.) |
+| `assets/taisi.jpg` | card da Dra. Taísi no carrossel `#palestrantes` (retrato 3:4, mesmo enquadramento dos demais) |
+
+Ainda em aberto, e sem estrutura pronta porque dependem de material novo:
+
+- **Foto do Severino** — trocar o arquivo `assets/severino-neto.jpg` pela versão
+  atualizada, mantendo o mesmo nome e enquadramento 3:4.
+- **Logos de patrocinadores faltantes** — seguir "Atualizando patrocinadores"
+  abaixo para cada marca nova.
+
 ## Pontos conhecidos a revisar
 
 - O `.htaccess` foi versionado como está em produção e ainda carrega blocos
