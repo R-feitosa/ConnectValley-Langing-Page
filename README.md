@@ -61,7 +61,7 @@ caminho abaixo — não há nenhuma outra alteração a fazer:
 | Arquivo | Onde aparece |
 | --- | --- |
 | `assets/novidades-connect-2026.mp4` | bloco "Novidades Connect 2026" na seção `#videos` (o vídeo do diálogo do Dr. e da Dra.) |
-| `assets/taisi.jpg` | card da Dra. Taísi no carrossel `#palestrantes` (retrato 3:4, mesmo enquadramento dos demais) |
+| `assets/tayse-feitosa.jpg` | card da Tayse Feitosa no carrossel `#palestrantes` (retrato 3:4, mesmo enquadramento dos demais) |
 
 Ainda em aberto, e sem estrutura pronta porque dependem de material novo:
 
