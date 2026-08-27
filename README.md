@@ -52,21 +52,25 @@ no servidor — publicar é sincronizar os arquivos, sem build.
 
 ## Assets pendentes
 
-O bloco "Novidades Connect 2026" na seção `#videos` já está pronto, esperando só
-o endereço do vídeo. Ele vem do YouTube: cole a URL em `data-youtube`, no
-próprio bloco dentro do `index.html`.
+Em aberto: as **logos de patrocinadores faltantes** — seguir "Atualizando
+patrocinadores" abaixo para cada marca nova.
+
+## Trocando o vídeo de novidades
+
+O bloco "Novidades Connect 2026" na seção `#videos` vem do YouTube. Para trocar o
+vídeo, basta a URL em `data-youtube`, no próprio bloco dentro do `index.html`:
 
 ```html
 <div class="video-player ..." data-youtube="https://youtu.be/SEU_VIDEO" ...>
 ```
 
 Serve qualquer forma de endereço — o link da barra do navegador, o de
-compartilhar, o de incorporar, o de Shorts, ou o ID de 11 caracteres sozinho.
-Enquanto o atributo estiver vazio, o bloco inteiro sai da página
-(`initOptionalMedia()`), então nada quebra até o vídeo ir ao ar.
+compartilhar, o de incorporar, o de Shorts, ou o ID de 11 caracteres sozinho. Com
+o atributo vazio o bloco inteiro sai da página (`initOptionalMedia()`), que é o
+jeito de tirar o vídeo do ar sem mexer em mais nada.
 
-Ainda em aberto: as **logos de patrocinadores faltantes** — seguir "Atualizando
-patrocinadores" abaixo para cada marca nova.
+A miniatura vem do próprio YouTube, então não há imagem para produzir: o vídeo
+que estiver no link é o frame que aparece.
 
 ### Por que YouTube, e não um arquivo no repositório
 

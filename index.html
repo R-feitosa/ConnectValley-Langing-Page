@@ -929,7 +929,7 @@
             <p class="text-gray-400 font-syne mt-4 text-sm md:text-lg">Um bate-papo sobre tudo o que muda nesta edição.</p>
           </div>
           <div class="video-player relative w-full aspect-video rounded-3xl overflow-hidden border border-brand-blue-mid shadow-[0_0_50px_rgba(0,85,255,0.15)] group simple-reveal-hidden"
-               data-youtube=""
+               data-youtube="https://youtu.be/LDqesG74Di8"
                data-video-title="Novidades Connect 2026">
             <img class="w-full h-full object-cover" alt="" loading="lazy" data-youtube-poster />
             <div class="video-play-overlay absolute inset-0 bg-black/40 flex items-center justify-center cursor-pointer transition duration-300 group-hover:bg-black/30 z-20" role="button" tabindex="0" aria-label="Reproduzir o vídeo Novidades Connect 2026">
@@ -1860,13 +1860,24 @@
 
             const poster = youtubePlayer.querySelector('[data-youtube-poster]')
             if (poster) {
-              // maxres não existe para todo vídeo; hq existe sempre
-              poster.src = 'https://i.ytimg.com/vi/' + id + '/maxresdefault.jpg'
-              poster.addEventListener('error', function onErr() {
-                this.removeEventListener('error', onErr)
-                this.src = 'https://i.ytimg.com/vi/' + id + '/hqdefault.jpg'
-              })
               poster.alt = 'Miniatura do vídeo ' + (youtubePlayer.getAttribute('data-video-title') || '')
+
+              // maxres não existe para todo vídeo; hq existe sempre. Se nem essa
+              // vier (bloqueador de anúncios, rede da empresa), esconde a imagem:
+              // sem isso o navegador desenha o texto do alt sobre o fundo, o que
+              // parece defeito. O botão de play continua lá e o vídeo continua
+              // tocando ao clique.
+              const fallbacks = ['maxresdefault', 'hqdefault']
+              let tentativa = 0
+              poster.addEventListener('error', () => {
+                tentativa += 1
+                if (tentativa < fallbacks.length) {
+                  poster.src = 'https://i.ytimg.com/vi/' + id + '/' + fallbacks[tentativa] + '.jpg'
+                } else {
+                  poster.remove()
+                }
+              })
+              poster.src = 'https://i.ytimg.com/vi/' + id + '/' + fallbacks[0] + '.jpg'
             }
             reveal()
             return Promise.resolve()
