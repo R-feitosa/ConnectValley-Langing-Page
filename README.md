@@ -52,23 +52,31 @@ no servidor — publicar é sincronizar os arquivos, sem build.
 
 ## Assets pendentes
 
-Duas atualizações do Connect 2026 já estão implementadas no `index.html`, mas
-dependem de arquivos que ainda não chegaram. Enquanto o arquivo não existe, o
-bloco correspondente é removido da página em tempo de execução
-(`initOptionalMedia()`), então nada aparece quebrado. Basta colocar o arquivo no
-caminho abaixo — não há nenhuma outra alteração a fazer:
+Uma atualização do Connect 2026 já está implementada no `index.html`, mas
+depende de um arquivo que ainda não chegou. Enquanto o arquivo não existe, o
+bloco é removido da página em tempo de execução (`initOptionalMedia()`), então
+nada aparece quebrado. Basta colocar o arquivo no caminho abaixo — não há
+nenhuma outra alteração a fazer:
 
 | Arquivo | Onde aparece |
 | --- | --- |
 | `assets/novidades-connect-2026.mp4` | bloco "Novidades Connect 2026" na seção `#videos` (o vídeo do diálogo do Dr. e da Dra.) |
-| `assets/tayse-feitosa.jpg` | card da Tayse Feitosa no carrossel `#palestrantes` (retrato 3:4, mesmo enquadramento dos demais) |
 
-Ainda em aberto, e sem estrutura pronta porque dependem de material novo:
+Ainda em aberto: as **logos de patrocinadores faltantes** — seguir "Atualizando
+patrocinadores" abaixo para cada marca nova.
 
-- **Foto do Severino** — trocar o arquivo `assets/severino-neto.jpg` pela versão
-  atualizada, mantendo o mesmo nome e enquadramento 3:4.
-- **Logos de patrocinadores faltantes** — seguir "Atualizando patrocinadores"
-  abaixo para cada marca nova.
+### Convenção dos retratos de palestrante
+
+Os arquivos em `assets/` são JPEG de verdade, `1080x1440` (3:4, o mesmo
+`aspect-ratio` do card), com nome em minúsculas no formato `nome-sobrenome.jpg`.
+Vale conferir os três pontos, porque cada um já causou problema:
+
+- **Extensão x conteúdo** — renomear um PNG para `.jpg` não converte nada. O
+  navegador até exibe, mas o arquivo fica 10x maior. Converta de fato.
+- **Maiúsculas** — o servidor é Linux e diferencia; `Tayse-Feitosa.jpg` não
+  atende uma referência a `tayse-feitosa.jpg`.
+- **Peso** — mirar em ~150 KB (JPEG progressivo, qualidade 82). Acima disso a
+  imagem está pesando mais que o necessário para um card de 320 px.
 
 ## Pontos conhecidos a revisar
 
