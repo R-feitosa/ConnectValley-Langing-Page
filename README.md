@@ -110,6 +110,14 @@ já custou uma rodada de retrabalho:
 trazer o nome nem o cargo — o card já os escreve por cima, e uma arte com texto
 faz a informação aparecer duas vezes.
 
+**Ao trocar o conteúdo de um arquivo mantendo o nome, incremente o `?v=` da
+referência no `index.html`.** O `.htaccess` manda o navegador guardar imagens por
+um ano; sem trocar o endereço, quem já visitou o site continua vendo a versão
+antiga por tempo indeterminado. Isso já aconteceu uma vez: os retratos foram
+substituídos, o site em produção seguiu exibindo os antigos, e o único card
+correto era o do palestrante cujo arquivo tinha nome inédito. Arquivo com nome
+novo não precisa de `?v=`.
+
 **Logos de patrocinador** (`assets/logos/<cota>/marca.png`): PNG com fundo
 transparente e o logo em **branco monocromático**. Os cards são azul-escuros, então
 um logo colorido feito para fundo claro fica ilegível ou some — o que importa não
