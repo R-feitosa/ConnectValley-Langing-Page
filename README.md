@@ -52,22 +52,20 @@ no servidor — publicar é sincronizar os arquivos, sem build.
 
 ## Assets pendentes
 
-Dois arquivos em produção com o designer. Nos dois casos é só substituir o
-arquivo no caminho indicado — não há alteração de código a fazer.
+Falta um arquivo, em produção com o designer: a arte corrigida da Tayse Feitosa.
+A atual traz "Sócia/Fouder" — o erro está gravado na imagem, não no texto da
+página. Basta substituir `assets/tayse-feitosa.jpg`, sem alteração de código.
 
-| Arquivo | O que muda |
-| --- | --- |
-| `assets/logos/ouro/sp-engrenagem.png` | entra como 11ª marca da cota Ouro, fechando a lista de patrocinadores |
-| `assets/tayse-feitosa.jpg` | corrige "Sócia/Fouder" para "Sócia/Founder", erro gravado na arte atual |
+Os patrocinadores estão completos: 45 logos, e as quatro cotas batem com a lista
+oficial (Diamante 4, Ouro+ 13, Ouro 11, Prata 17).
 
-Ao adicionar a SP Engrenagem, incluir também o card no carrossel `#construtores`,
-seguindo o molde das demais marcas da cota. As especificações de arquivo estão em
-"Convenção dos logos de patrocinador", mais abaixo.
+Nota sobre nomes, porque as duas duplas já causaram confusão:
 
-Nota sobre nomes: **Nort Motos e Grupo HWS são a mesma empresa**, cadastrada como
-Grupo HWS, e a **SP Engrenagem** também aparece como **CasaLar**. O site usa
-Grupo HWS; material que chegar com a marca Nort Motos é a mesma cota Diamante,
-não um patrocinador a mais.
+- **Nort Motos e Grupo HWS são a mesma empresa**, cadastrada como Grupo HWS. O
+  site usa Grupo HWS; material que chegar com a marca Nort Motos é a mesma cota
+  Diamante, não um patrocinador novo.
+- **SP Engrenagem e CasaLar são a mesma empresa.** A lista de patrocinadores usa
+  SP Engrenagem; o card usa CasaLar, que é a marca da arte.
 
 ## Trocando o vídeo de novidades
 
