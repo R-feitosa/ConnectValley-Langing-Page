@@ -52,14 +52,22 @@ no servidor — publicar é sincronizar os arquivos, sem build.
 
 ## Assets pendentes
 
-**SP Engrenagem** (cota Ouro) é o único patrocinador da lista que ainda não está
-no site: o logo não veio em nenhuma entrega. A marca também aparece como
-**CasaLar** — nenhum dos dois nomes está nas telas do motion, então o arquivo
-precisa vir da própria marca.
+Dois arquivos em produção com o designer. Nos dois casos é só substituir o
+arquivo no caminho indicado — não há alteração de código a fazer.
+
+| Arquivo | O que muda |
+| --- | --- |
+| `assets/logos/ouro/sp-engrenagem.png` | entra como 11ª marca da cota Ouro, fechando a lista de patrocinadores |
+| `assets/tayse-feitosa.jpg` | corrige "Sócia/Fouder" para "Sócia/Founder", erro gravado na arte atual |
+
+Ao adicionar a SP Engrenagem, incluir também o card no carrossel `#construtores`,
+seguindo o molde das demais marcas da cota. As especificações de arquivo estão em
+"Convenção dos logos de patrocinador", mais abaixo.
 
 Nota sobre nomes: **Nort Motos e Grupo HWS são a mesma empresa**, cadastrada como
-Grupo HWS. O site usa Grupo HWS; se aparecer material com a marca Nort Motos, é
-a mesma cota Diamante, não um patrocinador a mais.
+Grupo HWS, e a **SP Engrenagem** também aparece como **CasaLar**. O site usa
+Grupo HWS; material que chegar com a marca Nort Motos é a mesma cota Diamante,
+não um patrocinador a mais.
 
 ## Trocando o vídeo de novidades
 
@@ -90,18 +98,26 @@ o botão de play, e nada do YouTube é carregado. Isso mantém a página leve e 
 cookie de terceiro antes do consentimento — daí também o domínio
 `youtube-nocookie.com` no iframe.
 
-### Convenção dos retratos de palestrante
+### Convenção dos retratos e dos logos de patrocinador
 
-Os arquivos em `assets/` são JPEG de verdade, `1080x1440` (3:4, o mesmo
-`aspect-ratio` do card), com nome em minúsculas no formato `nome-sobrenome.jpg`.
-Vale conferir os três pontos, porque cada um já causou problema:
+Três pontos valem para qualquer imagem que entrar em `assets/`, porque cada um
+já custou uma rodada de retrabalho:
 
 - **Extensão x conteúdo** — renomear um PNG para `.jpg` não converte nada. O
-  navegador até exibe, mas o arquivo fica 10x maior. Converta de fato.
+  navegador até exibe, mas o arquivo fica dez vezes maior.
 - **Maiúsculas** — o servidor é Linux e diferencia; `Tayse-Feitosa.jpg` não
   atende uma referência a `tayse-feitosa.jpg`.
-- **Peso** — mirar em ~150 KB (JPEG progressivo, qualidade 82). Acima disso a
-  imagem está pesando mais que o necessário para um card de 320 px.
+- **Peso** — mirar em ~150 KB. Acima disso a imagem pesa mais que o necessário
+  para o tamanho em que é exibida.
+
+**Retratos de palestrante** (`assets/nome-sobrenome.jpg`): JPEG progressivo,
+`1080x1440` (3:4, o mesmo `aspect-ratio` do card), qualidade 82.
+
+**Logos de patrocinador** (`assets/logos/<cota>/marca.png`): PNG com fundo
+transparente e o logo em **branco monocromático**. Os cards são azul-escuros, então
+um logo colorido feito para fundo claro fica ilegível ou some — o que importa não
+é só remover o fundo, é ter a variante branca da marca. Vetor (SVG) serve e é
+melhor ainda.
 
 ## Pontos conhecidos a revisar
 
