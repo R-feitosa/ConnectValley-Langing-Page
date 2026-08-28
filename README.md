@@ -50,14 +50,11 @@ vídeos e nos caminhos relativos.
 A hospedagem é cPanel. O conteúdo desta pasta corresponde a `public_html/`
 no servidor — publicar é sincronizar os arquivos, sem build.
 
-## Assets pendentes
+## Estado dos assets
 
-Falta um arquivo, em produção com o designer: a arte corrigida da Tayse Feitosa.
-A atual traz "Sócia/Fouder" — o erro está gravado na imagem, não no texto da
-página. Basta substituir `assets/tayse-feitosa.jpg`, sem alteração de código.
-
-Os patrocinadores estão completos: 45 logos, e as quatro cotas batem com a lista
-oficial (Diamante 4, Ouro+ 13, Ouro 11, Prata 17).
+Sem pendências. Os patrocinadores estão completos — 45 logos, com as quatro cotas
+batendo com a lista oficial (Diamante 4, Ouro+ 13, Ouro 11, Prata 17) — e os
+quatro retratos de palestrante estão na versão sem texto na arte.
 
 Nota sobre nomes, porque as duas duplas já causaram confusão:
 
@@ -109,7 +106,9 @@ já custou uma rodada de retrabalho:
   para o tamanho em que é exibida.
 
 **Retratos de palestrante** (`assets/nome-sobrenome.jpg`): JPEG progressivo,
-`1080x1440` (3:4, o mesmo `aspect-ratio` do card), qualidade 82.
+`1080x1440` (3:4, o mesmo `aspect-ratio` do card), qualidade 82. A arte não deve
+trazer o nome nem o cargo — o card já os escreve por cima, e uma arte com texto
+faz a informação aparecer duas vezes.
 
 **Logos de patrocinador** (`assets/logos/<cota>/marca.png`): PNG com fundo
 transparente e o logo em **branco monocromático**. Os cards são azul-escuros, então
