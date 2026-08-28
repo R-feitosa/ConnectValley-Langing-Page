@@ -52,8 +52,8 @@ no servidor — publicar é sincronizar os arquivos, sem build.
 
 ## Assets pendentes
 
-Em aberto: as **logos de patrocinadores faltantes** — seguir "Atualizando
-patrocinadores" abaixo para cada marca nova.
+- **SP Engrenagem / CasaLar** (cota Ouro) — não veio logo; falta o arquivo.
+- **Grupo HWS** e **Sebrae** — o arquivo existe, mas a cota não foi definida.
 
 ## Trocando o vídeo de novidades
 
