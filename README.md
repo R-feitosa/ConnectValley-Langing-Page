@@ -52,10 +52,14 @@ no servidor — publicar é sincronizar os arquivos, sem build.
 
 ## Assets pendentes
 
-- **SP Engrenagem** (cota Ouro) — consta da lista de patrocinadores, mas não
-  veio logo em nenhuma entrega; falta o arquivo.
-- **Nort Motos** — está no site como Diamante, mas não aparece na lista de
-  patrocinadores mais recente. A conferir antes de sair ou ficar.
+**SP Engrenagem** (cota Ouro) é o único patrocinador da lista que ainda não está
+no site: o logo não veio em nenhuma entrega. A marca também aparece como
+**CasaLar** — nenhum dos dois nomes está nas telas do motion, então o arquivo
+precisa vir da própria marca.
+
+Nota sobre nomes: **Nort Motos e Grupo HWS são a mesma empresa**, cadastrada como
+Grupo HWS. O site usa Grupo HWS; se aparecer material com a marca Nort Motos, é
+a mesma cota Diamante, não um patrocinador a mais.
 
 ## Trocando o vídeo de novidades
 
