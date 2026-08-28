@@ -162,13 +162,10 @@
       }
       .fixed-bottom-bar.visible { transform: translateY(0); }
       
-      @keyframes progress-fill {
-        from { width: 0; }
-        to { width: 5%; } /* Antes estava 0% */
-      }
+      /* A largura é definida por initBarraPreVenda(), que a calcula pela data. */
       .progress-fill {
         width: 0;
-        animation: progress-fill 2s ease-out forwards 1s;
+        transition: width 2s ease-out;
       }
 
       /* CARDS */
@@ -620,9 +617,9 @@
       <div class="relative z-10 w-full md:max-w-md flex flex-col gap-1">
         <div class="flex justify-between text-[9px] md:text-xs uppercase font-bold tracking-wider text-gray-400 font-display">
           <span class="text-brand-gold">PRÉ-VENDA INICIADA!</span>
-          <span class="text-gray-400">5% Vendido</span>
+          <span class="text-gray-400" data-pre-venda-rotulo>50% Vendido</span>
         </div>
-        <div class="w-full h-2 md:h-4 bg-gray-800 rounded-full overflow-hidden border border-gray-700" role="progressbar" aria-valuenow="5" aria-valuemin="0" aria-valuemax="100" aria-label="Porcentagem de ingressos vendidos">
+        <div class="w-full h-2 md:h-4 bg-gray-800 rounded-full overflow-hidden border border-gray-700" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" aria-label="Porcentagem de ingressos vendidos">
           <div class="h-full bg-gradient-to-r from-brand-blue-accent to-brand-gold progress-fill"></div>
         </div>
       </div>
@@ -1671,6 +1668,7 @@
         initAmbientGlowAnimations()
         initConnectedBackground()
         initVideoPlayer()
+        initBarraPreVenda()
         initHeroVideoLoop()
         initScrollSpy()
         // os carrosséis só montam depois que a mídia opcional entrou ou saiu do
@@ -1817,6 +1815,43 @@
         } catch (e) {
           return ''
         }
+      }
+
+      /*
+        A barra de pré-venda sobe um ponto por dia: 50% na data-base e 99% no dia
+        do evento. Para em 99 de propósito — 100% diria "esgotado", que é uma
+        afirmação sobre a venda, não sobre o tempo, e a barra não tem como saber.
+
+        A data-base é fixa e com fuso de Brasília para a virada do dia não
+        depender do fuso de quem visita. O cálculo é feito no navegador, então
+        segue o relógio do visitante; num site estático não há de onde tirar a
+        hora do servidor.
+      */
+      const PRE_VENDA = {
+        base: new Date('2026-08-28T00:00:00-03:00'),
+        inicial: 50,
+        porDia: 1,
+        teto: 99
+      }
+
+      function percentualPreVenda(agora = new Date()) {
+        const UM_DIA = 24 * 60 * 60 * 1000
+        const dias = Math.floor((agora - PRE_VENDA.base) / UM_DIA)
+        const bruto = PRE_VENDA.inicial + dias * PRE_VENDA.porDia
+        // nunca abaixo do inicial: protege de relógio atrasado no dispositivo
+        return Math.min(PRE_VENDA.teto, Math.max(PRE_VENDA.inicial, bruto))
+      }
+
+      function initBarraPreVenda() {
+        const barra = document.querySelector('.progress-fill')
+        const rotulo = document.querySelector('[data-pre-venda-rotulo]')
+        const caixa = barra && barra.closest('[role="progressbar"]')
+        const pct = percentualPreVenda()
+
+        if (rotulo) rotulo.textContent = pct + '% Vendido'
+        if (caixa) caixa.setAttribute('aria-valuenow', String(pct))
+        // o atraso preserva a entrada animada que a barra já tinha
+        if (barra) setTimeout(() => { barra.style.width = pct + '%' }, 1000)
       }
 
       function initVideoPlayer() {

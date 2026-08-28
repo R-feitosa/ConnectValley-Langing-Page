@@ -124,6 +124,22 @@ um logo colorido feito para fundo claro fica ilegível ou some — o que importa
 é só remover o fundo, é ter a variante branca da marca. Vetor (SVG) serve e é
 melhor ainda.
 
+## Barra de pré-venda
+
+A porcentagem da barra na faixa inferior não é digitada no HTML: sai de
+`percentualPreVenda()`, que parte de 50% em 28/08/2026 e soma um ponto por dia,
+chegando a 99% em 16/10/2026, o dia do evento. Para em 99 de propósito — 100%
+diria "esgotado", que é uma afirmação sobre a venda, e a barra não tem como
+saber disso.
+
+Para mudar o ritmo ou o ponto de partida, os quatro valores estão juntos na
+constante `PRE_VENDA`, no `index.html`. O rótulo, o `aria-valuenow` e a largura
+da barra derivam todos desse mesmo cálculo, então basta mexer ali.
+
+O cálculo roda no navegador e segue o relógio do visitante; num site estático
+não há de onde tirar a hora do servidor. A data-base tem fuso de Brasília fixo
+para a virada do dia não variar conforme o fuso de quem acessa.
+
 ## Pontos conhecidos a revisar
 
 - O `.htaccess` foi versionado como está em produção e ainda carrega blocos
