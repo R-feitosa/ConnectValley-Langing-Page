@@ -52,8 +52,10 @@ no servidor — publicar é sincronizar os arquivos, sem build.
 
 ## Assets pendentes
 
-- **SP Engrenagem / CasaLar** (cota Ouro) — não veio logo; falta o arquivo.
-- **Grupo HWS** e **Sebrae** — o arquivo existe, mas a cota não foi definida.
+- **SP Engrenagem** (cota Ouro) — consta da lista de patrocinadores, mas não
+  veio logo em nenhuma entrega; falta o arquivo.
+- **Nort Motos** — está no site como Diamante, mas não aparece na lista de
+  patrocinadores mais recente. A conferir antes de sair ou ficar.
 
 ## Trocando o vídeo de novidades
 
