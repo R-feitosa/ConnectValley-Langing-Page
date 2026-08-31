@@ -3,7 +3,25 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Connect Valley | RF Group</title>
+    <title>Connect Valley 2026 | 16 e 17 de outubro, Sobral (CE)</title>
+    <meta name="description" content="A maior imersão de negócios e inovação do interior do Ceará: palestras, networking e 20 horas de certificado. 16 e 17 de outubro de 2026, em Sobral." />
+    <link rel="canonical" href="https://connectvaley.com.br/" />
+
+    <!-- Prévia dos links compartilhados (WhatsApp, Instagram, LinkedIn, Facebook) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:site_name" content="Connect Valley" />
+    <meta property="og:url" content="https://connectvaley.com.br/" />
+    <meta property="og:title" content="Connect Valley 2026 | 16 e 17 de outubro, Sobral (CE)" />
+    <meta property="og:description" content="A maior imersão de negócios e inovação do interior do Ceará. Dois dias de palestras, networking e oportunidades, com 20 horas de certificado." />
+    <meta property="og:image" content="https://connectvaley.com.br/assets/og-connect-2026.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Connect Valley 2026 — O futuro começa em outubro. 16 e 17 de outubro, Sobral, Ceará." />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Connect Valley 2026 | 16 e 17 de outubro, Sobral (CE)" />
+    <meta name="twitter:description" content="A maior imersão de negócios e inovação do interior do Ceará. Dois dias de palestras, networking e oportunidades, com 20 horas de certificado." />
+    <meta name="twitter:image" content="https://connectvaley.com.br/assets/og-connect-2026.jpg" />
 
     <link rel="icon" href="./assets/icone.svg" type="image/svg+xml" />
     <link rel="icon" type="image/png" sizes="192x192" href="./assets/logo-icone.png" />
@@ -595,7 +613,7 @@
     <div id="bottom-bar" class="fixed bottom-0 left-0 w-full fixed-bottom-bar z-50 py-3 px-3 md:py-6 md:px-12 flex flex-col md:flex-row items-center justify-between gap-3 bg-[#030816]/95 border-t border-[#F2C94C]/30 shadow-2xl overflow-hidden">
       <canvas id="bottom-bar-canvas"></canvas>
       <div class="relative z-10 flex flex-col items-center md:items-start gap-1 w-full md:w-auto">
-        <span class="text-[9px] md:text-sm uppercase text-gray-400 tracking-[0.2em] font-display">O evento começa em:</span>
+        <span id="countdown-rotulo" class="text-[9px] md:text-sm uppercase text-gray-400 tracking-[0.2em] font-display">O evento começa em:</span>
         <div class="flex items-center justify-center gap-2 text-brand-gold font-bold font-mono w-full">
           <div class="flex flex-col md:flex-row items-center bg-white/5 rounded-lg px-3 py-1 md:bg-transparent md:p-0 min-w-[50px] md:min-w-0">
             <span id="days" class="text-lg md:text-4xl leading-none">00</span><span class="text-[9px] md:text-lg text-gray-500 md:ml-1 uppercase">d</span>
@@ -1548,26 +1566,26 @@
       </div>
       <div class="swiper-gallery-top swiper simple-reveal-hidden pl-6 md:pl-20 mb-8 relative z-20">
         <div class="swiper-wrapper">
-          <div class="swiper-slide hover-glow-blue"><div class="relative h-64 w-[400px] shrink-0 rounded-xl overflow-hidden border border-brand-blue-mid group"><img src="./assets/foto-dr-roneely.jpg" loading="lazy" class="h-full w-full object-cover brightness-90 group-hover:brightness-110 transition duration-500" /></div></div>
-          <div class="swiper-slide hover-glow-blue"><div class="relative h-64 w-[400px] shrink-0 rounded-xl overflow-hidden border border-brand-blue-mid group"><img src="./assets/foto-2.JPG" loading="lazy" class="h-full w-full object-cover brightness-90 group-hover:brightness-110 transition duration-500" /></div></div>
-          <div class="swiper-slide hover-glow-blue"><div class="relative h-64 w-[400px] shrink-0 rounded-xl overflow-hidden border border-brand-blue-mid group"><img src="./assets/foto-3.webp" loading="lazy" class="h-full w-full object-cover brightness-90 group-hover:brightness-110 transition duration-500" /></div></div>
-          <div class="swiper-slide hover-glow-blue"><div class="relative h-64 w-[400px] shrink-0 rounded-xl overflow-hidden border border-brand-blue-mid group"><img src="./assets/foto-4.JPG" loading="lazy" class="h-full w-full object-cover brightness-90 group-hover:brightness-110 transition duration-500" /></div></div>
-          <div class="swiper-slide hover-glow-blue"><div class="relative h-64 w-[400px] shrink-0 rounded-xl overflow-hidden border border-brand-blue-mid group"><img src="./assets/foto-5.JPG" loading="lazy" class="h-full w-full object-cover brightness-90 group-hover:brightness-110 transition duration-500" /></div></div>
-          <div class="swiper-slide hover-glow-blue"><div class="relative h-64 w-[400px] shrink-0 rounded-xl overflow-hidden border border-brand-blue-mid group"><img src="./assets/foto-6.JPG" loading="lazy" class="h-full w-full object-cover brightness-90 group-hover:brightness-110 transition duration-500" /></div></div>
-          <div class="swiper-slide hover-glow-blue"><div class="relative h-64 w-[400px] shrink-0 rounded-xl overflow-hidden border border-brand-blue-mid group"><img src="./assets/foto-7.JPG" loading="lazy" class="h-full w-full object-cover brightness-90 group-hover:brightness-110 transition duration-500" /></div></div>
-          <div class="swiper-slide hover-glow-blue"><div class="relative h-64 w-[400px] shrink-0 rounded-xl overflow-hidden border border-brand-blue-mid group"><img src="./assets/foto-8.JPG" loading="lazy" class="h-full w-full object-cover brightness-90 group-hover:brightness-110 transition duration-500" /></div></div>
+          <div class="swiper-slide hover-glow-blue"><div class="relative h-64 w-[400px] shrink-0 rounded-xl overflow-hidden border border-brand-blue-mid group"><img src="./assets/foto-dr-roneely.jpg" loading="lazy" alt="Palestrante em bate-papo no palco, sentado em poltrona diante do painel do Connect Valley" class="h-full w-full object-cover brightness-90 group-hover:brightness-110 transition duration-500" /></div></div>
+          <div class="swiper-slide hover-glow-blue"><div class="relative h-64 w-[400px] shrink-0 rounded-xl overflow-hidden border border-brand-blue-mid group"><img src="./assets/foto-2.JPG" loading="lazy" alt="Palestrante de terno apresentando no palco principal" class="h-full w-full object-cover brightness-90 group-hover:brightness-110 transition duration-500" /></div></div>
+          <div class="swiper-slide hover-glow-blue"><div class="relative h-64 w-[400px] shrink-0 rounded-xl overflow-hidden border border-brand-blue-mid group"><img src="./assets/foto-3.webp" loading="lazy" alt="Palestrante ao microfone diante da tela de apresentação" class="h-full w-full object-cover brightness-90 group-hover:brightness-110 transition duration-500" /></div></div>
+          <div class="swiper-slide hover-glow-blue"><div class="relative h-64 w-[400px] shrink-0 rounded-xl overflow-hidden border border-brand-blue-mid group"><img src="./assets/foto-4.JPG" loading="lazy" alt="Equipe da Fortes Tecnologia recebendo visitantes no estande" class="h-full w-full object-cover brightness-90 group-hover:brightness-110 transition duration-500" /></div></div>
+          <div class="swiper-slide hover-glow-blue"><div class="relative h-64 w-[400px] shrink-0 rounded-xl overflow-hidden border border-brand-blue-mid group"><img src="./assets/foto-5.JPG" loading="lazy" alt="Convidados em conversa no palco, um deles ao microfone" class="h-full w-full object-cover brightness-90 group-hover:brightness-110 transition duration-500" /></div></div>
+          <div class="swiper-slide hover-glow-blue"><div class="relative h-64 w-[400px] shrink-0 rounded-xl overflow-hidden border border-brand-blue-mid group"><img src="./assets/foto-6.JPG" loading="lazy" alt="Equipe de organização do evento reunida no palco" class="h-full w-full object-cover brightness-90 group-hover:brightness-110 transition duration-500" /></div></div>
+          <div class="swiper-slide hover-glow-blue"><div class="relative h-64 w-[400px] shrink-0 rounded-xl overflow-hidden border border-brand-blue-mid group"><img src="./assets/foto-7.JPG" loading="lazy" alt="Grupo de participantes no estande do Sest Senat" class="h-full w-full object-cover brightness-90 group-hover:brightness-110 transition duration-500" /></div></div>
+          <div class="swiper-slide hover-glow-blue"><div class="relative h-64 w-[400px] shrink-0 rounded-xl overflow-hidden border border-brand-blue-mid group"><img src="./assets/foto-8.JPG" loading="lazy" alt="Participantes no estande de tecnologia e soluções empresariais" class="h-full w-full object-cover brightness-90 group-hover:brightness-110 transition duration-500" /></div></div>
         </div>
       </div>
       <div class="swiper-gallery-bottom swiper simple-reveal-hidden pl-6 md:pl-20 relative z-20">
         <div class="swiper-wrapper">
-          <div class="swiper-slide hover-glow-blue"><div class="relative h-64 w-[400px] shrink-0 rounded-xl overflow-hidden border border-brand-blue-mid group"><img src="./assets/foto-9.JPG" loading="lazy" class="h-full w-full object-cover brightness-90 group-hover:brightness-110 transition duration-500" /></div></div>
-          <div class="swiper-slide hover-glow-blue"><div class="relative h-64 w-[400px] shrink-0 rounded-xl overflow-hidden border border-brand-blue-mid group"><img src="./assets/foto-10.JPG" loading="lazy" class="h-full w-full object-cover brightness-90 group-hover:brightness-110 transition duration-500" /></div></div>
-          <div class="swiper-slide hover-glow-blue"><div class="relative h-64 w-[400px] shrink-0 rounded-xl overflow-hidden border border-brand-blue-mid group"><img src="./assets/foto-11.JPG" loading="lazy" class="h-full w-full object-cover brightness-90 group-hover:brightness-110 transition duration-500" /></div></div>
-          <div class="swiper-slide hover-glow-blue"><div class="relative h-64 w-[400px] shrink-0 rounded-xl overflow-hidden border border-brand-blue-mid group"><img src="./assets/foto-12.JPG" loading="lazy" class="h-full w-full object-cover brightness-90 group-hover:brightness-110 transition duration-500" /></div></div>
-          <div class="swiper-slide hover-glow-blue"><div class="relative h-64 w-[400px] shrink-0 rounded-xl overflow-hidden border border-brand-blue-mid group"><img src="./assets/foto-13.JPG" loading="lazy" class="h-full w-full object-cover brightness-90 group-hover:brightness-110 transition duration-500" /></div></div>
-          <div class="swiper-slide hover-glow-blue"><div class="relative h-64 w-[400px] shrink-0 rounded-xl overflow-hidden border border-brand-blue-mid group"><img src="./assets/foto-14.JPG" loading="lazy" class="h-full w-full object-cover brightness-90 group-hover:brightness-110 transition duration-500" /></div></div>
-          <div class="swiper-slide hover-glow-blue"><div class="relative h-64 w-[400px] shrink-0 rounded-xl overflow-hidden border border-brand-blue-mid group"><img src="./assets/foto-15.JPG" loading="lazy" class="h-full w-full object-cover brightness-90 group-hover:brightness-110 transition duration-500" /></div></div>
-          <div class="swiper-slide hover-glow-blue"><div class="relative h-64 w-[400px] shrink-0 rounded-xl overflow-hidden border border-brand-blue-mid group"><img src="./assets/foto-16.JPG" loading="lazy" class="h-full w-full object-cover brightness-90 group-hover:brightness-110 transition duration-500" /></div></div>
+          <div class="swiper-slide hover-glow-blue"><div class="relative h-64 w-[400px] shrink-0 rounded-xl overflow-hidden border border-brand-blue-mid group"><img src="./assets/foto-9.JPG" loading="lazy" alt="Equipe atendendo visitantes em estande da feira de negócios" class="h-full w-full object-cover brightness-90 group-hover:brightness-110 transition duration-500" /></div></div>
+          <div class="swiper-slide hover-glow-blue"><div class="relative h-64 w-[400px] shrink-0 rounded-xl overflow-hidden border border-brand-blue-mid group"><img src="./assets/foto-10.JPG" loading="lazy" alt="Profissionais reunidos em mesa no estande de BPO financeiro" class="h-full w-full object-cover brightness-90 group-hover:brightness-110 transition duration-500" /></div></div>
+          <div class="swiper-slide hover-glow-blue"><div class="relative h-64 w-[400px] shrink-0 rounded-xl overflow-hidden border border-brand-blue-mid group"><img src="./assets/foto-11.JPG" loading="lazy" alt="Participantes confraternizando na área de convivência do evento" class="h-full w-full object-cover brightness-90 group-hover:brightness-110 transition duration-500" /></div></div>
+          <div class="swiper-slide hover-glow-blue"><div class="relative h-64 w-[400px] shrink-0 rounded-xl overflow-hidden border border-brand-blue-mid group"><img src="./assets/foto-12.JPG" loading="lazy" alt="Palestrante ao microfone durante apresentação" class="h-full w-full object-cover brightness-90 group-hover:brightness-110 transition duration-500" /></div></div>
+          <div class="swiper-slide hover-glow-blue"><div class="relative h-64 w-[400px] shrink-0 rounded-xl overflow-hidden border border-brand-blue-mid group"><img src="./assets/foto-13.JPG" loading="lazy" alt="Visitantes no estande da Unopar" class="h-full w-full object-cover brightness-90 group-hover:brightness-110 transition duration-500" /></div></div>
+          <div class="swiper-slide hover-glow-blue"><div class="relative h-64 w-[400px] shrink-0 rounded-xl overflow-hidden border border-brand-blue-mid group"><img src="./assets/foto-14.JPG" loading="lazy" alt="Equipe uniformizada no estande de recursos humanos" class="h-full w-full object-cover brightness-90 group-hover:brightness-110 transition duration-500" /></div></div>
+          <div class="swiper-slide hover-glow-blue"><div class="relative h-64 w-[400px] shrink-0 rounded-xl overflow-hidden border border-brand-blue-mid group"><img src="./assets/foto-15.JPG" loading="lazy" alt="Grupo de participantes com sacolas do evento diante do painel de boas-vindas" class="h-full w-full object-cover brightness-90 group-hover:brightness-110 transition duration-500" /></div></div>
+          <div class="swiper-slide hover-glow-blue"><div class="relative h-64 w-[400px] shrink-0 rounded-xl overflow-hidden border border-brand-blue-mid group"><img src="./assets/foto-16.JPG" loading="lazy" alt="Expositores e visitantes no estande da feira de negócios" class="h-full w-full object-cover brightness-90 group-hover:brightness-110 transition duration-500" /></div></div>
         </div>
       </div>
     </section>
@@ -1668,6 +1686,7 @@
         initAmbientGlowAnimations()
         initConnectedBackground()
         initVideoPlayer()
+        initCardsPalestrante()
         initBarraPreVenda()
         initHeroVideoLoop()
         initScrollSpy()
@@ -1978,6 +1997,20 @@
         ])
       }
 
+      /*
+        Os cards de palestrante se anunciam como role="button" e recebem foco,
+        mas só respondiam a clique — quem navega por teclado conseguia chegar
+        neles e não conseguia abrir. Aqui eles passam a aceitar Enter e Espaço,
+        como o overlay dos vídeos.
+      */
+      function initCardsPalestrante() {
+        document.querySelectorAll('[role="button"][onclick*="openSpeakerModal"]').forEach(card => {
+          card.addEventListener('keydown', e => {
+            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); card.click() }
+          })
+        })
+      }
+
       function openSpeakerModal(name, role) {
         const modal = document.getElementById('speaker-modal')
         const modalName = document.getElementById('modal-name')
@@ -2260,15 +2293,30 @@
           scrollTrigger: { trigger: 'header', start: 'top top', end: 'bottom top', scrub: 0.5 }
         })
 
+        /*
+          A partir do horário do evento a diferença fica negativa. Sem tratar,
+          o contador passa a exibir "-1 D : -2 H" — justamente no dia do evento,
+          com o site no pico de acesso. Trava em zero e troca o rótulo.
+        */
         const targetDate = new Date('October 16, 2026 09:00:00').getTime()
-        setInterval(function () {
-          const now = new Date().getTime()
-          const distance = targetDate - now
-          document.getElementById('days').innerText = Math.floor(distance / (1000 * 60 * 60 * 24))
-          document.getElementById('hours').innerText = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
-          document.getElementById('minutes').innerText = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60))
-          document.getElementById('seconds').innerText = Math.floor((distance % (1000 * 60)) / 1000)
-        }, 1000)
+        const dobra = n => String(n).padStart(2, '0')
+
+        function atualizarContador() {
+          const restante = Math.max(0, targetDate - new Date().getTime())
+          const rotulo = document.getElementById('countdown-rotulo')
+
+          document.getElementById('days').innerText = Math.floor(restante / (1000 * 60 * 60 * 24))
+          document.getElementById('hours').innerText = dobra(Math.floor((restante % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)))
+          document.getElementById('minutes').innerText = dobra(Math.floor((restante % (1000 * 60 * 60)) / (1000 * 60)))
+          document.getElementById('seconds').innerText = dobra(Math.floor((restante % (1000 * 60)) / 1000))
+
+          if (restante === 0 && rotulo && rotulo.innerText !== 'O evento começou!') {
+            rotulo.innerText = 'O evento começou!'
+          }
+        }
+
+        atualizarContador()
+        setInterval(atualizarContador, 1000)
  
         gsap.utils.toArray('.text-reveal-trigger').forEach(title => {
           ScrollTrigger.create({

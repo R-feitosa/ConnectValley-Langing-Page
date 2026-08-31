@@ -145,9 +145,13 @@ para a virada do dia não variar conforme o fuso de quem acessa.
 - O `.htaccess` foi versionado como está em produção e ainda carrega blocos
   herdados do WordPress que redirecionam rotas não encontradas para
   `index.php`, que não existe neste site.
-- Falta `<meta name="description">` e tags Open Graph, o que prejudica SEO e
-  a prévia dos links compartilhados.
-- Os vídeos do hero somam cerca de 16 MB e são o maior peso da página.
+- Os vídeos do hero somam cerca de 16 MB e são o maior peso da página. O player
+  de YouTube usado no bloco de novidades resolveria, se valer a troca.
+- O bloco `# BEGIN WordPress` do `.htaccess` é herança de outra instalação:
+  reescreve qualquer rota inexistente para `/index.php`, que não existe aqui, e
+  publica um cabeçalho `X-nginx-cache "WordPress"` que não corresponde ao site.
+  Não foi removido porque não há como testar Apache fora do servidor e um erro
+  ali derruba a página inteira; vale limpar com o cPanel à mão.
 
 ## Atualizando patrocinadores
 
