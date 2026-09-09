@@ -124,9 +124,13 @@ um logo colorido feito para fundo claro fica ilegível ou some — o que importa
 é só remover o fundo, é ter a variante branca da marca. Vetor (SVG) serve e é
 melhor ainda.
 
-## Barra de pré-venda
+## Barra de vendas
 
-A porcentagem da barra na faixa inferior não é digitada no HTML: sai de
+São duas barras — a contínua da faixa inferior e a segmentada da seção de
+ingressos — e as duas saem do mesmo cálculo, em `initBarraPreVenda()`. Se um dia
+só uma for alterada, a página passa a contar duas histórias no mesmo scroll.
+
+A porcentagem não é digitada no HTML: sai de
 `percentualPreVenda()`, que parte de 50% em 28/08/2026 e soma um ponto por dia,
 chegando a 99% em 16/10/2026, o dia do evento. Para em 99 de propósito — 100%
 diria "esgotado", que é uma afirmação sobre a venda, e a barra não tem como
