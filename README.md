@@ -124,6 +124,14 @@ um logo colorido feito para fundo claro fica ilegível ou some — o que importa
 é só remover o fundo, é ter a variante branca da marca. Vetor (SVG) serve e é
 melhor ainda.
 
+## Datas com fuso explícito
+
+Tanto o alvo do contador regressivo quanto a data-base da barra de vendas trazem
+`-03:00` no literal. Sem o fuso, o navegador lê a data no fuso de quem visita, e
+o mesmo evento passa a ter horários diferentes por visitante: `'October 16, 2026
+09:00:00'` zerava o contador às 05:00 de Brasília para quem estava em Lisboa e
+às 10:00 para quem estava em Manaus.
+
 ## Barra de vendas
 
 São duas barras — a contínua da faixa inferior e a segmentada da seção de
