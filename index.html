@@ -267,7 +267,10 @@
         background: linear-gradient(145deg, #0d1f3c 0%, #070f20 100%);
         border: 1px solid rgba(242, 201, 76, 0.25);
         border-radius: 28px;
-        overflow: hidden;
+        /* Rola por dentro: no celular, arte + biografia passam da altura da tela. */
+        overflow-x: hidden; overflow-y: auto;
+        max-height: calc(100vh - 2rem);
+        overscroll-behavior: contain;
         transform: scale(0.93) translateY(16px);
         transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
         box-shadow: 0 40px 80px rgba(0,0,0,0.6), 0 0 60px rgba(242,201,76,0.07);
@@ -476,38 +479,28 @@
       </div>
     </div>
 
-    <div id="speaker-modal" class="modal-backdrop">
+    <div id="speaker-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modal-name" aria-hidden="true">
       <div class="modal-content relative grid md:grid-cols-2">
-        <button onclick="closeSpeakerModal()" class="modal-close-btn">&times;</button>
+        <button onclick="closeSpeakerModal()" class="modal-close-btn" aria-label="Fechar">&times;</button>
 
-        <!-- Lado esquerdo: imagem/vídeo -->
-        <div class="relative bg-black h-[260px] md:h-auto overflow-hidden">
-          <video id="modal-video" class="w-full h-full object-cover opacity-50" poster="./assets/backgroundd.JPG" loop muted playsinline>
-            <source src="./assets/hero-video.mp4" type="video/mp4" />
-          </video>
-          <!-- Gradiente sobre a mídia -->
-          <div class="absolute inset-0 bg-gradient-to-t from-[#070f20] via-transparent to-transparent md:bg-gradient-to-r md:from-transparent md:to-[#070f20]"></div>
-          <!-- Badge Connect Valley -->
-          <div class="absolute top-5 left-5">
-            <span class="bg-brand-gold text-brand-blue-dark text-[10px] font-display font-bold uppercase tracking-widest px-3 py-1 rounded-full">Connect Valley 2026</span>
-          </div>
-          <!-- Botão play centralizado -->
-          <div class="absolute inset-0 flex items-center justify-center">
-            <div class="w-14 h-14 rounded-full bg-brand-gold/90 flex items-center justify-center text-brand-blue-dark cursor-pointer hover:scale-110 hover:bg-brand-gold transition-all duration-200 shadow-lg shadow-brand-gold/30">
-              <svg class="w-5 h-5 ml-1" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-            </div>
-          </div>
+        <!-- Lado esquerdo: a arte oficial de divulgação do palestrante
+             (assets/artes/). Ela já traz nome, cargo e tema; o lado direito
+             repete isso como texto de verdade, para leitor de tela e busca. -->
+        <div class="relative bg-black h-[52vh] md:h-auto md:aspect-[3/4] overflow-hidden">
+          <img id="modal-art" src="" alt="" class="w-full h-full object-contain md:object-cover transition-opacity duration-300" />
         </div>
 
-        <!-- Lado direito: info -->
+        <!-- Lado direito: info, preenchida por openSpeakerModal() a partir de PALESTRANTES -->
         <div class="p-8 md:p-10 flex flex-col justify-center">
           <span class="inline-flex items-center gap-2 text-brand-gold uppercase tracking-[0.3em] text-[10px] font-bold font-display mb-4">
-            <span class="w-4 h-px bg-brand-gold"></span>Palestrante
+            <span class="w-4 h-px bg-brand-gold"></span><span id="modal-label">Palestrante</span>
           </span>
-          <h3 class="text-3xl md:text-4xl text-white font-display uppercase leading-tight mb-1" id="modal-name">EM BREVE</h3>
-          <p class="text-brand-blue-accent font-display font-bold uppercase tracking-wide text-sm mb-6" id="modal-role">Surpresa</p>
+          <h3 class="text-3xl md:text-4xl text-white font-display uppercase leading-tight mb-1" id="modal-name"></h3>
+          <p class="text-brand-blue-accent font-display font-bold uppercase tracking-wide text-sm mb-6" id="modal-role"></p>
           <div class="w-10 h-px bg-brand-gold/40 mb-6"></div>
-          <p class="text-gray-400 leading-relaxed text-sm md:text-base" id="modal-bio">Estamos preparando um conteúdo exclusivo com este palestrante.</p>
+          <p class="text-white font-syne font-bold text-base md:text-lg leading-snug mb-2" id="modal-tema"></p>
+          <p class="text-gray-400 font-display uppercase tracking-wider text-[11px] mb-5" id="modal-quando"></p>
+          <div class="space-y-3 text-gray-300 leading-relaxed text-sm max-w-[65ch]" id="modal-bio"></div>
         </div>
       </div>
     </div>
@@ -1185,7 +1178,7 @@
         <div class="text-center mb-12 max-w-3xl mx-auto simple-reveal-hidden">
           <span class="text-brand-blue-accent font-display uppercase tracking-[0.3em] text-xs font-bold">Line Up</span>
           <h2 class="font-display font-bold text-4xl md:text-6xl text-white mt-4 uppercase tracking-tight">PALESTRANTES <span class="text-brand-gold">CONFIRMADOS</span></h2>
-          <p class="text-gray-400 font-syne mt-4 text-sm md:text-lg">Clique nos cards abaixo para visualizar detalhes sobre suas trajetórias (em breve).</p>
+          <p class="text-gray-400 font-syne mt-4 text-sm md:text-lg">Clique nos cards para conhecer a trajetória e a palestra de cada um.</p>
         </div>
       </div>
       <div class="swiper-speakers swiper simple-reveal-hidden pl-6 md:pl-20">
@@ -2320,19 +2313,92 @@
         })
       }
 
+      /*
+        Conteúdo do modal de palestrante, pela chave do nome exatamente como
+        no onclick do card. Tema, palco e horário seguem o cronograma do app;
+        o texto foi condensado das legendas oficiais dos anúncios no
+        @connect.valley; a arte é assets/artes/<mesmo nome do retrato>.jpg.
+        Palestrante novo: card no carrossel, arte em assets/artes e uma
+        entrada aqui.
+      */
+      const PALESTRANTES = {
+        "Roneely Feitosa": {"arte": "./assets/artes/roneely-feitosa.jpg", "rotulo": "Palestrante master", "palco": "Palco 360°", "dia": "16/10", "hora": "13h30", "tema": "O mundo mudou, você percebeu?", "bio": ["Advogado empresarial, empreendedor e sócio-proprietário do R. Feitosa Group. Natural de Camocim, começou como vendedor de picolé e garçom antes de construir a carreira no Direito e no empreendedorismo. É mestre em Ciências Jurídicas, com formação executiva em Gestão de Negócios e Empreendedorismo.", "No palco, as mudanças que já estão transformando a forma de trabalhar, liderar, empreender e decidir — e o que é preciso enxergar para continuar relevante."]},
+        "Severino Neto": {"arte": "./assets/artes/severino-neto.jpg", "rotulo": "Palestrante master", "palco": "Palco 360°", "dia": "16/10", "hora": "18h10", "tema": "Supermercado que virou serviço", "bio": ["Presidente do Grupo São Luiz, onde está há quase cinco décadas. Começou aos 17 anos como empacotador, quando a rede tinha três lojas, e passou por diferentes áreas da operação até a presidência. Sob sua liderança, o São Luiz chegou a 34 lojas, cerca de 3.900 colaboradores e 50 mil clientes atendidos por dia.", "No palco, como transformar a experiência de compra e fazer do atendimento parte essencial da estratégia de um negócio."]},
+        "Nelson Rossi": {"arte": "./assets/artes/nelson-rossi.jpg", "rotulo": "Palestrante master", "palco": "Palco 360°", "dia": "17/10", "hora": "14h20", "tema": "Liderança das novas gerações", "bio": ["Diretor Industrial da Grendene, onde construiu mais de quatro décadas de carreira: começou como zelador e avançou por diferentes níveis da operação até a liderança industrial. Participou diretamente do desenvolvimento da operação da Grendene em Sobral, que hoje concentra cerca de 80% da produção da companhia.", "Traz ao palco o que nenhuma teoria substitui: operação, gestão de pessoas e formação de lideranças, vividas da base à alta gestão."]},
+        "Tayse Feitosa": {"arte": "./assets/artes/tayse-feitosa.jpg", "rotulo": "Palestrante master", "palco": "Palco 360°", "dia": "17/10", "hora": "11h40", "tema": "Entre filhos, desafios e negócios", "bio": ["Empresária, gestora, advogada e Diretora Financeira do R. Feitosa Group, onde atua na gestão financeira e estratégica das empresas do grupo. Sócia-proprietária, também é corretora de imóveis e mestranda em Administração de Empresas.", "No palco, os desafios de construir uma trajetória profissional conciliando diferentes papéis e escolhas — uma perspectiva real sobre liderança, família e vida empresarial."]},
+        "Belini Júnior": {"arte": "./assets/artes/belini-junior.jpg", "rotulo": "Palestrante", "palco": "Palco 360°", "dia": "16/10", "hora": "14h30", "tema": "Tecnologia aplicada à eficiência operacional e redução de custos", "bio": ["Sócio da Gateway Soluções, Belini fala a empresários e gestores que querem identificar gargalos, otimizar processos e usar a tecnologia de forma estratégica nos negócios."]},
+        "Alexandre Chastinet": {"arte": "./assets/artes/alexandre-chastinet.jpg", "rotulo": "Palestrante", "palco": "Palco 360°", "dia": "16/10", "hora": "17h10", "tema": "Tem dinheiro barato sobrando no banco. Sua empresa está pegando?", "bio": ["Sócio da Fiel Imóveis, Alexandre leva ao palco uma provocação para empresários, gestores e líderes: como identificar e acessar oportunidades de capital e crédito, e tomar decisões financeiras com mais estratégia."]},
+        "Allan Lima": {"arte": "./assets/artes/allan-lima.jpg", "rotulo": "Palestrante", "palco": "Palco 360°", "dia": "16/10", "hora": "14h50", "tema": "Tecnologia aplicada à eficiência operacional e redução de custos", "bio": ["Da área comercial da Fortes Tecnologia, Allan mostra como a tecnologia pode sair do discurso e gerar impacto real na operação e nos resultados das empresas."]},
+        "Anderson Barros": {"arte": "./assets/artes/anderson-barros.jpg", "rotulo": "Palestrante", "palco": "Palco Work", "dia": "16/10", "hora": "16h30", "tema": "SST é custo ou investimento?", "bio": ["Sócio fundador da MedCenter, Anderson mostra como a Segurança e Saúde no Trabalho, tratada de forma estratégica, deixa de ser só uma obrigação e passa a proteger pessoas, reduzir riscos e sustentar o negócio."]},
+        "André Bergamini": {"arte": "./assets/artes/andre-bergamini.jpg", "rotulo": "Palestrante", "palco": "Palco Work", "dia": "16/10", "hora": "16h00", "tema": "Muito além do drywall: soluções acústicas e construções a seco de alta performance", "bio": ["CEO da Drysteel, André sobe ao Palco Work para falar de soluções acústicas e de construção a seco de alta performance."]},
+        "César Castro": {"arte": "./assets/artes/cesar-castro.jpg", "rotulo": "Palestrante", "palco": "Palco 360°", "dia": "16/10", "hora": "17h50", "tema": "Você pode ser o protagonista da sua própria marca", "bio": ["Empreendedor, videomaker e sócio fundador da Movin, César já participou da produção de milhares de vídeos para empresas, marcas e eventos, e hoje atua também na gestão de equipes, no desenvolvimento de negócios e na formação de novos profissionais.", "Com a provocação “Melhor feito do que perfeito”, compartilha cases, erros e acertos de quem constrói marcas com vídeo."]},
+        "Clésio Moura": {"arte": "./assets/artes/clesio-moura.jpg", "rotulo": "Palestrante", "palco": "Palco 360°", "dia": "17/10", "hora": "14h00", "tema": "Morra sem nada: uma provocação intrigante!", "bio": ["CEO e responsável técnico da Domos, Clésio fala de planejamento de proteção financeira vinculada à Prudential: organizar o presente, preparar o futuro e proteger a família — e não apenas acumular patrimônio."]},
+        "David Moreira": {"arte": "./assets/artes/david-moreira.jpg", "rotulo": "Palestrante master", "palco": "Palco 360°", "dia": "16/10", "hora": "16h35", "tema": "Tipos de liderança: qual é o seu?", "bio": ["Empresário e CEO da D&R Distribuidora Coca-Cola. Formado em Administração, tornou-se sócio do avô, Raimundo Tomé de Sousa, e participou da transformação do antigo “O Clarismundo” na D&R Distribuidora de Bebidas, que expandiu sua atuação de 10 para 21 cidades cearenses."]},
+        "Diógenes Passos": {"arte": "./assets/artes/diogenes-passos.jpg", "rotulo": "Palestrante", "palco": "Palco 360°", "dia": "17/10", "hora": "15h20", "tema": "Financiando o futuro: crédito, inovação e oportunidades para transformar negócios", "bio": ["Gerente Geral do BNB Sobral, Diógenes fala de crédito como ferramenta estratégica, inovação e acesso a oportunidades — caminhos para transformar boas ideias em negócios mais estruturados e preparados para crescer."]},
+        "Felipe Martins": {"arte": "./assets/artes/felipe-martins.jpg", "rotulo": "Palestrante", "palco": "Palco 360°", "dia": "16/10", "hora": "15h10", "tema": "“Quem compra terra não erra” — já dizia meu pai", "bio": ["CEO da FMS & PDR Engenharia, Felipe provoca: seu patrimônio está trabalhando para você ou só gerando custos? Uma conversa sobre estratégia, gestão e novas formas de enxergar os ativos de uma empresa."]},
+        "Francisco Jarbson": {"arte": "./assets/artes/francisco-jarbson.jpg", "rotulo": "Palestrante", "palco": "Palco 360°", "dia": "17/10", "hora": "11h20", "tema": "Quanto custa não ter seguro? Só depois do prejuízo você descobre", "bio": ["Gerente de Vendas da SG Proteção Veicular, Jarbson tem mais de 20 anos de experiência em liderança, gestão e vendas, no desenvolvimento de equipes, planejamento, negociação e formação de líderes.", "No palco, o contraste entre o investimento recorrente em proteção veicular e o prejuízo de um imprevisto sem cobertura."]},
+        "Gladstone Prado": {"arte": "./assets/artes/gladstone-prado.jpg", "rotulo": "Palestrante", "palco": "Palco Work", "dia": "17/10", "hora": "16h15", "tema": "Segurança 4.0: como a inteligência artificial e a nova legislação estão redefinindo o setor", "bio": ["Sócio proprietário da Plata, Gladstone discute como a inteligência artificial, as novas tecnologias e as mudanças na legislação estão construindo um novo cenário para empresas e profissionais de segurança."]},
+        "Hildebrando Andrade": {"arte": "./assets/artes/hildebrando-andrade.jpg", "rotulo": "Palestrante", "palco": "Palco 360°", "dia": "17/10", "hora": "17h05", "tema": "Seu aluguel vai pagar mais imposto. Você já sabe quanto?", "bio": ["Diretor administrativo da Valmir Andrade Contabilidade, Hildebrando mostra o que muda, com a Reforma Tributária, na tributação da renda de imóveis alugados e o que precisa entrar no radar de proprietários e investidores."]},
+        "Lucas Ogata": {"arte": "./assets/artes/lucas-ogata.jpg", "rotulo": "Palestrante master", "palco": "Palco 360°", "dia": "17/10", "hora": "10h30", "tema": "TikTok Shop: como conteúdo, creators e social commerce estão redefinindo as vendas", "bio": ["Head de TikTok Shop da AURA Beauty e especialista em Social Commerce, Creator Economy e Marketing de Influência. Participou da chegada do TikTok Shop ao Brasil e da estratégia que levou a AURA Beauty ao nº 1 em beleza na plataforma. É também fundador da FOS, startup que conecta creators, conteúdo e vendas."]},
+        "Marcelo Carneiro": {"arte": "./assets/artes/marcelo-carneiro.jpg", "rotulo": "Palestrante", "palco": "Palco 360°", "dia": "17/10", "hora": "16h25", "tema": "IA: o futuro não vai roubar seu emprego, mas vai mudar a forma como você trabalha", "bio": ["Do SEST SENAT, Marcelo discute tecnologia, profissionais e as novas competências exigidas por um mercado que muda rápido."]},
+        "Paulo Vitor": {"arte": "./assets/artes/paulo-vitor.jpg", "rotulo": "Palestrante", "palco": "Palco 360°", "dia": "17/10", "hora": "11h00", "tema": "O novo imposto chegou à cozinha", "bio": ["Sócio da Nort Contabilidade, Paulo Vitor traduz a Reforma Tributária em impactos práticos — na operação, nos preços e até na cozinha das empresas — para quem precisa tomar decisões."]},
+        "Rafael Ponte": {"arte": "./assets/artes/rafael-ponte.jpg", "rotulo": "Palestrante", "palco": "Palco Work", "dia": "16/10", "hora": "16h15", "tema": "Novas exigências de segurança contra incêndios em sistemas fotovoltaicos", "bio": ["CEO da Pro Sol, Rafael explica como as novas exigências impactam as instalações fotovoltaicas e por que segurança, adequação e prevenção precisam caminhar junto com inovação e eficiência energética."]},
+        "Rafael Souza": {"arte": "./assets/artes/rafael-souza.jpg", "rotulo": "Palestrante master", "palco": "Palco 360°", "dia": "17/10", "hora": "10h00", "tema": "Do conteúdo à venda: como conteúdo, influência e creators estão transformando o varejo", "bio": ["CEO da Agência Trendz, Rafael atua no ecossistema de Creator Economy, marketing digital e influência, com estratégias que aproximam marcas de comunidades e transformam atenção em relacionamento, posicionamento e vendas."]},
+        "Rayana Loiola": {"arte": "./assets/artes/rayana-loiola.jpg", "rotulo": "Palestrante", "palco": "Palco Work", "dia": "17/10", "hora": "16h00", "tema": "Empresa compra de empresa. Mas quem decide é gente.", "bio": ["Da área comercial da Sobral Gráfica, Rayana traz uma conversa prática sobre vendas B2B na vida real: relacionamento comercial, negociação e os desafios de vender de empresa para empresa."]},
+        "Said Sahdo": {"arte": "./assets/artes/said-sahdo.jpg", "rotulo": "Palestrante master", "palco": "Palco 360°", "dia": "16/10", "hora": "15h30", "tema": "1000 contra 1!", "bio": ["CCO do Grupo HWS, com mais de 40 anos no setor comercial, Said está à frente de uma operação com mais de 700 colaboradores e 30 empresas nos segmentos de motocicletas e automóveis.", "No palco, liderança em formato de perguntas e respostas ao vivo, com as perguntas vindas da própria plateia."]},
+        "Shirlean Rios": {"arte": "./assets/artes/shirlean-rios.jpg", "rotulo": "Palestrante", "palco": "Palco Work", "dia": "17/10", "hora": "16h30", "tema": "O futuro já está em movimento: como a mobilidade elétrica vai transformar nossas cidades", "bio": ["Sócio-proprietário da Rios Mobilidade Elétrica, marca cearense que desenvolve veículos próprios para o mercado brasileiro, Shirlean tem quase 40 anos de experiência no mercado de duas rodas.", "No palco, a micromobilidade elétrica, a expansão da Rios pelo Brasil e as oportunidades que esse mercado abre para empreendedores, parceiros e investidores."]},
+        "Tárcio Araújo": {"arte": "./assets/artes/tarcio-araujo.jpg", "rotulo": "Palestrante", "palco": "Palco 360°", "dia": "16/10", "hora": "17h30", "tema": "Oportunidades disfarçadas", "bio": ["CEO da Sobral Climatizadores, Tárcio compartilha aprendizados sobre gestão, visão estratégica e crescimento empresarial — e como enxergar possibilidades onde muitos veem apenas desafios."]},
+        "Thiago Alves": {"arte": "./assets/artes/thiago-alves.jpg", "rotulo": "Palestrante", "palco": "Palco 360°", "dia": "17/10", "hora": "16h45", "tema": "Pare de olhar para o CNPJ. Olhe para os CPFs dentro dele", "bio": ["CEO da Nexia Saúde, Thiago mostra por que os resultados de uma organização também dependem da saúde e do bem-estar dos profissionais que a constroem."]}
+      }
+
+      let focoAntesDoModal = null
+
       function openSpeakerModal(name, role) {
         const modal = document.getElementById('speaker-modal')
-        const modalName = document.getElementById('modal-name')
-        const modalRole = document.getElementById('modal-role')
-        if (modal && modalName && modalRole) {
-          modalName.innerText = name; modalRole.innerText = role; modal.classList.add('open')
+        if (!modal) return
+        const dados = PALESTRANTES[name] || {}
+        const el = id => document.getElementById(id)
+
+        el('modal-name').textContent = name
+        el('modal-role').textContent = role
+        el('modal-label').textContent = dados.rotulo || 'Palestrante'
+        el('modal-tema').textContent = dados.tema || ''
+        el('modal-quando').textContent = dados.palco ? `${dados.palco} · ${dados.dia} às ${dados.hora}` : ''
+        el('modal-bio').replaceChildren(...(dados.bio || []).map(texto => {
+          const paragrafo = document.createElement('p')
+          paragrafo.textContent = texto
+          return paragrafo
+        }))
+
+        // A arte entra com fade quando termina de carregar, para não piscar a
+        // do palestrante aberto antes enquanto a nova chega.
+        const arte = el('modal-art')
+        arte.parentElement.hidden = !dados.arte
+        if (dados.arte) {
+          arte.classList.add('opacity-0')
+          arte.onload = () => arte.classList.remove('opacity-0')
+          arte.alt = `Arte de divulgação de ${name} no Connect Valley 2026`
+          arte.src = dados.arte
         }
+
+        focoAntesDoModal = document.activeElement
+        modal.classList.add('open')
+        modal.setAttribute('aria-hidden', 'false')
+        modal.querySelector('.modal-close-btn').focus()
       }
 
       function closeSpeakerModal() {
         const modal = document.getElementById('speaker-modal')
-        if (modal) modal.classList.remove('open')
+        if (!modal || !modal.classList.contains('open')) return
+        modal.classList.remove('open')
+        modal.setAttribute('aria-hidden', 'true')
+        // Devolve o foco ao card de onde a pessoa veio (teclado e leitor de tela).
+        if (focoAntesDoModal) focoAntesDoModal.focus()
       }
+
+      document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') closeSpeakerModal()
+      })
 
       document.getElementById('speaker-modal').addEventListener('click', function (e) {
         if (e.target === this) closeSpeakerModal()

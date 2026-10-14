@@ -133,6 +133,25 @@ um logo colorido feito para fundo claro fica ilegível ou some — o que importa
 é só remover o fundo, é ter a variante branca da marca. Vetor (SVG) serve e é
 melhor ainda.
 
+## Modal do palestrante
+
+Clicar num card abre o modal com a **arte oficial de divulgação** à esquerda e,
+à direita, rótulo (Palestrante / Palestrante master), cargo, tema da palestra,
+palco com dia e hora, e uma descrição curta.
+
+- **A arte** fica em `assets/artes/<mesmo nome do retrato>.jpg`: é o primeiro
+  slide do post de anúncio no @connect.valley, em 720×960 (3:4), JPEG
+  progressivo, 55–95 KB. Aqui o texto na arte é desejado — é a peça de
+  divulgação —, ao contrário do retrato do card, que precisa vir sem texto. Só
+  é baixada quando alguém abre aquele modal.
+- **O texto** está no objeto `PALESTRANTES`, no `index.html`, com a chave igual
+  ao nome do `onclick` do card. Tema, palco e horário seguem o cronograma do app
+  (`sessoes`); a descrição foi condensada das legendas oficiais dos anúncios.
+  Se o cronograma mudar, atualize ali também.
+
+Palestrante novo = card no carrossel + arte em `assets/artes/` + entrada em
+`PALESTRANTES`. Sem a entrada, o modal abre só com nome e cargo.
+
 ## Datas com fuso explícito
 
 Tanto o alvo do contador regressivo quanto a data-base da barra de vendas trazem
