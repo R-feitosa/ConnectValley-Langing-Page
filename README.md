@@ -52,17 +52,26 @@ no servidor — publicar é sincronizar os arquivos, sem build.
 
 ## Estado dos assets
 
-Sem pendências. Os patrocinadores estão completos — 45 logos, com as quatro cotas
-batendo com a lista oficial (Diamante 4, Ouro+ 13, Ouro 11, Prata 17) — e os
-quatro retratos de palestrante estão na versão sem texto na arte.
+São 53 patrocinadores, conferidos em 14/10/2026 contra os patrocínios fechados e
+ativos do app (Diamante 4, Ouro+ 13, Ouro 16, Prata 20). Os 27 palestrantes do
+line-up batem com os anúncios do @connect.valley.
 
-Nota sobre nomes, porque as duas duplas já causaram confusão:
+Pendência: **Mãe Rainha** e **Rhiza Bank** (Ouro) ainda não têm logo — nem no
+app, nem no Instagram. O card mostra o nome no lugar; quando chegar o PNG
+branco, troque o `<span>` por um `<img>` igual ao dos vizinhos.
+
+Nota sobre nomes, porque essas duplas já causaram confusão:
 
 - **Nort Motos e Grupo HWS são a mesma empresa**, cadastrada como Grupo HWS. O
   site usa Grupo HWS; material que chegar com a marca Nort Motos é a mesma cota
   Diamante, não um patrocinador novo.
 - **SP Engrenagem e CasaLar são a mesma empresa.** A lista de patrocinadores usa
   SP Engrenagem; o card usa CasaLar, que é a marca da arte.
+- **M V Telecom é a Claro Empresas.** No app o patrocínio está como M V Telecom,
+  com o logo da Claro Empresas; o site usa Claro Empresas.
+- **Domah e Domah Collection Imob** são dois cadastros no app para a mesma marca.
+  O site tem um card só, Domah.
+- **Sedbase, no app, é a Sendbase** — é o que o logo diz. O site usa Sendbase.
 
 ## Trocando o vídeo de novidades
 
