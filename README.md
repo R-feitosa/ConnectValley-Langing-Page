@@ -52,17 +52,26 @@ no servidor — publicar é sincronizar os arquivos, sem build.
 
 ## Estado dos assets
 
-Sem pendências. Os patrocinadores estão completos — 45 logos, com as quatro cotas
-batendo com a lista oficial (Diamante 4, Ouro+ 13, Ouro 11, Prata 17) — e os
-quatro retratos de palestrante estão na versão sem texto na arte.
+São 53 patrocinadores, conferidos em 14/10/2026 contra os patrocínios fechados e
+ativos do app (Diamante 4, Ouro+ 13, Ouro 16, Prata 20). Os 27 palestrantes do
+line-up batem com os anúncios do @connect.valley.
 
-Nota sobre nomes, porque as duas duplas já causaram confusão:
+Pendência: **Mãe Rainha** e **Rhiza Bank** (Ouro) ainda não têm logo — nem no
+app, nem no Instagram. O card mostra o nome no lugar; quando chegar o PNG
+branco, troque o `<span>` por um `<img>` igual ao dos vizinhos.
+
+Nota sobre nomes, porque essas duplas já causaram confusão:
 
 - **Nort Motos e Grupo HWS são a mesma empresa**, cadastrada como Grupo HWS. O
   site usa Grupo HWS; material que chegar com a marca Nort Motos é a mesma cota
   Diamante, não um patrocinador novo.
 - **SP Engrenagem e CasaLar são a mesma empresa.** A lista de patrocinadores usa
   SP Engrenagem; o card usa CasaLar, que é a marca da arte.
+- **M V Telecom é a Claro Empresas.** No app o patrocínio está como M V Telecom,
+  com o logo da Claro Empresas; o site usa Claro Empresas.
+- **Domah e Domah Collection Imob** são dois cadastros no app para a mesma marca.
+  O site tem um card só, Domah.
+- **Sedbase, no app, é a Sendbase** — é o que o logo diz. O site usa Sendbase.
 
 ## Trocando o vídeo de novidades
 
@@ -123,6 +132,25 @@ transparente e o logo em **branco monocromático**. Os cards são azul-escuros, 
 um logo colorido feito para fundo claro fica ilegível ou some — o que importa não
 é só remover o fundo, é ter a variante branca da marca. Vetor (SVG) serve e é
 melhor ainda.
+
+## Modal do palestrante
+
+Clicar num card abre o modal com a **arte oficial de divulgação** à esquerda e,
+à direita, rótulo (Palestrante / Palestrante master), cargo, tema da palestra,
+palco com dia e hora, e uma descrição curta.
+
+- **A arte** fica em `assets/artes/<mesmo nome do retrato>.jpg`: é o primeiro
+  slide do post de anúncio no @connect.valley, em 720×960 (3:4), JPEG
+  progressivo, 55–95 KB. Aqui o texto na arte é desejado — é a peça de
+  divulgação —, ao contrário do retrato do card, que precisa vir sem texto. Só
+  é baixada quando alguém abre aquele modal.
+- **O texto** está no objeto `PALESTRANTES`, no `index.html`, com a chave igual
+  ao nome do `onclick` do card. Tema, palco e horário seguem o cronograma do app
+  (`sessoes`); a descrição foi condensada das legendas oficiais dos anúncios.
+  Se o cronograma mudar, atualize ali também.
+
+Palestrante novo = card no carrossel + arte em `assets/artes/` + entrada em
+`PALESTRANTES`. Sem a entrada, o modal abre só com nome e cargo.
 
 ## Datas com fuso explícito
 

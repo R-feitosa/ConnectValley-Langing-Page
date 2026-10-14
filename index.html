@@ -149,6 +149,21 @@
         opacity: 0;
         transform: translateY(20px);
       }
+      /* Hover do card de palestrante na cor da cota da empresa dele — as
+         mesmas cores da grade de patrocinadores. `data-cota` fica no card;
+         quem não fala por um patrocinador (organização, convidados) usa o
+         azul da marca. `:focus-visible` porque o card é focável pelo teclado. */
+      .speaker-card { --cota: 0, 85, 255; --cota-borda: .7; --cota-brilho: .22; }
+      .speaker-card[data-cota="diamante"] { --cota: 34, 211, 238; }
+      .speaker-card[data-cota="ouro-plus"] { --cota: 242, 201, 76; --cota-borda: .85; --cota-brilho: .28; }
+      .speaker-card[data-cota="ouro"] { --cota: 242, 201, 76; --cota-borda: .55; --cota-brilho: .14; }
+      .speaker-card[data-cota="prata"] { --cota: 209, 213, 219; --cota-borda: .65; --cota-brilho: .16; }
+      .speaker-card:hover .speaker-frame,
+      .speaker-card:focus-visible .speaker-frame {
+        border-color: rgba(var(--cota), var(--cota-borda));
+        box-shadow: 0 0 30px rgba(var(--cota), var(--cota-brilho));
+      }
+      .speaker-card:focus-visible { outline: none; }
       .text-reveal-mask {
         transform: translateY(0);
         opacity: 1;
@@ -252,7 +267,10 @@
         background: linear-gradient(145deg, #0d1f3c 0%, #070f20 100%);
         border: 1px solid rgba(242, 201, 76, 0.25);
         border-radius: 28px;
-        overflow: hidden;
+        /* Rola por dentro: no celular, arte + biografia passam da altura da tela. */
+        overflow-x: hidden; overflow-y: auto;
+        max-height: calc(100vh - 2rem);
+        overscroll-behavior: contain;
         transform: scale(0.93) translateY(16px);
         transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
         box-shadow: 0 40px 80px rgba(0,0,0,0.6), 0 0 60px rgba(242,201,76,0.07);
@@ -461,38 +479,28 @@
       </div>
     </div>
 
-    <div id="speaker-modal" class="modal-backdrop">
+    <div id="speaker-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modal-name" aria-hidden="true">
       <div class="modal-content relative grid md:grid-cols-2">
-        <button onclick="closeSpeakerModal()" class="modal-close-btn">&times;</button>
+        <button onclick="closeSpeakerModal()" class="modal-close-btn" aria-label="Fechar">&times;</button>
 
-        <!-- Lado esquerdo: imagem/vídeo -->
-        <div class="relative bg-black h-[260px] md:h-auto overflow-hidden">
-          <video id="modal-video" class="w-full h-full object-cover opacity-50" poster="./assets/backgroundd.JPG" loop muted playsinline>
-            <source src="./assets/hero-video.mp4" type="video/mp4" />
-          </video>
-          <!-- Gradiente sobre a mídia -->
-          <div class="absolute inset-0 bg-gradient-to-t from-[#070f20] via-transparent to-transparent md:bg-gradient-to-r md:from-transparent md:to-[#070f20]"></div>
-          <!-- Badge Connect Valley -->
-          <div class="absolute top-5 left-5">
-            <span class="bg-brand-gold text-brand-blue-dark text-[10px] font-display font-bold uppercase tracking-widest px-3 py-1 rounded-full">Connect Valley 2026</span>
-          </div>
-          <!-- Botão play centralizado -->
-          <div class="absolute inset-0 flex items-center justify-center">
-            <div class="w-14 h-14 rounded-full bg-brand-gold/90 flex items-center justify-center text-brand-blue-dark cursor-pointer hover:scale-110 hover:bg-brand-gold transition-all duration-200 shadow-lg shadow-brand-gold/30">
-              <svg class="w-5 h-5 ml-1" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-            </div>
-          </div>
+        <!-- Lado esquerdo: a arte oficial de divulgação do palestrante
+             (assets/artes/). Ela já traz nome, cargo e tema; o lado direito
+             repete isso como texto de verdade, para leitor de tela e busca. -->
+        <div class="relative bg-black h-[52vh] md:h-auto md:aspect-[3/4] overflow-hidden">
+          <img id="modal-art" src="" alt="" class="w-full h-full object-contain md:object-cover transition-opacity duration-300" />
         </div>
 
-        <!-- Lado direito: info -->
+        <!-- Lado direito: info, preenchida por openSpeakerModal() a partir de PALESTRANTES -->
         <div class="p-8 md:p-10 flex flex-col justify-center">
           <span class="inline-flex items-center gap-2 text-brand-gold uppercase tracking-[0.3em] text-[10px] font-bold font-display mb-4">
-            <span class="w-4 h-px bg-brand-gold"></span>Palestrante
+            <span class="w-4 h-px bg-brand-gold"></span><span id="modal-label">Palestrante</span>
           </span>
-          <h3 class="text-3xl md:text-4xl text-white font-display uppercase leading-tight mb-1" id="modal-name">EM BREVE</h3>
-          <p class="text-brand-blue-accent font-display font-bold uppercase tracking-wide text-sm mb-6" id="modal-role">Surpresa</p>
+          <h3 class="text-3xl md:text-4xl text-white font-display uppercase leading-tight mb-1" id="modal-name"></h3>
+          <p class="text-brand-blue-accent font-display font-bold uppercase tracking-wide text-sm mb-6" id="modal-role"></p>
           <div class="w-10 h-px bg-brand-gold/40 mb-6"></div>
-          <p class="text-gray-400 leading-relaxed text-sm md:text-base" id="modal-bio">Estamos preparando um conteúdo exclusivo com este palestrante.</p>
+          <p class="text-white font-syne font-bold text-base md:text-lg leading-snug mb-2" id="modal-tema"></p>
+          <p class="text-gray-400 font-display uppercase tracking-wider text-[11px] mb-5" id="modal-quando"></p>
+          <div class="space-y-3 text-gray-300 leading-relaxed text-sm max-w-[65ch]" id="modal-bio"></div>
         </div>
       </div>
     </div>
@@ -1170,388 +1178,358 @@
         <div class="text-center mb-12 max-w-3xl mx-auto simple-reveal-hidden">
           <span class="text-brand-blue-accent font-display uppercase tracking-[0.3em] text-xs font-bold">Line Up</span>
           <h2 class="font-display font-bold text-4xl md:text-6xl text-white mt-4 uppercase tracking-tight">PALESTRANTES <span class="text-brand-gold">CONFIRMADOS</span></h2>
-          <p class="text-gray-400 font-syne mt-4 text-sm md:text-lg">Clique nos cards abaixo para visualizar detalhes sobre suas trajetórias (em breve).</p>
+          <p class="text-gray-400 font-syne mt-4 text-sm md:text-lg">Clique nos cards para conhecer a trajetória e a palestra de cada um.</p>
         </div>
       </div>
       <div class="swiper-speakers swiper simple-reveal-hidden pl-6 md:pl-20">
         <div class="swiper-wrapper">
           <!-- Slide 1 - Roneely Feitosa -->
           <div class="swiper-slide">
-            <div class="w-[280px] md:w-[320px] group relative cursor-pointer" role="button" tabindex="0" aria-label="Ver detalhes do palestrante Roneely Feitosa" onclick="openSpeakerModal('Roneely Feitosa', 'Connect Valley')">
-              <div class="rounded-3xl overflow-hidden aspect-[3/4] mb-6 relative shadow-2xl border border-brand-blue-mid group-hover:border-brand-gold/60 transition duration-500 hover:shadow-[0_0_30px_rgba(242,201,76,0.15)]">
+            <div class="w-[280px] md:w-[320px] group relative cursor-pointer speaker-card" data-cota="convidado" role="button" tabindex="0" aria-label="Ver detalhes do palestrante Roneely Feitosa" onclick="openSpeakerModal('Roneely Feitosa', 'Sócio · RF Group &amp; Connect')">
+              <div class="rounded-3xl overflow-hidden aspect-[3/4] mb-6 relative shadow-2xl border border-brand-blue-mid transition duration-500 speaker-frame">
                 <img src="./assets/roneely-feitosa.jpg?v=2" alt="Roneely Feitosa" loading="lazy" class="w-full h-full object-cover brightness-90 group-hover:brightness-110 group-hover:scale-105 transition duration-700" />
                 <div class="absolute inset-0 bg-gradient-to-t from-brand-blue-dark via-brand-blue-dark/20 to-transparent z-10"></div>
                 <div class="absolute bottom-0 left-0 right-0 p-6 z-20">
                   <h4 class="font-display font-bold text-2xl text-white uppercase tracking-tight">Roneely Feitosa</h4>
-                  <p class="text-brand-gold text-xs uppercase font-bold tracking-wider mt-1">RF Group</p>
+                  <p class="text-brand-gold text-xs uppercase font-bold tracking-wider mt-1">Sócio · RF Group &amp; Connect</p>
                 </div>
               </div>
             </div>
           </div>
           <!-- Slide 2 - Severino Neto -->
           <div class="swiper-slide">
-            <div class="w-[280px] md:w-[320px] group relative cursor-pointer" role="button" tabindex="0" aria-label="Ver detalhes do palestrante Severino Neto" onclick="openSpeakerModal('Severino Neto', 'Connect Valley')">
-              <div class="rounded-3xl overflow-hidden aspect-[3/4] mb-6 relative shadow-2xl border border-brand-blue-mid group-hover:border-brand-gold/60 transition duration-500 hover:shadow-[0_0_30px_rgba(242,201,76,0.15)]">
+            <div class="w-[280px] md:w-[320px] group relative cursor-pointer speaker-card" data-cota="prata" role="button" tabindex="0" aria-label="Ver detalhes do palestrante Severino Neto" onclick="openSpeakerModal('Severino Neto', 'CEO · São Luiz')">
+              <div class="rounded-3xl overflow-hidden aspect-[3/4] mb-6 relative shadow-2xl border border-brand-blue-mid transition duration-500 speaker-frame">
                 <img src="./assets/severino-neto.jpg?v=2" alt="Severino Neto" loading="lazy" class="w-full h-full object-cover brightness-90 group-hover:brightness-110 group-hover:scale-105 transition duration-700" />
                 <div class="absolute inset-0 bg-gradient-to-t from-brand-blue-dark via-brand-blue-dark/20 to-transparent z-10"></div>
                 <div class="absolute bottom-0 left-0 right-0 p-6 z-20">
                   <h4 class="font-display font-bold text-2xl text-white uppercase tracking-tight">Severino Neto</h4>
-                  <p class="text-brand-gold text-xs uppercase font-bold tracking-wider mt-1">São Luiz Supermercado</p>
+                  <p class="text-brand-gold text-xs uppercase font-bold tracking-wider mt-1">CEO · São Luiz</p>
                 </div>
               </div>
             </div>
           </div>
           <!-- Slide 3 - Nelson Rossi -->
           <div class="swiper-slide">
-            <div class="w-[280px] md:w-[320px] group relative cursor-pointer" role="button" tabindex="0" aria-label="Ver detalhes do palestrante Nelson Rossi" onclick="openSpeakerModal('Nelson Rossi', 'Connect Valley')">
-              <div class="rounded-3xl overflow-hidden aspect-[3/4] mb-6 relative shadow-2xl border border-brand-blue-mid group-hover:border-brand-gold/60 transition duration-500 hover:shadow-[0_0_30px_rgba(242,201,76,0.15)]">
+            <div class="w-[280px] md:w-[320px] group relative cursor-pointer speaker-card" data-cota="convidado" role="button" tabindex="0" aria-label="Ver detalhes do palestrante Nelson Rossi" onclick="openSpeakerModal('Nelson Rossi', 'Diretor Industrial · Grendene')">
+              <div class="rounded-3xl overflow-hidden aspect-[3/4] mb-6 relative shadow-2xl border border-brand-blue-mid transition duration-500 speaker-frame">
                 <img src="./assets/nelson-rossi.jpg?v=2" alt="Nelson Rossi" loading="lazy" class="w-full h-full object-cover brightness-90 group-hover:brightness-110 group-hover:scale-105 transition duration-700" />
                 <div class="absolute inset-0 bg-gradient-to-t from-brand-blue-dark via-brand-blue-dark/20 to-transparent z-10"></div>
                 <div class="absolute bottom-0 left-0 right-0 p-6 z-20">
                   <h4 class="font-display font-bold text-2xl text-white uppercase tracking-tight">Nelson Rossi</h4>
-                  <p class="text-brand-gold text-xs uppercase font-bold tracking-wider mt-1">Grendene</p>
+                  <p class="text-brand-gold text-xs uppercase font-bold tracking-wider mt-1">Diretor Industrial · Grendene</p>
                 </div>
               </div>
             </div>
           </div>
           <!-- Slide 4 - Tayse Feitosa -->
           <div class="swiper-slide">
-            <div class="w-[280px] md:w-[320px] group relative cursor-pointer" role="button" tabindex="0" aria-label="Ver detalhes da palestrante Tayse Feitosa" onclick="openSpeakerModal('Tayse Feitosa', 'Sócia/Founder · Connect Valley')">
-              <div class="rounded-3xl overflow-hidden aspect-[3/4] mb-6 relative shadow-2xl border border-brand-blue-mid group-hover:border-brand-gold/60 transition duration-500 hover:shadow-[0_0_30px_rgba(242,201,76,0.15)]">
+            <div class="w-[280px] md:w-[320px] group relative cursor-pointer speaker-card" data-cota="convidado" role="button" tabindex="0" aria-label="Ver detalhes da palestrante Tayse Feitosa" onclick="openSpeakerModal('Tayse Feitosa', 'Sócia · RF Group &amp; Connect')">
+              <div class="rounded-3xl overflow-hidden aspect-[3/4] mb-6 relative shadow-2xl border border-brand-blue-mid transition duration-500 speaker-frame">
                 <img src="./assets/tayse-feitosa.jpg?v=2" alt="Tayse Feitosa" loading="lazy" class="w-full h-full object-cover brightness-90 group-hover:brightness-110 group-hover:scale-105 transition duration-700" />
                 <div class="absolute inset-0 bg-gradient-to-t from-brand-blue-dark via-brand-blue-dark/20 to-transparent z-10"></div>
                 <div class="absolute bottom-0 left-0 right-0 p-6 z-20">
                   <h4 class="font-display font-bold text-2xl text-white uppercase tracking-tight">Tayse Feitosa</h4>
-                  <p class="text-brand-gold text-xs uppercase font-bold tracking-wider mt-1">Sócia/Founder · Connect Valley</p>
+                  <p class="text-brand-gold text-xs uppercase font-bold tracking-wider mt-1">Sócia · RF Group &amp; Connect</p>
                 </div>
               </div>
             </div>
           </div>
           <!-- Slide 5 - Belini Júnior -->
           <div class="swiper-slide">
-            <div class="w-[280px] md:w-[320px] group relative cursor-pointer" role="button" tabindex="0" aria-label="Ver detalhes do palestrante Belini Júnior" onclick="openSpeakerModal('Belini Júnior', 'Gateway Soluções')">
-              <div class="rounded-3xl overflow-hidden aspect-[3/4] mb-6 relative shadow-2xl border border-brand-blue-mid group-hover:border-brand-gold/60 transition duration-500 hover:shadow-[0_0_30px_rgba(242,201,76,0.15)]">
+            <div class="w-[280px] md:w-[320px] group relative cursor-pointer speaker-card" data-cota="ouro-plus" role="button" tabindex="0" aria-label="Ver detalhes do palestrante Belini Júnior" onclick="openSpeakerModal('Belini Júnior', 'Sócio · Gateway Soluções')">
+              <div class="rounded-3xl overflow-hidden aspect-[3/4] mb-6 relative shadow-2xl border border-brand-blue-mid transition duration-500 speaker-frame">
                 <img src="./assets/belini-junior.jpg" alt="Belini Júnior" loading="lazy" class="w-full h-full object-cover brightness-90 group-hover:brightness-110 group-hover:scale-105 transition duration-700" />
                 <div class="absolute inset-0 bg-gradient-to-t from-brand-blue-dark via-brand-blue-dark/20 to-transparent z-10"></div>
                 <div class="absolute bottom-0 left-0 right-0 p-6 z-20">
                   <h4 class="font-display font-bold text-2xl text-white uppercase tracking-tight">Belini Júnior</h4>
-                  <p class="text-brand-gold text-xs uppercase font-bold tracking-wider mt-1">Gateway Soluções</p>
+                  <p class="text-brand-gold text-xs uppercase font-bold tracking-wider mt-1">Sócio · Gateway Soluções</p>
                 </div>
               </div>
             </div>
           </div>
           <!-- Slide 6 - Alexandre Chastinet -->
           <div class="swiper-slide">
-            <div class="w-[280px] md:w-[320px] group relative cursor-pointer" role="button" tabindex="0" aria-label="Ver detalhes de Alexandre Chastinet" onclick="openSpeakerModal('Alexandre Chastinet', 'Palestrante')">
-              <div class="rounded-3xl overflow-hidden aspect-[3/4] mb-6 relative shadow-2xl border border-brand-blue-mid group-hover:border-brand-gold/60 transition duration-500 hover:shadow-[0_0_30px_rgba(242,201,76,0.15)]">
+            <div class="w-[280px] md:w-[320px] group relative cursor-pointer speaker-card" data-cota="ouro-plus" role="button" tabindex="0" aria-label="Ver detalhes de Alexandre Chastinet" onclick="openSpeakerModal('Alexandre Chastinet', 'Sócio · Fiel Imóveis')">
+              <div class="rounded-3xl overflow-hidden aspect-[3/4] mb-6 relative shadow-2xl border border-brand-blue-mid transition duration-500 speaker-frame">
                 <img src="./assets/alexandre-chastinet.jpg" alt="Alexandre Chastinet" loading="lazy" class="w-full h-full object-cover brightness-90 group-hover:brightness-110 group-hover:scale-105 transition duration-700" />
                 <div class="absolute inset-0 bg-gradient-to-t from-brand-blue-dark via-brand-blue-dark/20 to-transparent z-10"></div>
                 <div class="absolute bottom-0 left-0 right-0 p-6 z-20">
                   <h4 class="font-display font-bold text-2xl text-white uppercase tracking-tight">Alexandre Chastinet</h4>
-                  <p class="text-brand-gold text-xs uppercase font-bold tracking-wider mt-1">Palestrante</p>
+                  <p class="text-brand-gold text-xs uppercase font-bold tracking-wider mt-1">Sócio · Fiel Imóveis</p>
                 </div>
               </div>
             </div>
           </div>
           <!-- Slide 7 - Allan Lima -->
           <div class="swiper-slide">
-            <div class="w-[280px] md:w-[320px] group relative cursor-pointer" role="button" tabindex="0" aria-label="Ver detalhes de Allan Lima" onclick="openSpeakerModal('Allan Lima', 'Palestrante')">
-              <div class="rounded-3xl overflow-hidden aspect-[3/4] mb-6 relative shadow-2xl border border-brand-blue-mid group-hover:border-brand-gold/60 transition duration-500 hover:shadow-[0_0_30px_rgba(242,201,76,0.15)]">
+            <div class="w-[280px] md:w-[320px] group relative cursor-pointer speaker-card" data-cota="ouro-plus" role="button" tabindex="0" aria-label="Ver detalhes de Allan Lima" onclick="openSpeakerModal('Allan Lima', 'Comercial · Fortes Tecnologia')">
+              <div class="rounded-3xl overflow-hidden aspect-[3/4] mb-6 relative shadow-2xl border border-brand-blue-mid transition duration-500 speaker-frame">
                 <img src="./assets/allan-lima.jpg" alt="Allan Lima" loading="lazy" class="w-full h-full object-cover brightness-90 group-hover:brightness-110 group-hover:scale-105 transition duration-700" />
                 <div class="absolute inset-0 bg-gradient-to-t from-brand-blue-dark via-brand-blue-dark/20 to-transparent z-10"></div>
                 <div class="absolute bottom-0 left-0 right-0 p-6 z-20">
                   <h4 class="font-display font-bold text-2xl text-white uppercase tracking-tight">Allan Lima</h4>
-                  <p class="text-brand-gold text-xs uppercase font-bold tracking-wider mt-1">Palestrante</p>
+                  <p class="text-brand-gold text-xs uppercase font-bold tracking-wider mt-1">Comercial · Fortes Tecnologia</p>
                 </div>
               </div>
             </div>
           </div>
           <!-- Slide 8 - Anderson Barros -->
           <div class="swiper-slide">
-            <div class="w-[280px] md:w-[320px] group relative cursor-pointer" role="button" tabindex="0" aria-label="Ver detalhes de Anderson Barros" onclick="openSpeakerModal('Anderson Barros', 'Palestrante')">
-              <div class="rounded-3xl overflow-hidden aspect-[3/4] mb-6 relative shadow-2xl border border-brand-blue-mid group-hover:border-brand-gold/60 transition duration-500 hover:shadow-[0_0_30px_rgba(242,201,76,0.15)]">
+            <div class="w-[280px] md:w-[320px] group relative cursor-pointer speaker-card" data-cota="ouro" role="button" tabindex="0" aria-label="Ver detalhes de Anderson Barros" onclick="openSpeakerModal('Anderson Barros', 'Sócio Fundador · MedCenter')">
+              <div class="rounded-3xl overflow-hidden aspect-[3/4] mb-6 relative shadow-2xl border border-brand-blue-mid transition duration-500 speaker-frame">
                 <img src="./assets/anderson-barros.jpg" alt="Anderson Barros" loading="lazy" class="w-full h-full object-cover brightness-90 group-hover:brightness-110 group-hover:scale-105 transition duration-700" />
                 <div class="absolute inset-0 bg-gradient-to-t from-brand-blue-dark via-brand-blue-dark/20 to-transparent z-10"></div>
                 <div class="absolute bottom-0 left-0 right-0 p-6 z-20">
                   <h4 class="font-display font-bold text-2xl text-white uppercase tracking-tight">Anderson Barros</h4>
-                  <p class="text-brand-gold text-xs uppercase font-bold tracking-wider mt-1">Palestrante</p>
+                  <p class="text-brand-gold text-xs uppercase font-bold tracking-wider mt-1">Sócio Fundador · MedCenter</p>
                 </div>
               </div>
             </div>
           </div>
           <!-- Slide 9 - André Bergamini -->
           <div class="swiper-slide">
-            <div class="w-[280px] md:w-[320px] group relative cursor-pointer" role="button" tabindex="0" aria-label="Ver detalhes de André Bergamini" onclick="openSpeakerModal('André Bergamini', 'Palestrante')">
-              <div class="rounded-3xl overflow-hidden aspect-[3/4] mb-6 relative shadow-2xl border border-brand-blue-mid group-hover:border-brand-gold/60 transition duration-500 hover:shadow-[0_0_30px_rgba(242,201,76,0.15)]">
+            <div class="w-[280px] md:w-[320px] group relative cursor-pointer speaker-card" data-cota="ouro" role="button" tabindex="0" aria-label="Ver detalhes de André Bergamini" onclick="openSpeakerModal('André Bergamini', 'CEO · Drysteel')">
+              <div class="rounded-3xl overflow-hidden aspect-[3/4] mb-6 relative shadow-2xl border border-brand-blue-mid transition duration-500 speaker-frame">
                 <img src="./assets/andre-bergamini.jpg" alt="André Bergamini" loading="lazy" class="w-full h-full object-cover brightness-90 group-hover:brightness-110 group-hover:scale-105 transition duration-700" />
                 <div class="absolute inset-0 bg-gradient-to-t from-brand-blue-dark via-brand-blue-dark/20 to-transparent z-10"></div>
                 <div class="absolute bottom-0 left-0 right-0 p-6 z-20">
                   <h4 class="font-display font-bold text-2xl text-white uppercase tracking-tight">André Bergamini</h4>
-                  <p class="text-brand-gold text-xs uppercase font-bold tracking-wider mt-1">Palestrante</p>
+                  <p class="text-brand-gold text-xs uppercase font-bold tracking-wider mt-1">CEO · Drysteel</p>
                 </div>
               </div>
             </div>
           </div>
           <!-- Slide 10 - César Castro -->
           <div class="swiper-slide">
-            <div class="w-[280px] md:w-[320px] group relative cursor-pointer" role="button" tabindex="0" aria-label="Ver detalhes de César Castro" onclick="openSpeakerModal('César Castro', 'Palestrante')">
-              <div class="rounded-3xl overflow-hidden aspect-[3/4] mb-6 relative shadow-2xl border border-brand-blue-mid group-hover:border-brand-gold/60 transition duration-500 hover:shadow-[0_0_30px_rgba(242,201,76,0.15)]">
+            <div class="w-[280px] md:w-[320px] group relative cursor-pointer speaker-card" data-cota="ouro-plus" role="button" tabindex="0" aria-label="Ver detalhes de César Castro" onclick="openSpeakerModal('César Castro', 'Sócio Fundador · Movin')">
+              <div class="rounded-3xl overflow-hidden aspect-[3/4] mb-6 relative shadow-2xl border border-brand-blue-mid transition duration-500 speaker-frame">
                 <img src="./assets/cesar-castro.jpg" alt="César Castro" loading="lazy" class="w-full h-full object-cover brightness-90 group-hover:brightness-110 group-hover:scale-105 transition duration-700" />
                 <div class="absolute inset-0 bg-gradient-to-t from-brand-blue-dark via-brand-blue-dark/20 to-transparent z-10"></div>
                 <div class="absolute bottom-0 left-0 right-0 p-6 z-20">
                   <h4 class="font-display font-bold text-2xl text-white uppercase tracking-tight">César Castro</h4>
-                  <p class="text-brand-gold text-xs uppercase font-bold tracking-wider mt-1">Palestrante</p>
+                  <p class="text-brand-gold text-xs uppercase font-bold tracking-wider mt-1">Sócio Fundador · Movin</p>
                 </div>
               </div>
             </div>
           </div>
           <!-- Slide 11 - Clésio Moura -->
           <div class="swiper-slide">
-            <div class="w-[280px] md:w-[320px] group relative cursor-pointer" role="button" tabindex="0" aria-label="Ver detalhes de Clésio Moura" onclick="openSpeakerModal('Clésio Moura', 'Palestrante')">
-              <div class="rounded-3xl overflow-hidden aspect-[3/4] mb-6 relative shadow-2xl border border-brand-blue-mid group-hover:border-brand-gold/60 transition duration-500 hover:shadow-[0_0_30px_rgba(242,201,76,0.15)]">
+            <div class="w-[280px] md:w-[320px] group relative cursor-pointer speaker-card" data-cota="ouro-plus" role="button" tabindex="0" aria-label="Ver detalhes de Clésio Moura" onclick="openSpeakerModal('Clésio Moura', 'CEO · Domos')">
+              <div class="rounded-3xl overflow-hidden aspect-[3/4] mb-6 relative shadow-2xl border border-brand-blue-mid transition duration-500 speaker-frame">
                 <img src="./assets/clesio-moura.jpg" alt="Clésio Moura" loading="lazy" class="w-full h-full object-cover brightness-90 group-hover:brightness-110 group-hover:scale-105 transition duration-700" />
                 <div class="absolute inset-0 bg-gradient-to-t from-brand-blue-dark via-brand-blue-dark/20 to-transparent z-10"></div>
                 <div class="absolute bottom-0 left-0 right-0 p-6 z-20">
                   <h4 class="font-display font-bold text-2xl text-white uppercase tracking-tight">Clésio Moura</h4>
-                  <p class="text-brand-gold text-xs uppercase font-bold tracking-wider mt-1">Palestrante</p>
+                  <p class="text-brand-gold text-xs uppercase font-bold tracking-wider mt-1">CEO · Domos</p>
                 </div>
               </div>
             </div>
           </div>
           <!-- Slide 12 - David Moreira -->
           <div class="swiper-slide">
-            <div class="w-[280px] md:w-[320px] group relative cursor-pointer" role="button" tabindex="0" aria-label="Ver detalhes de David Moreira" onclick="openSpeakerModal('David Moreira', 'Palestrante')">
-              <div class="rounded-3xl overflow-hidden aspect-[3/4] mb-6 relative shadow-2xl border border-brand-blue-mid group-hover:border-brand-gold/60 transition duration-500 hover:shadow-[0_0_30px_rgba(242,201,76,0.15)]">
+            <div class="w-[280px] md:w-[320px] group relative cursor-pointer speaker-card" data-cota="diamante" role="button" tabindex="0" aria-label="Ver detalhes de David Moreira" onclick="openSpeakerModal('David Moreira', 'CEO · D&amp;R Coca-Cola')">
+              <div class="rounded-3xl overflow-hidden aspect-[3/4] mb-6 relative shadow-2xl border border-brand-blue-mid transition duration-500 speaker-frame">
                 <img src="./assets/david-moreira.jpg" alt="David Moreira" loading="lazy" class="w-full h-full object-cover brightness-90 group-hover:brightness-110 group-hover:scale-105 transition duration-700" />
                 <div class="absolute inset-0 bg-gradient-to-t from-brand-blue-dark via-brand-blue-dark/20 to-transparent z-10"></div>
                 <div class="absolute bottom-0 left-0 right-0 p-6 z-20">
                   <h4 class="font-display font-bold text-2xl text-white uppercase tracking-tight">David Moreira</h4>
-                  <p class="text-brand-gold text-xs uppercase font-bold tracking-wider mt-1">Palestrante</p>
+                  <p class="text-brand-gold text-xs uppercase font-bold tracking-wider mt-1">CEO · D&amp;R Coca-Cola</p>
                 </div>
               </div>
             </div>
           </div>
           <!-- Slide 13 - Diógenes Passos -->
           <div class="swiper-slide">
-            <div class="w-[280px] md:w-[320px] group relative cursor-pointer" role="button" tabindex="0" aria-label="Ver detalhes de Diógenes Passos" onclick="openSpeakerModal('Diógenes Passos', 'Palestrante')">
-              <div class="rounded-3xl overflow-hidden aspect-[3/4] mb-6 relative shadow-2xl border border-brand-blue-mid group-hover:border-brand-gold/60 transition duration-500 hover:shadow-[0_0_30px_rgba(242,201,76,0.15)]">
+            <div class="w-[280px] md:w-[320px] group relative cursor-pointer speaker-card" data-cota="diamante" role="button" tabindex="0" aria-label="Ver detalhes de Diógenes Passos" onclick="openSpeakerModal('Diógenes Passos', 'Gerente Geral · BNB Sobral')">
+              <div class="rounded-3xl overflow-hidden aspect-[3/4] mb-6 relative shadow-2xl border border-brand-blue-mid transition duration-500 speaker-frame">
                 <img src="./assets/diogenes-passos.jpg" alt="Diógenes Passos" loading="lazy" class="w-full h-full object-cover brightness-90 group-hover:brightness-110 group-hover:scale-105 transition duration-700" />
                 <div class="absolute inset-0 bg-gradient-to-t from-brand-blue-dark via-brand-blue-dark/20 to-transparent z-10"></div>
                 <div class="absolute bottom-0 left-0 right-0 p-6 z-20">
                   <h4 class="font-display font-bold text-2xl text-white uppercase tracking-tight">Diógenes Passos</h4>
-                  <p class="text-brand-gold text-xs uppercase font-bold tracking-wider mt-1">Palestrante</p>
+                  <p class="text-brand-gold text-xs uppercase font-bold tracking-wider mt-1">Gerente Geral · BNB Sobral</p>
                 </div>
               </div>
             </div>
           </div>
           <!-- Slide 14 - Felipe Martins -->
           <div class="swiper-slide">
-            <div class="w-[280px] md:w-[320px] group relative cursor-pointer" role="button" tabindex="0" aria-label="Ver detalhes de Felipe Martins" onclick="openSpeakerModal('Felipe Martins', 'Palestrante')">
-              <div class="rounded-3xl overflow-hidden aspect-[3/4] mb-6 relative shadow-2xl border border-brand-blue-mid group-hover:border-brand-gold/60 transition duration-500 hover:shadow-[0_0_30px_rgba(242,201,76,0.15)]">
+            <div class="w-[280px] md:w-[320px] group relative cursor-pointer speaker-card" data-cota="ouro-plus" role="button" tabindex="0" aria-label="Ver detalhes de Felipe Martins" onclick="openSpeakerModal('Felipe Martins', 'CEO · FMS &amp; PDR Engenharia')">
+              <div class="rounded-3xl overflow-hidden aspect-[3/4] mb-6 relative shadow-2xl border border-brand-blue-mid transition duration-500 speaker-frame">
                 <img src="./assets/felipe-martins.jpg" alt="Felipe Martins" loading="lazy" class="w-full h-full object-cover brightness-90 group-hover:brightness-110 group-hover:scale-105 transition duration-700" />
                 <div class="absolute inset-0 bg-gradient-to-t from-brand-blue-dark via-brand-blue-dark/20 to-transparent z-10"></div>
                 <div class="absolute bottom-0 left-0 right-0 p-6 z-20">
                   <h4 class="font-display font-bold text-2xl text-white uppercase tracking-tight">Felipe Martins</h4>
-                  <p class="text-brand-gold text-xs uppercase font-bold tracking-wider mt-1">Palestrante</p>
+                  <p class="text-brand-gold text-xs uppercase font-bold tracking-wider mt-1">CEO · FMS &amp; PDR Engenharia</p>
                 </div>
               </div>
             </div>
           </div>
           <!-- Slide 15 - Francisco Jarbson -->
           <div class="swiper-slide">
-            <div class="w-[280px] md:w-[320px] group relative cursor-pointer" role="button" tabindex="0" aria-label="Ver detalhes de Francisco Jarbson" onclick="openSpeakerModal('Francisco Jarbson', 'Palestrante')">
-              <div class="rounded-3xl overflow-hidden aspect-[3/4] mb-6 relative shadow-2xl border border-brand-blue-mid group-hover:border-brand-gold/60 transition duration-500 hover:shadow-[0_0_30px_rgba(242,201,76,0.15)]">
+            <div class="w-[280px] md:w-[320px] group relative cursor-pointer speaker-card" data-cota="ouro-plus" role="button" tabindex="0" aria-label="Ver detalhes de Francisco Jarbson" onclick="openSpeakerModal('Francisco Jarbson', 'Gerente de Vendas · SG Proteção Veicular')">
+              <div class="rounded-3xl overflow-hidden aspect-[3/4] mb-6 relative shadow-2xl border border-brand-blue-mid transition duration-500 speaker-frame">
                 <img src="./assets/francisco-jarbson.jpg" alt="Francisco Jarbson" loading="lazy" class="w-full h-full object-cover brightness-90 group-hover:brightness-110 group-hover:scale-105 transition duration-700" />
                 <div class="absolute inset-0 bg-gradient-to-t from-brand-blue-dark via-brand-blue-dark/20 to-transparent z-10"></div>
                 <div class="absolute bottom-0 left-0 right-0 p-6 z-20">
                   <h4 class="font-display font-bold text-2xl text-white uppercase tracking-tight">Francisco Jarbson</h4>
-                  <p class="text-brand-gold text-xs uppercase font-bold tracking-wider mt-1">Palestrante</p>
+                  <p class="text-brand-gold text-xs uppercase font-bold tracking-wider mt-1">Gerente de Vendas · SG Proteção Veicular</p>
                 </div>
               </div>
             </div>
           </div>
           <!-- Slide 16 - Gladstone Prado -->
           <div class="swiper-slide">
-            <div class="w-[280px] md:w-[320px] group relative cursor-pointer" role="button" tabindex="0" aria-label="Ver detalhes de Gladstone Prado" onclick="openSpeakerModal('Gladstone Prado', 'Palestrante')">
-              <div class="rounded-3xl overflow-hidden aspect-[3/4] mb-6 relative shadow-2xl border border-brand-blue-mid group-hover:border-brand-gold/60 transition duration-500 hover:shadow-[0_0_30px_rgba(242,201,76,0.15)]">
+            <div class="w-[280px] md:w-[320px] group relative cursor-pointer speaker-card" data-cota="ouro" role="button" tabindex="0" aria-label="Ver detalhes de Gladstone Prado" onclick="openSpeakerModal('Gladstone Prado', 'Sócio Proprietário · Plata')">
+              <div class="rounded-3xl overflow-hidden aspect-[3/4] mb-6 relative shadow-2xl border border-brand-blue-mid transition duration-500 speaker-frame">
                 <img src="./assets/gladstone-prado.jpg" alt="Gladstone Prado" loading="lazy" class="w-full h-full object-cover brightness-90 group-hover:brightness-110 group-hover:scale-105 transition duration-700" />
                 <div class="absolute inset-0 bg-gradient-to-t from-brand-blue-dark via-brand-blue-dark/20 to-transparent z-10"></div>
                 <div class="absolute bottom-0 left-0 right-0 p-6 z-20">
                   <h4 class="font-display font-bold text-2xl text-white uppercase tracking-tight">Gladstone Prado</h4>
-                  <p class="text-brand-gold text-xs uppercase font-bold tracking-wider mt-1">Palestrante</p>
+                  <p class="text-brand-gold text-xs uppercase font-bold tracking-wider mt-1">Sócio Proprietário · Plata</p>
                 </div>
               </div>
             </div>
           </div>
           <!-- Slide 17 - Hildebrando Andrade -->
           <div class="swiper-slide">
-            <div class="w-[280px] md:w-[320px] group relative cursor-pointer" role="button" tabindex="0" aria-label="Ver detalhes de Hildebrando Andrade" onclick="openSpeakerModal('Hildebrando Andrade', 'Palestrante')">
-              <div class="rounded-3xl overflow-hidden aspect-[3/4] mb-6 relative shadow-2xl border border-brand-blue-mid group-hover:border-brand-gold/60 transition duration-500 hover:shadow-[0_0_30px_rgba(242,201,76,0.15)]">
+            <div class="w-[280px] md:w-[320px] group relative cursor-pointer speaker-card" data-cota="ouro-plus" role="button" tabindex="0" aria-label="Ver detalhes de Hildebrando Andrade" onclick="openSpeakerModal('Hildebrando Andrade', 'Diretor Administrativo · Valmir Andrade')">
+              <div class="rounded-3xl overflow-hidden aspect-[3/4] mb-6 relative shadow-2xl border border-brand-blue-mid transition duration-500 speaker-frame">
                 <img src="./assets/hildebrando-andrade.jpg" alt="Hildebrando Andrade" loading="lazy" class="w-full h-full object-cover brightness-90 group-hover:brightness-110 group-hover:scale-105 transition duration-700" />
                 <div class="absolute inset-0 bg-gradient-to-t from-brand-blue-dark via-brand-blue-dark/20 to-transparent z-10"></div>
                 <div class="absolute bottom-0 left-0 right-0 p-6 z-20">
                   <h4 class="font-display font-bold text-2xl text-white uppercase tracking-tight">Hildebrando Andrade</h4>
-                  <p class="text-brand-gold text-xs uppercase font-bold tracking-wider mt-1">Palestrante</p>
+                  <p class="text-brand-gold text-xs uppercase font-bold tracking-wider mt-1">Diretor Administrativo · Valmir Andrade</p>
                 </div>
               </div>
             </div>
           </div>
           <!-- Slide 18 - Lucas Ogata -->
           <div class="swiper-slide">
-            <div class="w-[280px] md:w-[320px] group relative cursor-pointer" role="button" tabindex="0" aria-label="Ver detalhes de Lucas Ogata" onclick="openSpeakerModal('Lucas Ogata', 'Palestrante')">
-              <div class="rounded-3xl overflow-hidden aspect-[3/4] mb-6 relative shadow-2xl border border-brand-blue-mid group-hover:border-brand-gold/60 transition duration-500 hover:shadow-[0_0_30px_rgba(242,201,76,0.15)]">
+            <div class="w-[280px] md:w-[320px] group relative cursor-pointer speaker-card" data-cota="convidado" role="button" tabindex="0" aria-label="Ver detalhes de Lucas Ogata" onclick="openSpeakerModal('Lucas Ogata', 'Head de TikTok Shop · AURA Beauty')">
+              <div class="rounded-3xl overflow-hidden aspect-[3/4] mb-6 relative shadow-2xl border border-brand-blue-mid transition duration-500 speaker-frame">
                 <img src="./assets/lucas-ogata.jpg" alt="Lucas Ogata" loading="lazy" class="w-full h-full object-cover brightness-90 group-hover:brightness-110 group-hover:scale-105 transition duration-700" />
                 <div class="absolute inset-0 bg-gradient-to-t from-brand-blue-dark via-brand-blue-dark/20 to-transparent z-10"></div>
                 <div class="absolute bottom-0 left-0 right-0 p-6 z-20">
                   <h4 class="font-display font-bold text-2xl text-white uppercase tracking-tight">Lucas Ogata</h4>
-                  <p class="text-brand-gold text-xs uppercase font-bold tracking-wider mt-1">Palestrante</p>
+                  <p class="text-brand-gold text-xs uppercase font-bold tracking-wider mt-1">Head de TikTok Shop · AURA Beauty</p>
                 </div>
               </div>
             </div>
           </div>
           <!-- Slide 19 - Marcelo Carneiro -->
           <div class="swiper-slide">
-            <div class="w-[280px] md:w-[320px] group relative cursor-pointer" role="button" tabindex="0" aria-label="Ver detalhes de Marcelo Carneiro" onclick="openSpeakerModal('Marcelo Carneiro', 'Palestrante')">
-              <div class="rounded-3xl overflow-hidden aspect-[3/4] mb-6 relative shadow-2xl border border-brand-blue-mid group-hover:border-brand-gold/60 transition duration-500 hover:shadow-[0_0_30px_rgba(242,201,76,0.15)]">
+            <div class="w-[280px] md:w-[320px] group relative cursor-pointer speaker-card" data-cota="ouro-plus" role="button" tabindex="0" aria-label="Ver detalhes de Marcelo Carneiro" onclick="openSpeakerModal('Marcelo Carneiro', 'SEST SENAT')">
+              <div class="rounded-3xl overflow-hidden aspect-[3/4] mb-6 relative shadow-2xl border border-brand-blue-mid transition duration-500 speaker-frame">
                 <img src="./assets/marcelo-carneiro.jpg" alt="Marcelo Carneiro" loading="lazy" class="w-full h-full object-cover brightness-90 group-hover:brightness-110 group-hover:scale-105 transition duration-700" />
                 <div class="absolute inset-0 bg-gradient-to-t from-brand-blue-dark via-brand-blue-dark/20 to-transparent z-10"></div>
                 <div class="absolute bottom-0 left-0 right-0 p-6 z-20">
                   <h4 class="font-display font-bold text-2xl text-white uppercase tracking-tight">Marcelo Carneiro</h4>
-                  <p class="text-brand-gold text-xs uppercase font-bold tracking-wider mt-1">Palestrante</p>
+                  <p class="text-brand-gold text-xs uppercase font-bold tracking-wider mt-1">SEST SENAT</p>
                 </div>
               </div>
             </div>
           </div>
           <!-- Slide 20 - Paulo Vitor -->
           <div class="swiper-slide">
-            <div class="w-[280px] md:w-[320px] group relative cursor-pointer" role="button" tabindex="0" aria-label="Ver detalhes de Paulo Vitor" onclick="openSpeakerModal('Paulo Vitor', 'Palestrante')">
-              <div class="rounded-3xl overflow-hidden aspect-[3/4] mb-6 relative shadow-2xl border border-brand-blue-mid group-hover:border-brand-gold/60 transition duration-500 hover:shadow-[0_0_30px_rgba(242,201,76,0.15)]">
+            <div class="w-[280px] md:w-[320px] group relative cursor-pointer speaker-card" data-cota="ouro-plus" role="button" tabindex="0" aria-label="Ver detalhes de Paulo Vitor" onclick="openSpeakerModal('Paulo Vitor', 'Sócio · Nort Contabilidade')">
+              <div class="rounded-3xl overflow-hidden aspect-[3/4] mb-6 relative shadow-2xl border border-brand-blue-mid transition duration-500 speaker-frame">
                 <img src="./assets/paulo-vitor.jpg" alt="Paulo Vitor" loading="lazy" class="w-full h-full object-cover brightness-90 group-hover:brightness-110 group-hover:scale-105 transition duration-700" />
                 <div class="absolute inset-0 bg-gradient-to-t from-brand-blue-dark via-brand-blue-dark/20 to-transparent z-10"></div>
                 <div class="absolute bottom-0 left-0 right-0 p-6 z-20">
                   <h4 class="font-display font-bold text-2xl text-white uppercase tracking-tight">Paulo Vitor</h4>
-                  <p class="text-brand-gold text-xs uppercase font-bold tracking-wider mt-1">Palestrante</p>
+                  <p class="text-brand-gold text-xs uppercase font-bold tracking-wider mt-1">Sócio · Nort Contabilidade</p>
                 </div>
               </div>
             </div>
           </div>
           <!-- Slide 21 - Rafael Ponte -->
           <div class="swiper-slide">
-            <div class="w-[280px] md:w-[320px] group relative cursor-pointer" role="button" tabindex="0" aria-label="Ver detalhes de Rafael Ponte" onclick="openSpeakerModal('Rafael Ponte', 'Palestrante')">
-              <div class="rounded-3xl overflow-hidden aspect-[3/4] mb-6 relative shadow-2xl border border-brand-blue-mid group-hover:border-brand-gold/60 transition duration-500 hover:shadow-[0_0_30px_rgba(242,201,76,0.15)]">
+            <div class="w-[280px] md:w-[320px] group relative cursor-pointer speaker-card" data-cota="ouro" role="button" tabindex="0" aria-label="Ver detalhes de Rafael Ponte" onclick="openSpeakerModal('Rafael Ponte', 'CEO · Pro Sol')">
+              <div class="rounded-3xl overflow-hidden aspect-[3/4] mb-6 relative shadow-2xl border border-brand-blue-mid transition duration-500 speaker-frame">
                 <img src="./assets/rafael-ponte.jpg" alt="Rafael Ponte" loading="lazy" class="w-full h-full object-cover brightness-90 group-hover:brightness-110 group-hover:scale-105 transition duration-700" />
                 <div class="absolute inset-0 bg-gradient-to-t from-brand-blue-dark via-brand-blue-dark/20 to-transparent z-10"></div>
                 <div class="absolute bottom-0 left-0 right-0 p-6 z-20">
                   <h4 class="font-display font-bold text-2xl text-white uppercase tracking-tight">Rafael Ponte</h4>
-                  <p class="text-brand-gold text-xs uppercase font-bold tracking-wider mt-1">Palestrante</p>
+                  <p class="text-brand-gold text-xs uppercase font-bold tracking-wider mt-1">CEO · Pro Sol</p>
                 </div>
               </div>
             </div>
           </div>
           <!-- Slide 22 - Rafael Souza -->
           <div class="swiper-slide">
-            <div class="w-[280px] md:w-[320px] group relative cursor-pointer" role="button" tabindex="0" aria-label="Ver detalhes de Rafael Souza" onclick="openSpeakerModal('Rafael Souza', 'Agência Trendz')">
-              <div class="rounded-3xl overflow-hidden aspect-[3/4] mb-6 relative shadow-2xl border border-brand-blue-mid group-hover:border-brand-gold/60 transition duration-500 hover:shadow-[0_0_30px_rgba(242,201,76,0.15)]">
+            <div class="w-[280px] md:w-[320px] group relative cursor-pointer speaker-card" data-cota="convidado" role="button" tabindex="0" aria-label="Ver detalhes de Rafael Souza" onclick="openSpeakerModal('Rafael Souza', 'CEO · Agência Trendz')">
+              <div class="rounded-3xl overflow-hidden aspect-[3/4] mb-6 relative shadow-2xl border border-brand-blue-mid transition duration-500 speaker-frame">
                 <img src="./assets/rafael-souza.jpg" alt="Rafael Souza" loading="lazy" class="w-full h-full object-cover brightness-90 group-hover:brightness-110 group-hover:scale-105 transition duration-700" />
                 <div class="absolute inset-0 bg-gradient-to-t from-brand-blue-dark via-brand-blue-dark/20 to-transparent z-10"></div>
                 <div class="absolute bottom-0 left-0 right-0 p-6 z-20">
                   <h4 class="font-display font-bold text-2xl text-white uppercase tracking-tight">Rafael Souza</h4>
-                  <p class="text-brand-gold text-xs uppercase font-bold tracking-wider mt-1">Agência Trendz</p>
+                  <p class="text-brand-gold text-xs uppercase font-bold tracking-wider mt-1">CEO · Agência Trendz</p>
                 </div>
               </div>
             </div>
           </div>
           <!-- Slide 23 - Rayana Loiola -->
           <div class="swiper-slide">
-            <div class="w-[280px] md:w-[320px] group relative cursor-pointer" role="button" tabindex="0" aria-label="Ver detalhes de Rayana Loiola" onclick="openSpeakerModal('Rayana Loiola', 'Palestrante')">
-              <div class="rounded-3xl overflow-hidden aspect-[3/4] mb-6 relative shadow-2xl border border-brand-blue-mid group-hover:border-brand-gold/60 transition duration-500 hover:shadow-[0_0_30px_rgba(242,201,76,0.15)]">
+            <div class="w-[280px] md:w-[320px] group relative cursor-pointer speaker-card" data-cota="ouro" role="button" tabindex="0" aria-label="Ver detalhes de Rayana Loiola" onclick="openSpeakerModal('Rayana Loiola', 'Comercial · Sobral Gráfica')">
+              <div class="rounded-3xl overflow-hidden aspect-[3/4] mb-6 relative shadow-2xl border border-brand-blue-mid transition duration-500 speaker-frame">
                 <img src="./assets/rayana-loiola.jpg" alt="Rayana Loiola" loading="lazy" class="w-full h-full object-cover brightness-90 group-hover:brightness-110 group-hover:scale-105 transition duration-700" />
                 <div class="absolute inset-0 bg-gradient-to-t from-brand-blue-dark via-brand-blue-dark/20 to-transparent z-10"></div>
                 <div class="absolute bottom-0 left-0 right-0 p-6 z-20">
                   <h4 class="font-display font-bold text-2xl text-white uppercase tracking-tight">Rayana Loiola</h4>
-                  <p class="text-brand-gold text-xs uppercase font-bold tracking-wider mt-1">Palestrante</p>
+                  <p class="text-brand-gold text-xs uppercase font-bold tracking-wider mt-1">Comercial · Sobral Gráfica</p>
                 </div>
               </div>
             </div>
           </div>
           <!-- Slide 24 - Said Sahdo -->
           <div class="swiper-slide">
-            <div class="w-[280px] md:w-[320px] group relative cursor-pointer" role="button" tabindex="0" aria-label="Ver detalhes de Said Sahdo" onclick="openSpeakerModal('Said Sahdo', 'Palestrante')">
-              <div class="rounded-3xl overflow-hidden aspect-[3/4] mb-6 relative shadow-2xl border border-brand-blue-mid group-hover:border-brand-gold/60 transition duration-500 hover:shadow-[0_0_30px_rgba(242,201,76,0.15)]">
+            <div class="w-[280px] md:w-[320px] group relative cursor-pointer speaker-card" data-cota="diamante" role="button" tabindex="0" aria-label="Ver detalhes de Said Sahdo" onclick="openSpeakerModal('Said Sahdo', 'CCO · Grupo HWS')">
+              <div class="rounded-3xl overflow-hidden aspect-[3/4] mb-6 relative shadow-2xl border border-brand-blue-mid transition duration-500 speaker-frame">
                 <img src="./assets/said-sahdo.jpg" alt="Said Sahdo" loading="lazy" class="w-full h-full object-cover brightness-90 group-hover:brightness-110 group-hover:scale-105 transition duration-700" />
                 <div class="absolute inset-0 bg-gradient-to-t from-brand-blue-dark via-brand-blue-dark/20 to-transparent z-10"></div>
                 <div class="absolute bottom-0 left-0 right-0 p-6 z-20">
                   <h4 class="font-display font-bold text-2xl text-white uppercase tracking-tight">Said Sahdo</h4>
-                  <p class="text-brand-gold text-xs uppercase font-bold tracking-wider mt-1">Palestrante</p>
+                  <p class="text-brand-gold text-xs uppercase font-bold tracking-wider mt-1">CCO · Grupo HWS</p>
                 </div>
               </div>
             </div>
           </div>
           <!-- Slide 25 - Shirlean Rios -->
           <div class="swiper-slide">
-            <div class="w-[280px] md:w-[320px] group relative cursor-pointer" role="button" tabindex="0" aria-label="Ver detalhes de Shirlean Rios" onclick="openSpeakerModal('Shirlean Rios', 'Palestrante')">
-              <div class="rounded-3xl overflow-hidden aspect-[3/4] mb-6 relative shadow-2xl border border-brand-blue-mid group-hover:border-brand-gold/60 transition duration-500 hover:shadow-[0_0_30px_rgba(242,201,76,0.15)]">
+            <div class="w-[280px] md:w-[320px] group relative cursor-pointer speaker-card" data-cota="ouro" role="button" tabindex="0" aria-label="Ver detalhes de Shirlean Rios" onclick="openSpeakerModal('Shirlean Rios', 'CEO · Rios Mobilidade Elétrica')">
+              <div class="rounded-3xl overflow-hidden aspect-[3/4] mb-6 relative shadow-2xl border border-brand-blue-mid transition duration-500 speaker-frame">
                 <img src="./assets/shirlean-rios.jpg" alt="Shirlean Rios" loading="lazy" class="w-full h-full object-cover brightness-90 group-hover:brightness-110 group-hover:scale-105 transition duration-700" />
                 <div class="absolute inset-0 bg-gradient-to-t from-brand-blue-dark via-brand-blue-dark/20 to-transparent z-10"></div>
                 <div class="absolute bottom-0 left-0 right-0 p-6 z-20">
                   <h4 class="font-display font-bold text-2xl text-white uppercase tracking-tight">Shirlean Rios</h4>
-                  <p class="text-brand-gold text-xs uppercase font-bold tracking-wider mt-1">Palestrante</p>
+                  <p class="text-brand-gold text-xs uppercase font-bold tracking-wider mt-1">CEO · Rios Mobilidade Elétrica</p>
                 </div>
               </div>
             </div>
           </div>
           <!-- Slide 26 - Tárcio Araújo -->
           <div class="swiper-slide">
-            <div class="w-[280px] md:w-[320px] group relative cursor-pointer" role="button" tabindex="0" aria-label="Ver detalhes de Tárcio Araújo" onclick="openSpeakerModal('Tárcio Araújo', 'Palestrante')">
-              <div class="rounded-3xl overflow-hidden aspect-[3/4] mb-6 relative shadow-2xl border border-brand-blue-mid group-hover:border-brand-gold/60 transition duration-500 hover:shadow-[0_0_30px_rgba(242,201,76,0.15)]">
+            <div class="w-[280px] md:w-[320px] group relative cursor-pointer speaker-card" data-cota="ouro-plus" role="button" tabindex="0" aria-label="Ver detalhes de Tárcio Araújo" onclick="openSpeakerModal('Tárcio Araújo', 'CEO · Sobral Climatizadores')">
+              <div class="rounded-3xl overflow-hidden aspect-[3/4] mb-6 relative shadow-2xl border border-brand-blue-mid transition duration-500 speaker-frame">
                 <img src="./assets/tarcio-araujo.jpg" alt="Tárcio Araújo" loading="lazy" class="w-full h-full object-cover brightness-90 group-hover:brightness-110 group-hover:scale-105 transition duration-700" />
                 <div class="absolute inset-0 bg-gradient-to-t from-brand-blue-dark via-brand-blue-dark/20 to-transparent z-10"></div>
                 <div class="absolute bottom-0 left-0 right-0 p-6 z-20">
                   <h4 class="font-display font-bold text-2xl text-white uppercase tracking-tight">Tárcio Araújo</h4>
-                  <p class="text-brand-gold text-xs uppercase font-bold tracking-wider mt-1">Palestrante</p>
+                  <p class="text-brand-gold text-xs uppercase font-bold tracking-wider mt-1">CEO · Sobral Climatizadores</p>
                 </div>
               </div>
             </div>
           </div>
           <!-- Slide 27 - Thiago Alves -->
           <div class="swiper-slide">
-            <div class="w-[280px] md:w-[320px] group relative cursor-pointer" role="button" tabindex="0" aria-label="Ver detalhes de Thiago Alves" onclick="openSpeakerModal('Thiago Alves', 'Palestrante')">
-              <div class="rounded-3xl overflow-hidden aspect-[3/4] mb-6 relative shadow-2xl border border-brand-blue-mid group-hover:border-brand-gold/60 transition duration-500 hover:shadow-[0_0_30px_rgba(242,201,76,0.15)]">
+            <div class="w-[280px] md:w-[320px] group relative cursor-pointer speaker-card" data-cota="ouro-plus" role="button" tabindex="0" aria-label="Ver detalhes de Thiago Alves" onclick="openSpeakerModal('Thiago Alves', 'CEO · Nexia Saúde')">
+              <div class="rounded-3xl overflow-hidden aspect-[3/4] mb-6 relative shadow-2xl border border-brand-blue-mid transition duration-500 speaker-frame">
                 <img src="./assets/thiago-alves.jpg" alt="Thiago Alves" loading="lazy" class="w-full h-full object-cover brightness-90 group-hover:brightness-110 group-hover:scale-105 transition duration-700" />
                 <div class="absolute inset-0 bg-gradient-to-t from-brand-blue-dark via-brand-blue-dark/20 to-transparent z-10"></div>
                 <div class="absolute bottom-0 left-0 right-0 p-6 z-20">
                   <h4 class="font-display font-bold text-2xl text-white uppercase tracking-tight">Thiago Alves</h4>
-                  <p class="text-brand-gold text-xs uppercase font-bold tracking-wider mt-1">Palestrante</p>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- Slide 28 -->
-          <div class="swiper-slide">
-            <div class="w-[280px] md:w-[320px] group relative cursor-pointer" role="button" tabindex="0" aria-label="Ver detalhes do palestrante Em Breve" onclick="openSpeakerModal('EM BREVE', 'Surpresa')">
-              <div class="rounded-3xl overflow-hidden aspect-[3/4] mb-6 relative shadow-2xl border border-brand-blue-mid bg-brand-blue-mid/20 flex flex-col justify-end p-6 group-hover:border-brand-gold/50 transition duration-500 hover:shadow-[0_0_30px_rgba(242,201,76,0.05)]">
-                <div class="absolute inset-0 bg-gradient-to-t from-brand-blue-dark via-brand-blue-dark/40 to-transparent z-10"></div>
-                <div class="absolute inset-0 flex items-center justify-center">
-                  <span class="text-7xl text-brand-blue-accent/30 group-hover:text-brand-gold/50 group-hover:scale-110 transition duration-500 font-display font-bold">?</span>
-                </div>
-                <div class="relative z-20">
-                  <h4 class="font-display font-bold text-2xl text-gray-400 uppercase tracking-tight group-hover:text-white transition duration-300">Em Breve</h4>
-                  <p class="text-brand-gold/70 font-syne text-xs uppercase font-bold tracking-wider mt-1">Surpresa</p>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- Slide 29 -->
-          <div class="swiper-slide">
-            <div class="w-[280px] md:w-[320px] group relative cursor-pointer" role="button" tabindex="0" aria-label="Ver detalhes do palestrante Em Breve" onclick="openSpeakerModal('EM BREVE', 'Surpresa')">
-              <div class="rounded-3xl overflow-hidden aspect-[3/4] mb-6 relative shadow-2xl border border-brand-blue-mid bg-brand-blue-mid/20 flex flex-col justify-end p-6 group-hover:border-brand-gold/50 transition duration-500 hover:shadow-[0_0_30px_rgba(242,201,76,0.05)]">
-                <div class="absolute inset-0 bg-gradient-to-t from-brand-blue-dark via-brand-blue-dark/40 to-transparent z-10"></div>
-                <div class="absolute inset-0 flex items-center justify-center">
-                  <span class="text-7xl text-brand-blue-accent/30 group-hover:text-brand-gold/50 group-hover:scale-110 transition duration-500 font-display font-bold">?</span>
-                </div>
-                <div class="relative z-20">
-                  <h4 class="font-display font-bold text-2xl text-gray-400 uppercase tracking-tight group-hover:text-white transition duration-300">Em Breve</h4>
-                  <p class="text-brand-gold/70 font-syne text-xs uppercase font-bold tracking-wider mt-1">Surpresa</p>
+                  <p class="text-brand-gold text-xs uppercase font-bold tracking-wider mt-1">CEO · Nexia Saúde</p>
                 </div>
               </div>
             </div>
@@ -1567,7 +1545,7 @@
         
         <div class="relative w-full max-w-2xl mx-auto mb-12 text-center simple-reveal-hidden">
           <h3 class="font-display font-bold text-3xl md:text-4xl text-white uppercase tracking-wider mb-2">VENDAS INICIADAS</h3>
-          <p class="text-brand-gold font-syne font-bold uppercase tracking-[0.2em] mb-4 text-xl text-shadow-glow-blue">Garanta seu lugar no 1º lote</p>
+          <p class="text-brand-gold font-syne font-bold uppercase tracking-[0.2em] mb-4 text-xl text-shadow-glow-blue">Garanta seu lugar no 2º lote</p>
           <div class="h-16 border border-white/10 rounded-2xl p-2 bg-[#050B14] flex gap-1 shadow-[0_0_30px_rgba(242,201,76,0.1)]"
                data-pre-venda-segmentos role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50"
                aria-label="Porcentagem de ingressos vendidos">
@@ -1610,31 +1588,32 @@
              <button disabled class="mt-auto w-full py-4 rounded-xl border border-gray-800 text-gray-500 font-display font-bold uppercase tracking-widest text-sm cursor-not-allowed bg-transparent">Encerrado</button>
           </div>
 
-          <!-- Lote 1 (Active) -->
+          <!-- Lote 1 (encerrado) -->
+          <div class="simple-reveal-hidden rounded-3xl p-8 border border-gray-800 bg-brand-blue-mid/20 relative flex flex-col items-center text-center opacity-60">
+             <div class="absolute -top-4 bg-gray-700 text-gray-300 px-6 py-1 rounded-full font-display font-bold text-xs uppercase tracking-widest">Encerrado</div>
+             <h4 class="text-gray-400 text-xl font-display font-bold uppercase mb-2 mt-4">1º Lote</h4>
+             <div class="text-3xl font-display font-bold text-gray-500 mb-6 line-through">R$ 207,00</div>
+             <ul class="text-gray-500 font-syne text-sm mb-8 space-y-3 text-left w-full border-t border-gray-800 pt-6">
+                <li>Acesso aos 2 dias de evento</li>
+                <li>Acesso à plenária principal</li>
+                <li>Networking de alto nível</li>
+                <li>Certificado de participação</li>
+             </ul>
+             <button disabled class="mt-auto w-full py-4 rounded-xl border border-gray-800 text-gray-500 font-display font-bold uppercase tracking-widest text-sm cursor-not-allowed bg-transparent">Encerrado</button>
+          </div>
+
+          <!-- Lote 2 (Active) -->
           <div class="simple-reveal-hidden rounded-3xl p-8 border-2 border-brand-gold bg-brand-gold/5 relative shadow-[0_0_40px_rgba(242,201,76,0.15)] flex flex-col items-center text-center transform hover:-translate-y-2 transition-transform duration-300">
              <div class="absolute -top-4 bg-brand-gold text-brand-blue-dark px-6 py-1 rounded-full font-display font-bold text-xs uppercase tracking-widest shadow-lg">Lote Atual</div>
-             <h4 class="text-white text-xl font-display font-bold uppercase mb-2 mt-4">1º Lote</h4>
-             <div class="text-3xl font-display font-bold text-brand-gold mb-6">R$ 207,00</div>
+             <h4 class="text-white text-xl font-display font-bold uppercase mb-2 mt-4">2º Lote</h4>
+             <div class="text-3xl font-display font-bold text-brand-gold mb-6">R$ 237,00</div>
              <ul class="text-gray-300 font-syne text-sm mb-8 space-y-3 text-left w-full check-list border-t border-brand-gold/20 pt-6">
                 <li>Acesso aos 2 dias de evento</li>
                 <li>Acesso à plenária principal</li>
                 <li>Networking de alto nível</li>
                 <li>Certificado de participação</li>
              </ul>
-             <a href="https://doity.com.br/connect-valley-2026" target="_blank" rel="noopener noreferrer" aria-label="Comprar ingresso do 1º lote na Doity (abre em nova aba)" class="mt-auto w-full py-4 rounded-xl bg-brand-gold text-brand-blue-dark font-display font-bold uppercase tracking-widest text-sm hover:bg-white transition-all duration-300 shadow-lg shadow-brand-gold/20">Comprar Agora</a>
-          </div>
-
-          <!-- Lote 2 -->
-          <div class="simple-reveal-hidden rounded-3xl p-8 border border-gray-800 bg-brand-blue-mid/20 flex flex-col items-center text-center opacity-50">
-             <h4 class="text-gray-505 text-xl font-display font-bold uppercase mb-2 mt-4">2º Lote</h4>
-             <div class="text-2xl font-display font-bold text-gray-600 mb-6">Em Breve</div>
-             <ul class="text-gray-600 font-syne text-sm mb-8 space-y-3 text-left w-full border-t border-gray-800/50 pt-6">
-                <li>Acesso aos 2 dias de evento</li>
-                <li>Acesso à plenária principal</li>
-                <li>Networking de alto nível</li>
-                <li>Certificado de participação</li>
-             </ul>
-             <button disabled class="mt-auto w-full py-4 rounded-xl border border-gray-800 text-gray-600 font-display font-bold uppercase tracking-widest text-sm cursor-not-allowed bg-transparent">Em Breve</button>
+             <a href="https://doity.com.br/connect-valley-2026" target="_blank" rel="noopener noreferrer" aria-label="Comprar ingresso do 2º lote na Doity (abre em nova aba)" class="mt-auto w-full py-4 rounded-xl bg-brand-gold text-brand-blue-dark font-display font-bold uppercase tracking-widest text-sm hover:bg-white transition-all duration-300 shadow-lg shadow-brand-gold/20">Comprar Agora</a>
           </div>
 
           <!-- Lote 3 -->
@@ -1805,17 +1784,22 @@
             <span class="h-px w-12 md:w-24 bg-gradient-to-l from-transparent to-brand-gold/40"></span>
           </div>
           <div class="flex flex-wrap justify-center gap-5">
-                                    <div class="sponsor-card rounded-xl p-3 w-48 md:w-60 h-28 md:h-40 flex items-center justify-center border border-brand-gold/25 hover:border-brand-gold/60 transition duration-500 group"><img src="./assets/logos/ouro/casalar.png" loading="lazy" alt="Logotipo CasaLar — Patrocinador Ouro" class="max-w-[85%] max-h-[78%] object-contain opacity-90 group-hover:opacity-100 transition duration-500" /></div>
+            <div class="sponsor-card rounded-xl p-3 w-48 md:w-60 h-28 md:h-40 flex items-center justify-center border border-brand-gold/25 hover:border-brand-gold/60 transition duration-500 group"><img src="./assets/logos/ouro/casalar.png" loading="lazy" alt="Logotipo CasaLar — Patrocinador Ouro" class="max-w-[85%] max-h-[78%] object-contain opacity-90 group-hover:opacity-100 transition duration-500" /></div>
+            <div class="sponsor-card rounded-xl p-3 w-48 md:w-60 h-28 md:h-40 flex items-center justify-center border border-brand-gold/25 hover:border-brand-gold/60 transition duration-500 group"><img src="./assets/logos/ouro/domah.png" loading="lazy" alt="Logotipo Domah — Patrocinador Ouro" class="max-w-[85%] max-h-[78%] object-contain opacity-90 group-hover:opacity-100 transition duration-500" /></div>
             <div class="sponsor-card rounded-xl p-3 w-48 md:w-60 h-28 md:h-40 flex items-center justify-center border border-brand-gold/25 hover:border-brand-gold/60 transition duration-500 group"><img src="./assets/logos/ouro/drysteel.png" loading="lazy" alt="Logotipo Drysteel — Patrocinador Ouro" class="max-w-[85%] max-h-[78%] object-contain opacity-90 group-hover:opacity-100 transition duration-500" /></div>
             <div class="sponsor-card rounded-xl p-3 w-48 md:w-60 h-28 md:h-40 flex items-center justify-center border border-brand-gold/25 hover:border-brand-gold/60 transition duration-500 group"><img src="./assets/logos/ouro/libercard.png" loading="lazy" alt="Logotipo Libercard — Patrocinador Ouro" class="max-w-[85%] max-h-[78%] object-contain opacity-90 group-hover:opacity-100 transition duration-500" /></div>
+            <div class="sponsor-card rounded-xl p-3 w-48 md:w-60 h-28 md:h-40 flex items-center justify-center border border-brand-gold/25 hover:border-brand-gold/60 transition duration-500 group" role="img" aria-label="Logotipo Mãe Rainha — Patrocinador Ouro"><span aria-hidden="true" class="font-display font-bold uppercase tracking-wider text-center leading-tight px-2 text-base md:text-xl text-white/80 group-hover:text-white transition duration-500">Mãe Rainha</span></div>
             <div class="sponsor-card rounded-xl p-3 w-48 md:w-60 h-28 md:h-40 flex items-center justify-center border border-brand-gold/25 hover:border-brand-gold/60 transition duration-500 group"><img src="./assets/logos/ouro/medcenter.png" loading="lazy" alt="Logotipo Medcenter — Patrocinador Ouro" class="max-w-[85%] max-h-[78%] object-contain opacity-90 group-hover:opacity-100 transition duration-500" /></div>
+            <div class="sponsor-card rounded-xl p-3 w-48 md:w-60 h-28 md:h-40 flex items-center justify-center border border-brand-gold/25 hover:border-brand-gold/60 transition duration-500 group"><img src="./assets/logos/ouro/miri-moveis.png" loading="lazy" alt="Logotipo Miri Móveis — Patrocinador Ouro" class="max-w-[85%] max-h-[78%] object-contain opacity-90 group-hover:opacity-100 transition duration-500" /></div>
             <div class="sponsor-card rounded-xl p-3 w-48 md:w-60 h-28 md:h-40 flex items-center justify-center border border-brand-gold/25 hover:border-brand-gold/60 transition duration-500 group"><img src="./assets/logos/ouro/plasfran.png" loading="lazy" alt="Logotipo Plasfran — Patrocinador Ouro" class="max-w-[85%] max-h-[78%] object-contain opacity-90 group-hover:opacity-100 transition duration-500" /></div>
             <div class="sponsor-card rounded-xl p-3 w-48 md:w-60 h-28 md:h-40 flex items-center justify-center border border-brand-gold/25 hover:border-brand-gold/60 transition duration-500 group"><img src="./assets/logos/ouro/plata.png" loading="lazy" alt="Logotipo Plata — Patrocinador Ouro" class="max-w-[85%] max-h-[78%] object-contain opacity-90 group-hover:opacity-100 transition duration-500" /></div>
             <div class="sponsor-card rounded-xl p-3 w-48 md:w-60 h-28 md:h-40 flex items-center justify-center border border-brand-gold/25 hover:border-brand-gold/60 transition duration-500 group"><img src="./assets/logos/ouro/pro-sol.png" loading="lazy" alt="Logotipo Pro Sol — Patrocinador Ouro" class="max-w-[85%] max-h-[78%] object-contain opacity-90 group-hover:opacity-100 transition duration-500" /></div>
             <div class="sponsor-card rounded-xl p-3 w-48 md:w-60 h-28 md:h-40 flex items-center justify-center border border-brand-gold/25 hover:border-brand-gold/60 transition duration-500 group"><img src="./assets/logos/ouro/quick.png" loading="lazy" alt="Logotipo Quick — Patrocinador Ouro" class="max-w-[85%] max-h-[78%] object-contain opacity-90 group-hover:opacity-100 transition duration-500" /></div>
+            <div class="sponsor-card rounded-xl p-3 w-48 md:w-60 h-28 md:h-40 flex items-center justify-center border border-brand-gold/25 hover:border-brand-gold/60 transition duration-500 group" role="img" aria-label="Logotipo Rhiza Bank — Patrocinador Ouro"><span aria-hidden="true" class="font-display font-bold uppercase tracking-wider text-center leading-tight px-2 text-base md:text-xl text-white/80 group-hover:text-white transition duration-500">Rhiza Bank</span></div>
             <div class="sponsor-card rounded-xl p-3 w-48 md:w-60 h-28 md:h-40 flex items-center justify-center border border-brand-gold/25 hover:border-brand-gold/60 transition duration-500 group"><img src="./assets/logos/ouro/rios-mobilidade-eletrica.png" loading="lazy" alt="Logotipo Rios Mobilidade Elétrica — Patrocinador Ouro" class="max-w-[85%] max-h-[78%] object-contain opacity-90 group-hover:opacity-100 transition duration-500" /></div>
             <div class="sponsor-card rounded-xl p-3 w-48 md:w-60 h-28 md:h-40 flex items-center justify-center border border-brand-gold/25 hover:border-brand-gold/60 transition duration-500 group"><img src="./assets/logos/ouro/sobral-grafica.png" loading="lazy" alt="Logotipo Sobral Gráfica — Patrocinador Ouro" class="max-w-[85%] max-h-[78%] object-contain opacity-90 group-hover:opacity-100 transition duration-500" /></div>
             <div class="sponsor-card rounded-xl p-3 w-48 md:w-60 h-28 md:h-40 flex items-center justify-center border border-brand-gold/25 hover:border-brand-gold/60 transition duration-500 group"><img src="./assets/logos/ouro/vanguard.png" loading="lazy" alt="Logotipo Vanguard — Patrocinador Ouro" class="max-w-[85%] max-h-[78%] object-contain opacity-90 group-hover:opacity-100 transition duration-500" /></div>
+            <div class="sponsor-card rounded-xl p-3 w-48 md:w-60 h-28 md:h-40 flex items-center justify-center border border-brand-gold/25 hover:border-brand-gold/60 transition duration-500 group"><img src="./assets/logos/ouro/zero6-eventos.png" loading="lazy" alt="Logotipo Zero6 Eventos — Patrocinador Ouro" class="max-w-[85%] max-h-[78%] object-contain opacity-90 group-hover:opacity-100 transition duration-500" /></div>
           </div>
         </div>
 
@@ -1827,7 +1811,9 @@
             <span class="h-px w-12 md:w-24 bg-gradient-to-l from-transparent to-gray-400/50"></span>
           </div>
           <div class="flex flex-wrap justify-center gap-4">
-                        <div class="sponsor-card rounded-xl p-2 w-44 md:w-52 h-24 md:h-32 flex items-center justify-center border border-gray-400/30 hover:border-gray-300/60 transition duration-500 group"><img src="./assets/logos/prata/biofit.png" loading="lazy" alt="Logotipo Biofit — Patrocinador Prata" class="max-w-[85%] max-h-[78%] object-contain opacity-90 group-hover:opacity-100 transition duration-500" /></div>
+            <div class="sponsor-card rounded-xl p-2 w-44 md:w-52 h-24 md:h-32 flex items-center justify-center border border-gray-400/30 hover:border-gray-300/60 transition duration-500 group"><img src="./assets/logos/prata/agentia.png" loading="lazy" alt="Logotipo Agentia Escola de IA — Patrocinador Prata" class="max-w-[85%] max-h-[78%] object-contain opacity-90 group-hover:opacity-100 transition duration-500" /></div>
+            <div class="sponsor-card rounded-xl p-2 w-44 md:w-52 h-24 md:h-32 flex items-center justify-center border border-gray-400/30 hover:border-gray-300/60 transition duration-500 group"><img src="./assets/logos/prata/atria.png" loading="lazy" alt="Logotipo Atria — Patrocinador Prata" class="max-w-[85%] max-h-[78%] object-contain opacity-90 group-hover:opacity-100 transition duration-500" /></div>
+            <div class="sponsor-card rounded-xl p-2 w-44 md:w-52 h-24 md:h-32 flex items-center justify-center border border-gray-400/30 hover:border-gray-300/60 transition duration-500 group"><img src="./assets/logos/prata/biofit.png" loading="lazy" alt="Logotipo Biofit — Patrocinador Prata" class="max-w-[85%] max-h-[78%] object-contain opacity-90 group-hover:opacity-100 transition duration-500" /></div>
             <div class="sponsor-card rounded-xl p-2 w-44 md:w-52 h-24 md:h-32 flex items-center justify-center border border-gray-400/30 hover:border-gray-300/60 transition duration-500 group"><img src="./assets/logos/prata/bocca-felice.png" loading="lazy" alt="Logotipo Bocca Felice — Patrocinador Prata" class="max-w-[85%] max-h-[78%] object-contain opacity-90 group-hover:opacity-100 transition duration-500" /></div>
             <div class="sponsor-card rounded-xl p-2 w-44 md:w-52 h-24 md:h-32 flex items-center justify-center border border-gray-400/30 hover:border-gray-300/60 transition duration-500 group"><img src="./assets/logos/prata/claro-empresas.png" loading="lazy" alt="Logotipo Claro Empresas — Patrocinador Prata" class="max-w-[85%] max-h-[78%] object-contain opacity-90 group-hover:opacity-100 transition duration-500" /></div>
             <div class="sponsor-card rounded-xl p-2 w-44 md:w-52 h-24 md:h-32 flex items-center justify-center border border-gray-400/30 hover:border-gray-300/60 transition duration-500 group"><img src="./assets/logos/prata/davos.png" loading="lazy" alt="Logotipo Davos — Patrocinador Prata" class="max-w-[85%] max-h-[78%] object-contain opacity-90 group-hover:opacity-100 transition duration-500" /></div>
@@ -1841,6 +1827,7 @@
             <div class="sponsor-card rounded-xl p-2 w-44 md:w-52 h-24 md:h-32 flex items-center justify-center border border-gray-400/30 hover:border-gray-300/60 transition duration-500 group"><img src="./assets/logos/prata/rj-solucoes.png" loading="lazy" alt="Logotipo RJ Soluções — Patrocinador Prata" class="max-w-[85%] max-h-[78%] object-contain opacity-90 group-hover:opacity-100 transition duration-500" /></div>
             <div class="sponsor-card rounded-xl p-2 w-44 md:w-52 h-24 md:h-32 flex items-center justify-center border border-gray-400/30 hover:border-gray-300/60 transition duration-500 group"><img src="./assets/logos/prata/sao-luiz-supermercado.png" loading="lazy" alt="Logotipo São Luiz Supermercado — Patrocinador Prata" class="max-w-[85%] max-h-[78%] object-contain opacity-90 group-hover:opacity-100 transition duration-500" /></div>
             <div class="sponsor-card rounded-xl p-2 w-44 md:w-52 h-24 md:h-32 flex items-center justify-center border border-gray-400/30 hover:border-gray-300/60 transition duration-500 group"><img src="./assets/logos/prata/score-contabilidade.png" loading="lazy" alt="Logotipo Score Contabilidade — Patrocinador Prata" class="max-w-[85%] max-h-[78%] object-contain opacity-90 group-hover:opacity-100 transition duration-500" /></div>
+            <div class="sponsor-card rounded-xl p-2 w-44 md:w-52 h-24 md:h-32 flex items-center justify-center border border-gray-400/30 hover:border-gray-300/60 transition duration-500 group"><img src="./assets/logos/prata/sendbase.png" loading="lazy" alt="Logotipo Sendbase — Patrocinador Prata" class="max-w-[85%] max-h-[78%] object-contain opacity-90 group-hover:opacity-100 transition duration-500" /></div>
             <div class="sponsor-card rounded-xl p-2 w-44 md:w-52 h-24 md:h-32 flex items-center justify-center border border-gray-400/30 hover:border-gray-300/60 transition duration-500 group"><img src="./assets/logos/prata/sobral-international-school.png" loading="lazy" alt="Logotipo Sobral International School — Patrocinador Prata" class="max-w-[85%] max-h-[78%] object-contain opacity-90 group-hover:opacity-100 transition duration-500" /></div>
             <div class="sponsor-card rounded-xl p-2 w-44 md:w-52 h-24 md:h-32 flex items-center justify-center border border-gray-400/30 hover:border-gray-300/60 transition duration-500 group"><img src="./assets/logos/prata/unopar.png" loading="lazy" alt="Logotipo Unopar — Patrocinador Prata" class="max-w-[85%] max-h-[78%] object-contain opacity-90 group-hover:opacity-100 transition duration-500" /></div>
             <div class="sponsor-card rounded-xl p-2 w-44 md:w-52 h-24 md:h-32 flex items-center justify-center border border-gray-400/30 hover:border-gray-300/60 transition duration-500 group"><img src="./assets/logos/prata/velas-corretora.png" loading="lazy" alt="Logotipo Velas Corretora — Patrocinador Prata" class="max-w-[85%] max-h-[78%] object-contain opacity-90 group-hover:opacity-100 transition duration-500" /></div>
@@ -1892,7 +1879,7 @@
           GARANTIR MINHA VAGA
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
         </a>
-        <p class="font-syne text-sm md:text-base mt-6 uppercase tracking-widest font-bold text-brand-gold">1º Lote: R$ 207,00 · Vagas Limitadas</p>
+        <p class="font-syne text-sm md:text-base mt-6 uppercase tracking-widest font-bold text-brand-gold">2º Lote: R$ 237,00 · Vagas Limitadas</p>
       </div>
     </section>
 
@@ -2326,19 +2313,92 @@
         })
       }
 
+      /*
+        Conteúdo do modal de palestrante, pela chave do nome exatamente como
+        no onclick do card. Tema, palco e horário seguem o cronograma do app;
+        o texto foi condensado das legendas oficiais dos anúncios no
+        @connect.valley; a arte é assets/artes/<mesmo nome do retrato>.jpg.
+        Palestrante novo: card no carrossel, arte em assets/artes e uma
+        entrada aqui.
+      */
+      const PALESTRANTES = {
+        "Roneely Feitosa": {"arte": "./assets/artes/roneely-feitosa.jpg", "rotulo": "Palestrante master", "palco": "Palco 360°", "dia": "16/10", "hora": "13h30", "tema": "O mundo mudou, você percebeu?", "bio": ["Advogado empresarial, empreendedor e sócio-proprietário do R. Feitosa Group. Natural de Camocim, começou como vendedor de picolé e garçom antes de construir a carreira no Direito e no empreendedorismo. É mestre em Ciências Jurídicas, com formação executiva em Gestão de Negócios e Empreendedorismo.", "No palco, as mudanças que já estão transformando a forma de trabalhar, liderar, empreender e decidir — e o que é preciso enxergar para continuar relevante."]},
+        "Severino Neto": {"arte": "./assets/artes/severino-neto.jpg", "rotulo": "Palestrante master", "palco": "Palco 360°", "dia": "16/10", "hora": "18h10", "tema": "Supermercado que virou serviço", "bio": ["Presidente do Grupo São Luiz, onde está há quase cinco décadas. Começou aos 17 anos como empacotador, quando a rede tinha três lojas, e passou por diferentes áreas da operação até a presidência. Sob sua liderança, o São Luiz chegou a 34 lojas, cerca de 3.900 colaboradores e 50 mil clientes atendidos por dia.", "No palco, como transformar a experiência de compra e fazer do atendimento parte essencial da estratégia de um negócio."]},
+        "Nelson Rossi": {"arte": "./assets/artes/nelson-rossi.jpg", "rotulo": "Palestrante master", "palco": "Palco 360°", "dia": "17/10", "hora": "14h20", "tema": "Liderança das novas gerações", "bio": ["Diretor Industrial da Grendene, onde construiu mais de quatro décadas de carreira: começou como zelador e avançou por diferentes níveis da operação até a liderança industrial. Participou diretamente do desenvolvimento da operação da Grendene em Sobral, que hoje concentra cerca de 80% da produção da companhia.", "Traz ao palco o que nenhuma teoria substitui: operação, gestão de pessoas e formação de lideranças, vividas da base à alta gestão."]},
+        "Tayse Feitosa": {"arte": "./assets/artes/tayse-feitosa.jpg", "rotulo": "Palestrante master", "palco": "Palco 360°", "dia": "17/10", "hora": "11h40", "tema": "Entre filhos, desafios e negócios", "bio": ["Empresária, gestora, advogada e Diretora Financeira do R. Feitosa Group, onde atua na gestão financeira e estratégica das empresas do grupo. Sócia-proprietária, também é corretora de imóveis e mestranda em Administração de Empresas.", "No palco, os desafios de construir uma trajetória profissional conciliando diferentes papéis e escolhas — uma perspectiva real sobre liderança, família e vida empresarial."]},
+        "Belini Júnior": {"arte": "./assets/artes/belini-junior.jpg", "rotulo": "Palestrante", "palco": "Palco 360°", "dia": "16/10", "hora": "14h30", "tema": "Tecnologia aplicada à eficiência operacional e redução de custos", "bio": ["Sócio da Gateway Soluções, Belini fala a empresários e gestores que querem identificar gargalos, otimizar processos e usar a tecnologia de forma estratégica nos negócios."]},
+        "Alexandre Chastinet": {"arte": "./assets/artes/alexandre-chastinet.jpg", "rotulo": "Palestrante", "palco": "Palco 360°", "dia": "16/10", "hora": "17h10", "tema": "Tem dinheiro barato sobrando no banco. Sua empresa está pegando?", "bio": ["Sócio da Fiel Imóveis, Alexandre leva ao palco uma provocação para empresários, gestores e líderes: como identificar e acessar oportunidades de capital e crédito, e tomar decisões financeiras com mais estratégia."]},
+        "Allan Lima": {"arte": "./assets/artes/allan-lima.jpg", "rotulo": "Palestrante", "palco": "Palco 360°", "dia": "16/10", "hora": "14h50", "tema": "Tecnologia aplicada à eficiência operacional e redução de custos", "bio": ["Da área comercial da Fortes Tecnologia, Allan mostra como a tecnologia pode sair do discurso e gerar impacto real na operação e nos resultados das empresas."]},
+        "Anderson Barros": {"arte": "./assets/artes/anderson-barros.jpg", "rotulo": "Palestrante", "palco": "Palco Work", "dia": "16/10", "hora": "16h30", "tema": "SST é custo ou investimento?", "bio": ["Sócio fundador da MedCenter, Anderson mostra como a Segurança e Saúde no Trabalho, tratada de forma estratégica, deixa de ser só uma obrigação e passa a proteger pessoas, reduzir riscos e sustentar o negócio."]},
+        "André Bergamini": {"arte": "./assets/artes/andre-bergamini.jpg", "rotulo": "Palestrante", "palco": "Palco Work", "dia": "16/10", "hora": "16h00", "tema": "Muito além do drywall: soluções acústicas e construções a seco de alta performance", "bio": ["CEO da Drysteel, André sobe ao Palco Work para falar de soluções acústicas e de construção a seco de alta performance."]},
+        "César Castro": {"arte": "./assets/artes/cesar-castro.jpg", "rotulo": "Palestrante", "palco": "Palco 360°", "dia": "16/10", "hora": "17h50", "tema": "Você pode ser o protagonista da sua própria marca", "bio": ["Empreendedor, videomaker e sócio fundador da Movin, César já participou da produção de milhares de vídeos para empresas, marcas e eventos, e hoje atua também na gestão de equipes, no desenvolvimento de negócios e na formação de novos profissionais.", "Com a provocação “Melhor feito do que perfeito”, compartilha cases, erros e acertos de quem constrói marcas com vídeo."]},
+        "Clésio Moura": {"arte": "./assets/artes/clesio-moura.jpg", "rotulo": "Palestrante", "palco": "Palco 360°", "dia": "17/10", "hora": "14h00", "tema": "Morra sem nada: uma provocação intrigante!", "bio": ["CEO e responsável técnico da Domos, Clésio fala de planejamento de proteção financeira vinculada à Prudential: organizar o presente, preparar o futuro e proteger a família — e não apenas acumular patrimônio."]},
+        "David Moreira": {"arte": "./assets/artes/david-moreira.jpg", "rotulo": "Palestrante master", "palco": "Palco 360°", "dia": "16/10", "hora": "16h35", "tema": "Tipos de liderança: qual é o seu?", "bio": ["Empresário e CEO da D&R Distribuidora Coca-Cola. Formado em Administração, tornou-se sócio do avô, Raimundo Tomé de Sousa, e participou da transformação do antigo “O Clarismundo” na D&R Distribuidora de Bebidas, que expandiu sua atuação de 10 para 21 cidades cearenses."]},
+        "Diógenes Passos": {"arte": "./assets/artes/diogenes-passos.jpg", "rotulo": "Palestrante", "palco": "Palco 360°", "dia": "17/10", "hora": "15h20", "tema": "Financiando o futuro: crédito, inovação e oportunidades para transformar negócios", "bio": ["Gerente Geral do BNB Sobral, Diógenes fala de crédito como ferramenta estratégica, inovação e acesso a oportunidades — caminhos para transformar boas ideias em negócios mais estruturados e preparados para crescer."]},
+        "Felipe Martins": {"arte": "./assets/artes/felipe-martins.jpg", "rotulo": "Palestrante", "palco": "Palco 360°", "dia": "16/10", "hora": "15h10", "tema": "“Quem compra terra não erra” — já dizia meu pai", "bio": ["CEO da FMS & PDR Engenharia, Felipe provoca: seu patrimônio está trabalhando para você ou só gerando custos? Uma conversa sobre estratégia, gestão e novas formas de enxergar os ativos de uma empresa."]},
+        "Francisco Jarbson": {"arte": "./assets/artes/francisco-jarbson.jpg", "rotulo": "Palestrante", "palco": "Palco 360°", "dia": "17/10", "hora": "11h20", "tema": "Quanto custa não ter seguro? Só depois do prejuízo você descobre", "bio": ["Gerente de Vendas da SG Proteção Veicular, Jarbson tem mais de 20 anos de experiência em liderança, gestão e vendas, no desenvolvimento de equipes, planejamento, negociação e formação de líderes.", "No palco, o contraste entre o investimento recorrente em proteção veicular e o prejuízo de um imprevisto sem cobertura."]},
+        "Gladstone Prado": {"arte": "./assets/artes/gladstone-prado.jpg", "rotulo": "Palestrante", "palco": "Palco Work", "dia": "17/10", "hora": "16h15", "tema": "Segurança 4.0: como a inteligência artificial e a nova legislação estão redefinindo o setor", "bio": ["Sócio proprietário da Plata, Gladstone discute como a inteligência artificial, as novas tecnologias e as mudanças na legislação estão construindo um novo cenário para empresas e profissionais de segurança."]},
+        "Hildebrando Andrade": {"arte": "./assets/artes/hildebrando-andrade.jpg", "rotulo": "Palestrante", "palco": "Palco 360°", "dia": "17/10", "hora": "17h05", "tema": "Seu aluguel vai pagar mais imposto. Você já sabe quanto?", "bio": ["Diretor administrativo da Valmir Andrade Contabilidade, Hildebrando mostra o que muda, com a Reforma Tributária, na tributação da renda de imóveis alugados e o que precisa entrar no radar de proprietários e investidores."]},
+        "Lucas Ogata": {"arte": "./assets/artes/lucas-ogata.jpg", "rotulo": "Palestrante master", "palco": "Palco 360°", "dia": "17/10", "hora": "10h30", "tema": "TikTok Shop: como conteúdo, creators e social commerce estão redefinindo as vendas", "bio": ["Head de TikTok Shop da AURA Beauty e especialista em Social Commerce, Creator Economy e Marketing de Influência. Participou da chegada do TikTok Shop ao Brasil e da estratégia que levou a AURA Beauty ao nº 1 em beleza na plataforma. É também fundador da FOS, startup que conecta creators, conteúdo e vendas."]},
+        "Marcelo Carneiro": {"arte": "./assets/artes/marcelo-carneiro.jpg", "rotulo": "Palestrante", "palco": "Palco 360°", "dia": "17/10", "hora": "16h25", "tema": "IA: o futuro não vai roubar seu emprego, mas vai mudar a forma como você trabalha", "bio": ["Do SEST SENAT, Marcelo discute tecnologia, profissionais e as novas competências exigidas por um mercado que muda rápido."]},
+        "Paulo Vitor": {"arte": "./assets/artes/paulo-vitor.jpg", "rotulo": "Palestrante", "palco": "Palco 360°", "dia": "17/10", "hora": "11h00", "tema": "O novo imposto chegou à cozinha", "bio": ["Sócio da Nort Contabilidade, Paulo Vitor traduz a Reforma Tributária em impactos práticos — na operação, nos preços e até na cozinha das empresas — para quem precisa tomar decisões."]},
+        "Rafael Ponte": {"arte": "./assets/artes/rafael-ponte.jpg", "rotulo": "Palestrante", "palco": "Palco Work", "dia": "16/10", "hora": "16h15", "tema": "Novas exigências de segurança contra incêndios em sistemas fotovoltaicos", "bio": ["CEO da Pro Sol, Rafael explica como as novas exigências impactam as instalações fotovoltaicas e por que segurança, adequação e prevenção precisam caminhar junto com inovação e eficiência energética."]},
+        "Rafael Souza": {"arte": "./assets/artes/rafael-souza.jpg", "rotulo": "Palestrante master", "palco": "Palco 360°", "dia": "17/10", "hora": "10h00", "tema": "Do conteúdo à venda: como conteúdo, influência e creators estão transformando o varejo", "bio": ["CEO da Agência Trendz, Rafael atua no ecossistema de Creator Economy, marketing digital e influência, com estratégias que aproximam marcas de comunidades e transformam atenção em relacionamento, posicionamento e vendas."]},
+        "Rayana Loiola": {"arte": "./assets/artes/rayana-loiola.jpg", "rotulo": "Palestrante", "palco": "Palco Work", "dia": "17/10", "hora": "16h00", "tema": "Empresa compra de empresa. Mas quem decide é gente.", "bio": ["Da área comercial da Sobral Gráfica, Rayana traz uma conversa prática sobre vendas B2B na vida real: relacionamento comercial, negociação e os desafios de vender de empresa para empresa."]},
+        "Said Sahdo": {"arte": "./assets/artes/said-sahdo.jpg", "rotulo": "Palestrante master", "palco": "Palco 360°", "dia": "16/10", "hora": "15h30", "tema": "1000 contra 1!", "bio": ["CCO do Grupo HWS, com mais de 40 anos no setor comercial, Said está à frente de uma operação com mais de 700 colaboradores e 30 empresas nos segmentos de motocicletas e automóveis.", "No palco, liderança em formato de perguntas e respostas ao vivo, com as perguntas vindas da própria plateia."]},
+        "Shirlean Rios": {"arte": "./assets/artes/shirlean-rios.jpg", "rotulo": "Palestrante", "palco": "Palco Work", "dia": "17/10", "hora": "16h30", "tema": "O futuro já está em movimento: como a mobilidade elétrica vai transformar nossas cidades", "bio": ["Sócio-proprietário da Rios Mobilidade Elétrica, marca cearense que desenvolve veículos próprios para o mercado brasileiro, Shirlean tem quase 40 anos de experiência no mercado de duas rodas.", "No palco, a micromobilidade elétrica, a expansão da Rios pelo Brasil e as oportunidades que esse mercado abre para empreendedores, parceiros e investidores."]},
+        "Tárcio Araújo": {"arte": "./assets/artes/tarcio-araujo.jpg", "rotulo": "Palestrante", "palco": "Palco 360°", "dia": "16/10", "hora": "17h30", "tema": "Oportunidades disfarçadas", "bio": ["CEO da Sobral Climatizadores, Tárcio compartilha aprendizados sobre gestão, visão estratégica e crescimento empresarial — e como enxergar possibilidades onde muitos veem apenas desafios."]},
+        "Thiago Alves": {"arte": "./assets/artes/thiago-alves.jpg", "rotulo": "Palestrante", "palco": "Palco 360°", "dia": "17/10", "hora": "16h45", "tema": "Pare de olhar para o CNPJ. Olhe para os CPFs dentro dele", "bio": ["CEO da Nexia Saúde, Thiago mostra por que os resultados de uma organização também dependem da saúde e do bem-estar dos profissionais que a constroem."]}
+      }
+
+      let focoAntesDoModal = null
+
       function openSpeakerModal(name, role) {
         const modal = document.getElementById('speaker-modal')
-        const modalName = document.getElementById('modal-name')
-        const modalRole = document.getElementById('modal-role')
-        if (modal && modalName && modalRole) {
-          modalName.innerText = name; modalRole.innerText = role; modal.classList.add('open')
+        if (!modal) return
+        const dados = PALESTRANTES[name] || {}
+        const el = id => document.getElementById(id)
+
+        el('modal-name').textContent = name
+        el('modal-role').textContent = role
+        el('modal-label').textContent = dados.rotulo || 'Palestrante'
+        el('modal-tema').textContent = dados.tema || ''
+        el('modal-quando').textContent = dados.palco ? `${dados.palco} · ${dados.dia} às ${dados.hora}` : ''
+        el('modal-bio').replaceChildren(...(dados.bio || []).map(texto => {
+          const paragrafo = document.createElement('p')
+          paragrafo.textContent = texto
+          return paragrafo
+        }))
+
+        // A arte entra com fade quando termina de carregar, para não piscar a
+        // do palestrante aberto antes enquanto a nova chega.
+        const arte = el('modal-art')
+        arte.parentElement.hidden = !dados.arte
+        if (dados.arte) {
+          arte.classList.add('opacity-0')
+          arte.onload = () => arte.classList.remove('opacity-0')
+          arte.alt = `Arte de divulgação de ${name} no Connect Valley 2026`
+          arte.src = dados.arte
         }
+
+        focoAntesDoModal = document.activeElement
+        modal.classList.add('open')
+        modal.setAttribute('aria-hidden', 'false')
+        modal.querySelector('.modal-close-btn').focus()
       }
 
       function closeSpeakerModal() {
         const modal = document.getElementById('speaker-modal')
-        if (modal) modal.classList.remove('open')
+        if (!modal || !modal.classList.contains('open')) return
+        modal.classList.remove('open')
+        modal.setAttribute('aria-hidden', 'true')
+        // Devolve o foco ao card de onde a pessoa veio (teclado e leitor de tela).
+        if (focoAntesDoModal) focoAntesDoModal.focus()
       }
+
+      document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') closeSpeakerModal()
+      })
 
       document.getElementById('speaker-modal').addEventListener('click', function (e) {
         if (e.target === this) closeSpeakerModal()
